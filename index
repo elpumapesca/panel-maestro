@@ -3629,13 +3629,13 @@ const APP_CONFIG = {
   // real de tu WooCommerce. Mientras estén en 0, los chips se ven correctamente
   // pero la asignación de categoría al importar productos NO funciona.
   WOO_CATS: [
-    { id: 0, name: 'Cañas',        label: 'Cañas de Pescar'        },
-    { id: 0, name: 'Reeles',       label: 'Reeles'                 },
-    { id: 0, name: 'Señuelos',     label: 'Señuelos y Líneas'      },
-    { id: 0, name: 'Cajas',        label: 'Cajas y Bolsos'         },
-    { id: 0, name: 'Indumentaria', label: 'Indumentaria de Pesca'  },
-    { id: 0, name: 'Camping',      label: 'Camping y Outdoors'     },
-    { id: 0, name: 'Nautica',      label: 'Náutica'                },
+    { id: 2871, name: 'Cañas',        label: 'Cañas de Pescar'        },
+    { id: 2817, name: 'Reeles',       label: 'Reeles'                 },
+    { id: 2856, name: 'Señuelos',     label: 'Señuelos y Líneas'      },
+    { id: 2851, name: 'Cajas',        label: 'Cajas y Bolsos'         },
+    { id: 2633, name: 'Indumentaria', label: 'Indumentaria de Pesca'  },
+    { id: 2830, name: 'Camping',      label: 'Camping y Outdoors'     },
+    { id: 2629, name: 'Pesca',      label: 'Pesca'                },
   ],
 };
 
