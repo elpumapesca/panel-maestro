@@ -4,7 +4,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>El Puma Pesca — Panel Maestro</title>
+<title>El Puma Pesca — Panel Maestro v3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -693,7 +693,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <span style="font-size:18px">🔑</span> <span id="login-btn-label">Conectar cuenta</span>
       </button>
     </div>
-    <div class="login-note">OAuth 2.0 oficial · No almacenamos contraseñas</div>
+    <div class="login-note">OAuth 2.0 oficial · No almacenamos contraseñas · <span style="opacity:.7">Panel v3</span></div>
   </div>
 </div>
 
@@ -744,7 +744,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
 <nav id="sidebar">
   <div class="sb-logo">
     <div class="sb-icon">🎣</div>
-    <div><div class="sb-title">Panel Maestro Pro</div><div class="sb-ver">v1 · El Puma Pesca</div></div>
+    <div><div class="sb-title">Panel Maestro Pro</div><div class="sb-ver">v3 · El Puma Pesca</div></div>
   </div>
   <a class="sb-store" href="#dashboard" onclick="showSection('dashboard');return false;">
     <div><div class="sb-store-name" id="sb-store">Tu Tienda</div><div class="sb-store-sub"><div class="online-dot"></div>Conectado</div></div>
@@ -2278,7 +2278,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
               <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
                 <div>
                   <label style="font-size:11px;font-weight:500;color:var(--text3);display:block;margin-bottom:3px">Nombre del competidor</label>
-                  <input type="text" id="rp-comp-title" placeholder="Ej: Taza cerámica souvenir Buenos Aires"
+                  <input type="text" id="rp-comp-title" placeholder="Ej: Caña Spinning 2.10 mt o Reel Frontal 4000"
                     style="width:100%;font-size:12.5px;padding:8px 10px">
                 </div>
                 <div style="min-width:120px">
@@ -16284,31 +16284,67 @@ async function aiAsk(systemPrompt, userMsg, targetId){
   }
 }
 
-// ── 🧠 IA DE FECHAS CLAVE ────────────────────────────────────────────
+// ── 🧠 IA DE FECHAS CLAVE — Calendario comercial pesca/camping/outdoors 2026 ────
+// Fechas verificadas: Temporada Salmónidos Mendoza Res. 327 (1-nov-2025 a 3-may-2026),
+// Captura y devolución (1-may a 28-jun-2026), Día Nacional Pescador Deportivo (3-ago).
+// Pejerrey: hábito de pesca intenso otoño-invierno en lagunas pampeanas.
+// Camping: pico de demanda nov-feb (verano) + finde XL (Carnaval, Semana Santa, Día Padre).
 var AI_DATES = [
-  // ── Fechas fijas anuales (año 2026) ────────────────────────────
-  { date:'2026-02-14', label:'San Valentín',              icon:'❤️',  relevance:'Tazas mágicas de regalo, combos pareja' },
-  { date:'2026-03-08', label:'Día Internacional de la Mujer', icon:'💜', relevance:'Mugs con diseño femme, sets regalo' },
-  { date:'2026-03-21', label:'Día del Cerebro / Neumonología', icon:'🧠', relevance:'Tazas temáticas médicos/profesionales' },
-  { date:'2026-03-29', label:'Día del Trabajador Social', icon:'🤝', relevance:'Tazas motivacionales, combos oficina' },
-  { date:'2026-04-10', label:'Día del Contador',          icon:'🧮', relevance:'Tazas profesionales, jarros térmicos' },
-  { date:'2026-04-16', label:'Día del Secretario/a',      icon:'📋', relevance:'Sets regalo, tazas personalizadas' },
-  { date:'2026-04-19', label:'Día del Veterinario',       icon:'🐾', relevance:'Tazas con diseño animales/mascotas' },
-  { date:'2026-05-01', label:'Día del Trabajador',        icon:'🔨', relevance:'Combos oficina, termos trabajo' },
-  { date:'2026-05-15', label:'Día del Maestro',           icon:'📚', relevance:'Tazas docentes, kits regalo escuela' },
-  { date:'2026-05-21', label:'Día del Mecánico / Técnico',icon:'🔧', relevance:'Tazas gremio, jarros robustos' },
-  { date:'2026-06-01', label:'Día del Médico',            icon:'⚕️', relevance:'Tazas y jarros para profesionales salud' },
-  { date:'2026-06-13', label:'Día del Periodista',        icon:'📰', relevance:'Tazas temáticas prensa/comunicación' },
-  { date:'2026-06-21', label:'Día del Padre',             icon:'👨', relevance:'Jarros térmicos, sets con diseño sport/auto' },
-  { date:'2026-07-09', label:'Día de la Independencia',   icon:'🇦🇷', relevance:'Ediciones especiales patrias' },
-  { date:'2026-08-07', label:'Día del Abogado',           icon:'⚖️', relevance:'Tazas profesionales, jarros estudio' },
-  { date:'2026-09-11', label:'Día del Maestro (alt.)',    icon:'🍎', relevance:'Kits regalo educación, tazas con manzana' },
-  { date:'2026-10-11', label:'Día de la Madre',           icon:'🌸', relevance:'Tazas mágicas, combos set regalo madre' },
-  { date:'2026-10-16', label:'Día del Gastrónomo / Chef', icon:'👨‍🍳', relevance:'Tazas y jarros cocina profesional' },
-  { date:'2026-11-13', label:'Cyber Monday',              icon:'💻', relevance:'Descuentos en sets, promociones ML' },
-  { date:'2026-12-24', label:'Nochebuena / Navidad',      icon:'🎄', relevance:'Sets regalo, packaging navideño, envíos' },
-  { date:'2027-01-01', label:'Año Nuevo 2027',            icon:'🎆', relevance:'Sets celebración, ediciones especiales' },
-  { date:'2027-02-14', label:'San Valentín 2027',         icon:'❤️', relevance:'Tazas mágicas regalo, combos pareja' },
+  // ── ENERO: Vacaciones de verano, camping en pico, pesca embarcado/costa ─────
+  { date:'2026-01-06', label:'Reyes Magos',                icon:'👑', relevance:'Cerrar campañas regalo verano (cañas iniciación, kits camping)' },
+  { date:'2026-01-15', label:'Pico vacaciones verano',     icon:'☀️', relevance:'Stock camping, indumentaria liviana, kits pesca costa' },
+
+  // ── FEBRERO: Carnaval (finde XL) + San Valentín + sigue verano ─────────────
+  { date:'2026-02-14', label:'San Valentín',               icon:'❤️',  relevance:'Combos pareja outdoor (carpa 2 personas, sleeping doble, set linterna)' },
+  { date:'2026-02-16', label:'Carnaval — Finde XL',        icon:'🎭', relevance:'Pico camping/pesca, último impulso verano' },
+
+  // ── MARZO: Cierre verano, inicio temporada otoño ──────────────────────────
+  { date:'2026-03-08', label:'Día Internacional de la Mujer', icon:'💜', relevance:'Indumentaria técnica femenina, accesorios outdoor' },
+  { date:'2026-03-24', label:'Día Memoria — Finde XL',     icon:'🇦🇷', relevance:'Finde largo, escapada outdoor/pesca' },
+
+  // ── ABRIL: Semana Santa (finde XL pesca), temporada salmónidos cerrando ────
+  { date:'2026-04-02', label:'Semana Santa',               icon:'🐟', relevance:'Pico pesca otoño, último finde temporada salmónidos general' },
+  { date:'2026-04-30', label:'Cierre temporada salmónidos',icon:'🚫', relevance:'Última semana temporada general (cierre 3-may), liquidar stock pesca trucha' },
+
+  // ── MAYO: Inicio captura y devolución, camping otoño-invierno ──────────────
+  { date:'2026-05-01', label:'Inicia Captura y Devolución',icon:'♻️', relevance:'Mosca y anzuelo sin rebaba — push de cañas mosca, leaders, líneas WF' },
+  { date:'2026-05-25', label:'Día Patrio — Finde XL',      icon:'🇦🇷', relevance:'Escapada otoñal, indumentaria abrigada outdoor' },
+
+  // ── JUNIO: Día del Padre (CRÍTICO pesca/outdoor) + feriados ───────────────
+  { date:'2026-06-15', label:'Día Güemes — Finde XL',      icon:'🇦🇷', relevance:'Finde largo, push escapadas, kits pesca/camping' },
+  { date:'2026-06-21', label:'Día del Padre',              icon:'👨', relevance:'PICO ANUAL — Cañas, reeles, cajas, indumentaria, sets regalo padre pescador' },
+  { date:'2026-06-20', label:'Día de la Bandera — Finde XL',icon:'🇦🇷', relevance:'Aprovechar fin de semana largo previo Día del Padre' },
+
+  // ── JULIO: Vacaciones de invierno, pesca con mosca, camping invierno ──────
+  { date:'2026-07-09', label:'Día Independencia',          icon:'🎉', relevance:'Promo patria, ediciones especiales' },
+  { date:'2026-07-15', label:'Vacaciones de invierno',     icon:'❄️', relevance:'Indumentaria abrigada, equipamiento camping invierno, pesca mosca' },
+  { date:'2026-07-20', label:'Día del Amigo',              icon:'🎣', relevance:'Salidas de pesca grupales, accesorios y termos compartidos' },
+
+  // ── AGOSTO: Día del Pescador Deportivo (CRÍTICO) ──────────────────────────
+  { date:'2026-08-03', label:'Día Nacional del Pescador Deportivo', icon:'🎣', relevance:'PICO ANUAL — Toda la línea de pesca, promo destacada, contenido aspiracional' },
+  { date:'2026-08-17', label:'Día San Martín — Finde XL',  icon:'🇦🇷', relevance:'Finde largo invierno, escapada y outdoor' },
+
+  // ── SEPTIEMBRE: Día del Maestro, primavera arrancando, preparar temporada ──
+  { date:'2026-09-11', label:'Día del Maestro',            icon:'📚', relevance:'Regalo para docente pescador / outdoor lover' },
+  { date:'2026-09-21', label:'Inicio Primavera',           icon:'🌸', relevance:'Preparativos temporada nueva, push stock liviano' },
+
+  // ── OCTUBRE: Día de la Madre + preparativos temporada salmónidos noviembre ─
+  { date:'2026-10-12', label:'Día Diversidad Cultural',    icon:'🌎', relevance:'Finde largo, escapada outdoor' },
+  { date:'2026-10-18', label:'Día de la Madre',            icon:'🌸', relevance:'Indumentaria outdoor femenina, kits picnic, accesorios camping para mamá pescadora/aventurera' },
+
+  // ── NOVIEMBRE: APERTURA TEMPORADA SALMÓNIDOS (crítico para Mendoza) ────────
+  { date:'2026-11-01', label:'APERTURA Temporada Salmónidos', icon:'🎣', relevance:'PICO ANUAL — Lanzar campañas cañas mosca/spinning, reeles, líneas, señuelos sin rebaba' },
+  { date:'2026-11-20', label:'Día Soberanía — Finde XL',   icon:'🇦🇷', relevance:'Primer finde largo de temporada, salidas masivas' },
+  { date:'2026-11-27', label:'Black Friday',               icon:'🛒', relevance:'Descuentos en sets, promo destacada multicategoría' },
+  { date:'2026-11-30', label:'Cyber Monday',               icon:'💻', relevance:'Pico ventas online, push categorías con stock alto' },
+
+  // ── DICIEMBRE: APERTURA Salmónidos Embalses + Navidad + verano ────────────
+  { date:'2026-12-01', label:'Apertura Embalses (Mendoza)', icon:'🚣', relevance:'Agua del Toro, Los Reyunos, El Nihuil, Valle Grande habilitados — push pesca embarcado' },
+  { date:'2026-12-08', label:'Inmaculada — Finde XL',      icon:'🇦🇷', relevance:'Salidas masivas, último pico previo Navidad' },
+  { date:'2026-12-22', label:'Navidad',                    icon:'🎄', relevance:'Regalos pesca/camping/náutica, packaging especial, envíos garantizados' },
+
+  // ── ENERO 2027: continuidad temporada ─────────────────────────────────────
+  { date:'2027-01-01', label:'Año Nuevo 2027',             icon:'🎆', relevance:'Arranque temporada pesca/camping 2027, ediciones especiales' },
 ];
 
 function aiDatesAnalyze(){
@@ -17220,34 +17256,29 @@ var CAL_BASE_EVENTS = [
   // ── OPERATIVO ────────────────────────────────────────────────────────
   {id:'host-06',date:'2026-06-01',cat:'operativo',icon:'🌐',title:'Pago Hosting Web'},
   {id:'host-12',date:'2026-12-01',cat:'operativo',icon:'🌐',title:'Pago Hosting Web'},
-  // ── DÍAS INTERNACIONALES Y MUNDIALES (relevantes para drinkware y nichos) ──
-  {id:'cafe-world',   date:'2026-10-01',cat:'ventas',  icon:'☕',title:'Día Mundial del Café'},
-  {id:'te-world',     date:'2026-12-15',cat:'ventas',  icon:'🍵',title:'Día Internacional del Té'},
-  {id:'chocolate',    date:'2026-07-07',cat:'ventas',  icon:'🍫',title:'Día Mundial del Chocolate'},
-  {id:'mate-dia',     date:'2026-11-30',cat:'ventas',  icon:'🧉',title:'Día Nacional del Mate (Arg)'},
-  {id:'cerveza-int',  date:'2026-08-07',cat:'ventas',  icon:'🍺',title:'Día Internacional de la Cerveza'},
-  {id:'cocteleria',   date:'2026-07-24',cat:'ventas',  icon:'🍹',title:'Día Internacional del Cóctel'},
-  {id:'agua',         date:'2026-03-22',cat:'ventas',  icon:'💧',title:'Día Mundial del Agua'},
-  {id:'medio-amb',    date:'2026-06-05',cat:'ventas',  icon:'🌎',title:'Día Mundial del Medioambiente'},
-  {id:'tierra',       date:'2026-04-22',cat:'ventas',  icon:'🌱',title:'Día de la Tierra'},
-  {id:'mascota',      date:'2026-04-11',cat:'ventas',  icon:'🐾',title:'Día Mundial del Animal de Compañía'},
-  {id:'perro-int',    date:'2026-07-31',cat:'ventas',  icon:'🐶',title:'Día Mundial del Perro'},
-  {id:'gato-int',     date:'2026-08-08',cat:'ventas',  icon:'🐱',title:'Día Internacional del Gato'},
-  {id:'libro',        date:'2026-04-23',cat:'ventas',  icon:'📚',title:'Día Mundial del Libro'},
-  {id:'disenio',      date:'2026-04-27',cat:'ventas',  icon:'🎨',title:'Día Mundial del Diseño Gráfico'},
-  {id:'arte',         date:'2026-04-15',cat:'pop',     icon:'🖼️',title:'Día Mundial del Arte'},
-  {id:'fotog-int',    date:'2026-08-19',cat:'pop',     icon:'📷',title:'Día Mundial de la Fotografía'},
-  {id:'musica-int',   date:'2026-06-21',cat:'pop',     icon:'🎵',title:'Día Mundial de la Música'},
-  {id:'cine',         date:'2026-10-17',cat:'pop',     icon:'🎬',title:'Día Mundial del Cine'},
-  {id:'pizza-int',    date:'2026-01-09',cat:'pop',     icon:'🍕',title:'Día Mundial de la Pizza'},
-  {id:'ramen',        date:'2026-04-04',cat:'pop',     icon:'🍜',title:'Día Nacional del Ramen'},
-  {id:'emoji-int',    date:'2026-07-17',cat:'pop',     icon:'😂',title:'Día Mundial del Emoji'},
-  {id:'nerd-pride',   date:'2026-05-25',cat:'pop',     icon:'🤓',title:'Nerd Pride Day (Día del Orgullo Friki)'},
-  {id:'internet',     date:'2026-10-29',cat:'pop',     icon:'🌐',title:'Día Mundial de Internet'},
-  {id:'reciclaje',    date:'2026-05-17',cat:'ventas',  icon:'♻️',title:'Día Mundial del Reciclaje'},
-  {id:'regalo',       date:'2026-12-09',cat:'ventas',  icon:'🎁',title:'Día Internacional del Regalo'},
-  {id:'abuela',       date:'2026-10-26',cat:'ventas',  icon:'👵',title:'Día Internacional de los Abuelos'},
-  {id:'cumple-ml',    date:'2026-08-02',cat:'ventas',  icon:'🛒',title:'Cumpleaños MercadoLibre (Ofertas)'},
+  // ── DÍAS INTERNACIONALES Y MUNDIALES (relevantes para pesca, camping y outdoors) ──
+  {id:'pescador-arg',  date:'2026-08-03',cat:'ventas',  icon:'🎣',title:'Día Nacional del Pescador Deportivo (Arg)'},
+  {id:'apertura-salm', date:'2026-11-01',cat:'ventas',  icon:'🐟',title:'Apertura Temporada Salmónidos (Mendoza)'},
+  {id:'cierre-salm',   date:'2026-05-03',cat:'ventas',  icon:'🚫',title:'Cierre Temporada Salmónidos General (Mendoza)'},
+  {id:'capt-devol',    date:'2026-05-01',cat:'ventas',  icon:'♻️',title:'Inicio Captura y Devolución (mosca/sin rebaba)'},
+  {id:'apertura-emb',  date:'2026-12-01',cat:'ventas',  icon:'🚣',title:'Apertura Embalses (Agua del Toro, Reyunos, Nihuil)'},
+  {id:'pesca-mundial', date:'2026-06-27',cat:'ventas',  icon:'🌊',title:'Día Mundial de la Pesca'},
+  {id:'mar-mundial',   date:'2026-06-08',cat:'ventas',  icon:'🌊',title:'Día Mundial de los Océanos'},
+  {id:'medio-amb',     date:'2026-06-05',cat:'ventas',  icon:'🌎',title:'Día Mundial del Medioambiente'},
+  {id:'tierra',        date:'2026-04-22',cat:'ventas',  icon:'🌱',title:'Día de la Tierra'},
+  {id:'agua-mundial',  date:'2026-03-22',cat:'ventas',  icon:'💧',title:'Día Mundial del Agua'},
+  {id:'rios',          date:'2026-03-14',cat:'ventas',  icon:'🏞️',title:'Día Internacional de Acción por los Ríos'},
+  {id:'montana',       date:'2026-12-11',cat:'ventas',  icon:'⛰️',title:'Día Internacional de la Montaña'},
+  {id:'aire-libre',    date:'2026-06-13',cat:'ventas',  icon:'🏕️',title:'Día Mundial del Aire Libre (Outdoors)'},
+  {id:'turismo',       date:'2026-09-27',cat:'ventas',  icon:'🏔️',title:'Día Mundial del Turismo'},
+  {id:'libro',         date:'2026-04-23',cat:'ventas',  icon:'📚',title:'Día Mundial del Libro'},
+  {id:'reciclaje',     date:'2026-05-17',cat:'ventas',  icon:'♻️',title:'Día Mundial del Reciclaje'},
+  {id:'regalo',        date:'2026-12-09',cat:'ventas',  icon:'🎁',title:'Día Internacional del Regalo'},
+  {id:'abuela',        date:'2026-10-26',cat:'ventas',  icon:'👵',title:'Día Internacional de los Abuelos'},
+  {id:'cumple-ml',     date:'2026-08-02',cat:'ventas',  icon:'🛒',title:'Cumpleaños MercadoLibre (Ofertas)'},
+  {id:'black-friday',  date:'2026-11-27',cat:'ventas',  icon:'🛒',title:'Black Friday'},
+  {id:'cyber-monday',  date:'2026-11-30',cat:'ventas',  icon:'💻',title:'Cyber Monday'},
+  {id:'hot-sale',      date:'2026-05-11',cat:'ventas',  icon:'🔥',title:'Hot Sale Argentina (CACE)'},
 ];
 
 var CAL_LS_KEY  = 'impala_cal_custom';
