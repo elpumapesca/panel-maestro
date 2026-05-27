@@ -20079,13 +20079,13 @@ function _parseMLId(input) {
 // ⚠️ Estos IDs deben coincidir con APP_CONFIG.WOO_CATS de arriba.
 // Mientras estén en 0, el importer ML→Woo crea el producto SIN categoría asignada.
 var WOO_CATEGORIES_MAP = {
-  'Cañas':        0,
-  'Reeles':       0,
-  'Señuelos':     0,
-  'Cajas':        0,
-  'Indumentaria': 0,
-  'Camping':      0,
-  'Nautica':      0
+  'Cañas':        2871,
+  'Reeles':       2817,
+  'Señuelos':     2856,
+  'Cajas':        2851,
+  'Indumentaria': 2633,
+  'Camping':      2830,
+  'Pesca':      2629
 };
 
 // Medidas de empaque por categoria — autocompletan los campos de envio.
