@@ -3608,11 +3608,9 @@ const APP_CONFIG = {
   // URL del Worker desplegado para El Puma Pesca
   WORKER: 'https://panelmaestro.ventaselpumapesca.workers.dev',
 
-  // ── MercadoLibre App ID ─────────────────────────────────
-  // El mismo valor que ML_CLIENT_ID en las Variables de Entorno del Worker.
-  // ⚠️ REEMPLAZAR con el App ID real de la nueva app de El Puma Pesca
-  // (developers.mercadolibre.com.ar → Mis aplicaciones → tu app → ID).
-  APP_ID: 'REEMPLAZAR_CON_APP_ID_DE_ML',
+ // ── MercadoLibre App ID ─────────────────────────────────
+  // El mismo valor que ML_CLIENT_ID en las Variables de Entorno del Worker
+  APP_ID: '3149452505179702', // <--- No olvides completar este ID
 
   // ── Nombre de la tienda (aparece en sidebar y login) ────
   STORE_NAME: 'EL PUMA PESCA',
