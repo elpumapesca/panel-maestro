@@ -4,7 +4,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>El Puma Pesca — Panel Maestro v3</title>
+<title>El Puma Pesca — Panel Maestro v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -693,7 +693,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <span style="font-size:18px">🔑</span> <span id="login-btn-label">Conectar cuenta</span>
       </button>
     </div>
-    <div class="login-note">OAuth 2.0 oficial · No almacenamos contraseñas · <span style="opacity:.7">Panel v3</span></div>
+    <div class="login-note">OAuth 2.0 oficial · No almacenamos contraseñas · <span style="opacity:.7">Panel v4</span></div>
   </div>
 </div>
 
@@ -744,7 +744,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
 <nav id="sidebar">
   <div class="sb-logo">
     <div class="sb-icon">🎣</div>
-    <div><div class="sb-title">Panel Maestro Pro</div><div class="sb-ver">v3 · El Puma Pesca</div></div>
+    <div><div class="sb-title">Panel Maestro Pro</div><div class="sb-ver">v4 · El Puma Pesca</div></div>
   </div>
   <a class="sb-store" href="#dashboard" onclick="showSection('dashboard');return false;">
     <div><div class="sb-store-name" id="sb-store">Tu Tienda</div><div class="sb-store-sub"><div class="online-dot"></div>Conectado</div></div>
@@ -3598,6 +3598,52 @@ input::placeholder,textarea::placeholder{color:#6b7280}
 </div><!-- /main -->
 
 <script>
+// ═══════════════════════════════════════════════════════════════════════════
+// MIGRACIÓN AUTOMÁTICA localStorage — Tanda 4
+// Renombra claves del panel viejo (impala_*) a las nuevas (epp_*)
+// Se ejecuta UNA VEZ y queda un flag para no repetirse.
+// Si el usuario nunca usó el panel viejo, no hace nada.
+// ═══════════════════════════════════════════════════════════════════════════
+(function migrateLegacyKeys(){
+  try{
+    var MIGRATION_FLAG = 'epp_ls_migrated_v1';
+    if(localStorage.getItem(MIGRATION_FLAG)) return; // ya migrado
+
+    // Mapa: clave vieja → clave nueva
+    var keyMap = {
+      'epp_rank_toppubs':    'epp_rank_toppubs',
+      'epp_rank_visits':     'epp_rank_visits',
+      'epp_active_rules':    'epp_active_rules',
+      'epp_calc_history':    'epp_calc_history',
+      'epp_ai_rules':        'epp_ai_rules',
+      'epp_mv_cache':        'epp_mv_cache',
+      'epp_cal_custom':      'epp_cal_custom',
+      'epp_cal_birthdays':   'epp_cal_birthdays'
+    };
+
+    var migrated = 0;
+    Object.keys(keyMap).forEach(function(oldKey){
+      var newKey = keyMap[oldKey];
+      var value = localStorage.getItem(oldKey);
+      // Migrar solo si: existe la vieja, y NO existe la nueva (no pisar nada)
+      if(value !== null && localStorage.getItem(newKey) === null){
+        localStorage.setItem(newKey, value);
+        migrated++;
+      }
+    });
+
+    localStorage.setItem(MIGRATION_FLAG, new Date().toISOString());
+    if(migrated > 0){
+      console.log('[Panel Maestro v4] Migración LS completada: ' + migrated + ' claves trasladadas de impala_* a epp_*');
+    }
+    // Nota: NO borramos las claves viejas — quedan como backup por si rollback.
+    // Si el usuario quiere limpiarlas a futuro, puede ejecutar en consola:
+    //   Object.keys(localStorage).filter(k=>k.startsWith('impala_')).forEach(k=>localStorage.removeItem(k));
+  }catch(e){
+    console.warn('[Panel Maestro v4] Error en migración LS:', e);
+  }
+})();
+
 // ═══════════════════════════════════════════════════════════
 // APP_CONFIG — ÚNICO LUGAR CON DATOS ESPECÍFICOS DE LA CUENTA
 // Editá este bloque para configurar una instancia nueva.
@@ -5991,8 +6037,8 @@ async function renderCatChart(){
 
 // ── Trend / Ranking system ─────────────────────────────────────────────────
 // Stores previous rank positions in localStorage to show ↑↓ arrows
-var _RANK_TOP_KEY    = 'impala_rank_toppubs';
-var _RANK_VISITS_KEY = 'impala_rank_visits';
+var _RANK_TOP_KEY    = 'epp_rank_toppubs';
+var _RANK_VISITS_KEY = 'epp_rank_visits';
 
 // ── Ranking snapshot diario ────────────────────────────────────────────
 // El snapshot solo se actualiza una vez por día (fecha del sistema).
@@ -13322,7 +13368,7 @@ async function renderFacturacion(){
 // REGLAS
 // ═══════════════════════════════════════════════════════════
 
-var RULES_LS_KEY = 'impala_active_rules';
+var RULES_LS_KEY = 'epp_active_rules';
 
 function _saveRulesToLS(){
   try{ localStorage.setItem(RULES_LS_KEY, JSON.stringify(activeRules)); }catch(e){}
@@ -15649,7 +15695,7 @@ PC_CHANNELS.forEach(function(ch){ _pcState[ch.id] = _pcInitState(ch); });
 
 var _pcOrigenCosto = 0;
 var _pcLastCalc    = {};
-var PC_HISTORY_KEY = 'impala_calc_history';
+var PC_HISTORY_KEY = 'epp_calc_history';
 
 // ── Helpers ────────────────────────────────────────────────────
 function pcV(id){ return parseFloat(document.getElementById(id)?.value||'0')||0; }
@@ -16141,7 +16187,7 @@ function aiSaveRules(){
     roi:     parseFloat(document.getElementById('ai-rule-roi')?.value)||30,
     nosales: parseFloat(document.getElementById('ai-rule-nosales')?.value)||7,
   };
-  localStorage.setItem('impala_ai_rules', JSON.stringify(_aiRules));
+  localStorage.setItem('epp_ai_rules', JSON.stringify(_aiRules));
   // v68: sync automático a KV del Worker para multi-device
   if(typeof cloudSyncDebounced === 'function') cloudSyncDebounced();
   showToast('✅ Reglas guardadas. Tocá "↻ Refrescar feed" si querés re-analizar con los nuevos umbrales.','success');
@@ -16151,7 +16197,7 @@ function aiSaveRules(){
 }
 
 function aiLoadRules(){
-  try{ var r=JSON.parse(localStorage.getItem('impala_ai_rules')||'{}'); if(r.margin) _aiRules=r; }catch(e){}
+  try{ var r=JSON.parse(localStorage.getItem('epp_ai_rules')||'{}'); if(r.margin) _aiRules=r; }catch(e){}
   ['margin','stock','roi','nosales'].forEach(function(k){
     var el=document.getElementById('ai-rule-'+k); if(el) el.value=_aiRules[k];
   });
@@ -16887,7 +16933,7 @@ var _mostVisitedLoading = false;
 // ── Los más visitados — control vars ────────────────────────────────
 var _mvLoading    = false;   // single-run flag
 var _mvAbort      = false;   // abort signal for current run
-var _mvCacheKey   = 'impala_mv_cache';
+var _mvCacheKey   = 'epp_mv_cache';
 var _mvCacheTTL   = 24 * 60 * 60 * 1000; // 24 horas en ms
 
 function _mvSaveCache(data){
@@ -17281,7 +17327,7 @@ var CAL_BASE_EVENTS = [
   {id:'hot-sale',      date:'2026-05-11',cat:'ventas',  icon:'🔥',title:'Hot Sale Argentina (CACE)'},
 ];
 
-var CAL_LS_KEY  = 'impala_cal_custom';
+var CAL_LS_KEY  = 'epp_cal_custom';
 var _calYear    = new Date().getFullYear();
 var _calMonth   = new Date().getMonth();
 var _calView    = 'mes';
@@ -17294,7 +17340,7 @@ function calSaveCustom(arr){
   _calBackupSyncDebounced();
 }
 // ── Cumpleaños — storage y generación dinámica ───────────────────────────────
-var CAL_BDAY_KEY = 'impala_cal_birthdays';
+var CAL_BDAY_KEY = 'epp_cal_birthdays';
 function bday_getAll(){ try{ return JSON.parse(localStorage.getItem(CAL_BDAY_KEY)||'[]'); }catch(e){ return []; } }
 function bday_save(arr){
   localStorage.setItem(CAL_BDAY_KEY, JSON.stringify(arr));
@@ -20833,7 +20879,7 @@ async function fetchBackup() {
     if(data.aiRules && typeof data.aiRules === 'object'){
       try{
         _aiRules = data.aiRules;
-        localStorage.setItem('impala_ai_rules', JSON.stringify(_aiRules));
+        localStorage.setItem('epp_ai_rules', JSON.stringify(_aiRules));
         console.log('[Backup] aiRules restauradas del KV:', _aiRules);
         // Refrescar inputs si el panel de IA ya está abierto
         ['margin','stock','roi','nosales'].forEach(function(k){
@@ -21008,17 +21054,17 @@ const BKP_SECTIONS = {
   calCustom: {
     label: 'Calendario estratégico',
     icon: '📅',
-    get: () => { try { return JSON.parse(localStorage.getItem('impala_cal_custom') || '[]'); } catch { return []; } },
+    get: () => { try { return JSON.parse(localStorage.getItem('epp_cal_custom') || '[]'); } catch { return []; } },
   },
   bdays: {
     label: 'Cumpleaños registrados',
     icon: '🎂',
-    get: () => { try { return JSON.parse(localStorage.getItem('impala_cal_birthdays') || '[]'); } catch { return []; } },
+    get: () => { try { return JSON.parse(localStorage.getItem('epp_cal_birthdays') || '[]'); } catch { return []; } },
   },
   pcHistory: {
     label: 'Historial calculadora rentabilidad',
     icon: '📊',
-    get: () => { try { return JSON.parse(localStorage.getItem('impala_calc_history') || '[]'); } catch { return []; } },
+    get: () => { try { return JSON.parse(localStorage.getItem('epp_calc_history') || '[]'); } catch { return []; } },
   },
   // v118: 'seoKeywords' eliminado del backup — el SEO Tracker viejo fue descontinuado
   // por bloqueo de ML a /sites/MLA/search. Reemplazado por Termómetro SEO que
@@ -21169,9 +21215,9 @@ async function bkpApplyImport(data, selection){
       if(Array.isArray(data.quickReplies) && typeof qSaveQR === 'function') qSaveQR(data.quickReplies);
       if(data.template && typeof qWriteTmpl === 'function') qWriteTmpl(data.template);
     }
-    if(selection.calCustom && Array.isArray(data.calCustom))       localStorage.setItem('impala_cal_custom', JSON.stringify(data.calCustom));
-    if(selection.bdays && Array.isArray(data.bdays))               localStorage.setItem('impala_cal_birthdays', JSON.stringify(data.bdays));
-    if(selection.pcHistory && Array.isArray(data.pcHistory))       localStorage.setItem('impala_calc_history', JSON.stringify(data.pcHistory));
+    if(selection.calCustom && Array.isArray(data.calCustom))       localStorage.setItem('epp_cal_custom', JSON.stringify(data.calCustom));
+    if(selection.bdays && Array.isArray(data.bdays))               localStorage.setItem('epp_cal_birthdays', JSON.stringify(data.bdays));
+    if(selection.pcHistory && Array.isArray(data.pcHistory))       localStorage.setItem('epp_calc_history', JSON.stringify(data.pcHistory));
     // v118: bloque de seoKeywords removido — el SEO Tracker viejo fue descontinuado.
     // Backups antiguos con seoKeywords se ignoran silenciosamente.
 
