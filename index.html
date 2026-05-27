@@ -732,8 +732,8 @@ input::placeholder,textarea::placeholder{color:#6b7280}
   <div class="modal">
     <div class="modal-title">✨ Generador de producto completo</div>
     <div class="modal-sub">Ingresá una keyword y la IA genera todo: título, descripción, tags y prompt de imagen.</div>
-    <div class="ff"><label>Keyword base</label><input type="text" id="gen-kw" placeholder="Ej: messi, taza sublimada, friends, breaking bad..."></div>
-    <div class="fr"><div><label>Categoría</label><input type="text" id="gen-cat" placeholder="Tazas, Hogar..."></div><div><label>Precio sugerido ($)</label><input type="number" id="gen-price" placeholder="12999"></div></div>
+    <div class="ff"><label>Keyword base</label><input type="text" id="gen-kw" placeholder="Ej: caña spinning, reel frontal, señuelo, bolsa de dormir..."></div>
+    <div class="fr"><div><label>Categoría</label><input type="text" id="gen-cat" placeholder="Cañas, Reeles, Camping..."></div><div><label>Precio sugerido ($)</label><input type="number" id="gen-price" placeholder="12999"></div></div>
     <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="generateProduct()">🤖 Generar con IA</button>
     <div id="gen-result"></div>
     <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="closeModal('modal-gen')">Cerrar</button>
@@ -1328,10 +1328,10 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <button class="btn btn-primary" onclick="sendAI()" style="white-space:nowrap">Enviar →</button>
       </div>
       <div class="chips" id="ai-chips">
-        <div class="chip" onclick="qprompt('¿Cómo mejorar el posicionamiento de tazas personalizadas en ML Argentina?')">📈 Posicionamiento</div>
-        <div class="chip" onclick="qprompt('¿Qué imágenes debo usar para mis tazas en ML 2026?')">🖼️ Imágenes</div>
+        <div class="chip" onclick="qprompt('¿Cómo mejorar el posicionamiento de artículos de pesca en ML Argentina?')">📈 Posicionamiento</div>
+        <div class="chip" onclick="qprompt('¿Qué imágenes debo usar para cañas y reeles en ML 2026?')">🖼️ Imágenes</div>
         <div class="chip" onclick="qprompt('¿Cómo afectan los precios al ranking en ML Argentina?')">💰 Precios</div>
-        <div class="chip" onclick="qprompt('Dame una estrategia completa para mi tienda de tazas')">🎯 Estrategia</div>
+        <div class="chip" onclick="qprompt('Dame una estrategia completa para mi tienda de pesca, camping y outdoors')">🎯 Estrategia</div>
         <div class="chip" onclick="qprompt('¿Cuáles son los errores más comunes que penalizan en ML?')">⚠️ Errores comunes</div>
         <div class="chip" onclick="qprompt('¿Cómo funciona el algoritmo de relevancia de ML Argentina 2026?')">🧠 Algoritmo ML</div>
       </div>
@@ -1368,7 +1368,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
           </div>
         </div>
         <div style="display:flex;gap:6px">
-          <input type="text" id="gs-query" placeholder="Ej: taza personalizada, jarro térmico, mate camionero..."
+          <input type="text" id="gs-query" placeholder="Ej: caña spinning, reel frontal, señuelo crankbait..."
             style="flex:1;font-size:13px;padding:8px 11px;border:1px solid #93c5fd;border-radius:6px;background:#fff"
             onkeydown="if(event.key==='Enter'){event.preventDefault();gsSearch()}">
           <button class="btn btn-primary btn-sm" onclick="gsSearch()" id="gs-search-btn" style="white-space:nowrap">🔎 Buscar</button>
@@ -1403,8 +1403,8 @@ input::placeholder,textarea::placeholder{color:#6b7280}
       </div>
 
       <div class="fr">
-        <div><label>Categoría</label><input type="text" id="opt-cat" placeholder="Ej: Tazas, Hogar..."></div>
-        <div><label>Keywords extra</label><input type="text" id="opt-kws" placeholder="Ej: regalo, sublimada"></div>
+        <div><label>Categoría</label><input type="text" id="opt-cat" placeholder="Ej: Cañas, Reeles, Camping..."></div>
+        <div><label>Keywords extra</label><input type="text" id="opt-kws" placeholder="Ej: spinning, agua salada"></div>
       </div>
       <!-- v105: Dos botones — IA pura (el actual) e IA + Google Suggest (nuevo) -->
       <div style="display:flex;gap:6px;margin-bottom:8px">
@@ -1702,7 +1702,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
       </div>
       <div>
         <label style="font-size:11px;color:var(--text3);margin-bottom:3px;display:block">Firma (sufijo)</label>
-        <input type="text" id="qtmpl-firma" style="width:100%;font-size:12px;padding:7px 9px" placeholder="Ej: Esperamos tu compra. Saludos - Tienda Impala Design">
+        <input type="text" id="qtmpl-firma" style="width:100%;font-size:12px;padding:7px 9px" placeholder="Ej: Esperamos tu compra. Saludos - El Puma Pesca">
       </div>
     </div>
     <div style="font-size:11.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-top:4px">Respuestas rápidas</div>
@@ -2793,7 +2793,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
   <!-- HEADER -->
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
     <div style="flex:1">
-      <div class="card-title" style="font-size:16px">📅 Calendario Estratégico — Impala Design 2026</div>
+      <div class="card-title" style="font-size:16px">📅 Calendario Estratégico — El Puma Pesca 2026</div>
       <div style="font-size:11px;color:var(--text3);margin-top:2px">Fiscal · Comercial · Operativo · Pop Culture</div>
     </div>
     <div class="tabs">
@@ -3565,7 +3565,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <input type="text" id="gsc-filter-input" placeholder="🔎 Filtrar keywords..." style="font-size:12px;max-width:220px;padding:5px 9px" oninput="gscApplyFilters()">
         <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;font-weight:500">
           <input type="checkbox" id="gsc-hide-brand" onchange="gscApplyFilters()" style="cursor:pointer">
-          Ocultar "impala"
+          Ocultar "puma pesca"
         </label>
         <span style="font-size:11px;color:var(--text3)" id="gsc-filter-count"></span>
       </div>
@@ -9385,7 +9385,7 @@ function predDownloadReport(){
   const a = document.createElement('a');
   a.href = url;
   const dateStr = new Date().toISOString().slice(0, 10);
-  a.download = 'reporte-predictivo-impala-' + dateStr + '.txt';
+  a.download = 'reporte-predictivo-elpumapesca-' + dateStr + '.txt';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -9455,7 +9455,7 @@ function predBuildReport(store){
   // Build output
   let out = '';
   out += '═══════════════════════════════════════════════════════════════════════════\n';
-  out += '  REPORTE PREDICTIVO — TIENDA IMPALA DESIGN\n';
+  out += '  REPORTE PREDICTIVO — EL PUMA PESCA\n';
   out += '  Generado: ' + new Date().toLocaleString('es-AR') + '\n';
   out += '  Ventana de análisis: últimos 7 días\n';
   out += '═══════════════════════════════════════════════════════════════════════════\n\n';
@@ -10757,7 +10757,7 @@ async function doOptimize(){
   const el=document.getElementById('opt-out');
   el.innerHTML='<div class="loading"><div class="spin"></div>Optimizando con IA...</div>';
   try{
-    const r=await callClaude(`Sos un experto en SEO para MercadoLibre Argentina 2026. Tu objetivo es optimizar títulos y descripciones basándote en INTENCIÓN DE BÚSQUEDA REAL del comprador.
+    const r=await callClaude(`Sos un experto en SEO para MercadoLibre Argentina 2026 especializado en el rubro PESCA, CAMPING Y OUTDOORS (cañas, reeles, señuelos, líneas, cajas, indumentaria técnica, equipamiento de camping, náutica). Tu objetivo es optimizar títulos y descripciones basándote en INTENCIÓN DE BÚSQUEDA REAL del comprador (pescador / aventurero / outdoor).
 
 TÍTULO ACTUAL: "${title}"
 ${cat?'CATEGORÍA: '+cat:''}
@@ -10765,56 +10765,53 @@ ${desc?'DESCRIPCIÓN ACTUAL:\n'+desc.slice(0,500):''}
 ${kws?'KEYWORDS EXTRA A INCLUIR: '+kws:''}
 
 ═══ MENTALIDAD BASE ═══
-Simulá cómo busca un comprador dentro de un marketplace. El título ES una búsqueda, NO publicidad. Preguntate: ¿Qué tipearía un comprador real en ML para encontrar este producto?
+Simulá cómo busca un comprador dentro de un marketplace. El título ES una búsqueda, NO publicidad. Preguntate: ¿Qué tipearía un pescador o aventurero real en ML para encontrar este producto?
 
 ═══ REGLAS TÍTULO (ESTRICTAS) ═══
-1. Estructura Exacta: [Producto] + [Material] + [Modelo/Temática] + [KEYWORDS DEL MODELO] + [Capacidad/Medida]
-2. Naturaleza de las Keywords: Las [KEYWORDS DEL MODELO] deben derivar EXCLUSIVAMENTE del modelo o temática (ej. época del personaje, género del cantante, deporte del equipo). PROHIBIDO usar keywords genéricas relacionadas al producto, material o capacidad.
-3. Keyword principal AL INICIO — la palabra con mayor intención de compra primero.
+1. Estructura Exacta: [Producto] + [Marca/Modelo] + [Tipo/Aplicación] + [KEYWORDS TÉCNICAS] + [Medida/Capacidad]
+2. Naturaleza de las Keywords: Las [KEYWORDS TÉCNICAS] deben derivar EXCLUSIVAMENTE del uso del producto (tipo de pesca, ambiente, presa típica, modalidad). PROHIBIDO usar keywords genéricas vacías.
+3. Keyword principal AL INICIO — el tipo de producto que la gente tipea primero (ej "Caña Spinning", "Reel Frontal", "Carpa 4 Personas").
 4. Máximo 60 caracteres ESTRICTO — contá antes de responder. Tratá de acercarte lo máximo posible al límite de 60 para no desperdiciar espacio de indexación.
 5. Sin puntuación ni emojis — prohibido: , . ( ) : ; ! ? / - + & @ # * % $ " ' =
 6. Sin mayúsculas excesivas — solo primera letra de palabras clave si corresponde.
 7. Sin palabras repetidas innecesariamente.
 
 ═══ EJEMPLOS DE APLICACIÓN DE ESTRUCTURA ═══
-- Si el input es "Taza Interior De Color Pantera Rosa" -> Output ideal: "Taza Cerámica Pantera Rosa Retro Dibujo Animado 325 ml"
-- Si el input es "Taza Mágica Joaquín Sabina" -> Output ideal: "Taza Mágica Cerámica Joaquín Sabina Cantante Español 325 ml"
+- Si el input es "Caña pesca para río" -> Output ideal: "Caña Spinning Pejerrey Truchas Río 2.10 Mt 2 Tramos"
+- Si el input es "Reel para mar" -> Output ideal: "Reel Frontal Agua Salada Pesca Embarcado Costa 4000"
+- Si el input es "Carpa para acampar" -> Output ideal: "Carpa Camping 4 Personas Iglú Impermeable Doble Techo"
+- Si el input es "Señuelo crankbait" -> Output ideal: "Señuelo Crankbait Tarpon Dorado Pejerrey Flotante 7cm"
 
 PALABRAS ABSOLUTAMENTE PROHIBIDAS EN TÍTULO, VARIANTES Y DESCRIPCIÓN (nunca usarlas, ni siquiera como sugerencia, ni en ninguna combinación):
-- Nombres de tienda/marca propia: "Impala", "Design", "Tienda", "Taza Impala"
+- Nombres de tienda/marca propia: "Puma", "El Puma", "El Puma Pesca", "Tienda", "Shop"
 - Palabras de venta genéricas: "Regalo", "Oferta", "Promo", "Gratis", "Envío gratis", "Stock", "Garantía", "Nuevo"
 - Cualquier variación de: "Personalizado", "Personalizada", "Personalizable", "Custom"
-- Claims vacíos: "Alta calidad", "El mejor", "Único", "Exclusivo"
-- v109: Palabras "Oficial", "Original" y cualquier combinación: "Diseño oficial", "Producto original", "Producto oficial", "Modelo original", "Versión oficial", "Versión original", "Auténtico" — PROHIBIDAS EN TÍTULO Y EN DESCRIPCIÓN. Si necesitás transmitir calidad, hacelo describiendo materiales y proceso, no con estos adjetivos.
+- Claims vacíos: "Alta calidad", "El mejor", "Único", "Exclusivo", "Premium"
+- Palabras "Oficial", "Original" y cualquier combinación: "Diseño oficial", "Producto original", "Producto oficial", "Modelo original", "Versión oficial", "Versión original", "Auténtico" — PROHIBIDAS EN TÍTULO Y EN DESCRIPCIÓN. Si necesitás transmitir calidad, hacelo describiendo materiales y especificaciones técnicas, no con estos adjetivos.
+- "Profesional" salvo que sea la denominación oficial de una línea del fabricante (ej "Línea Pro de Daiwa")
+- "Garantía de por vida" — no prometer plazos absolutos.
 - Frases tipo slogan o publicidad de cualquier tipo
-- La palabra "lavavajillas" bajo NINGÚN contexto ni siquiera como sugerencia
-
-REGLA DE MICROONDAS (SOLO EN DESCRIPCIÓN):
-- Si el producto es taza plástica, taza cerámica, taza mágica o jarro térmico
-  -> usar la frase exacta "Apto para microondas" o "Apta para microondas" según el género del sustantivo
-  -> NO mencionar "lavavajillas" bajo ninguna circunstancia
 
 ═══ REGLAS DESCRIPCIÓN ═══
 - Longitud: entre 800 y 2000 caracteres (OBLIGATORIO)
 - Priorizar la información más importante en los primeros 300-500 caracteres
 - Estructura obligatoria:
-  1) Resumen inicial del producto (qué es, para quién, por qué comprarlo)
-  2) Beneficios clave (no solo características)
-  3) Especificaciones técnicas en formato ordenado
-  4) Casos de uso y ocasiones
+  1) Resumen inicial del producto (qué es, para qué tipo de pesca / actividad outdoor, qué problema resuelve)
+  2) Beneficios clave técnicos (no genéricos): construcción, material, modalidad de uso
+  3) Especificaciones técnicas en formato ordenado (medidas, peso, capacidad, materiales, accesorios incluidos)
+  4) Modalidades de pesca / casos de uso compatibles (spinning, baitcasting, mosca, costa, embarcado, agua dulce/salada según corresponda; o para camping: temporada, cantidad de personas, condiciones)
 - Evitar relleno innecesario, repeticiones ni frases de venta genéricas
 - Sin "Personalizado/a/able" ni nombres de tienda
 - Sin "Oficial", "Original" ni sus combinaciones (ver lista de palabras prohibidas arriba)
 - Saltos de línea para escanear rápido
-- AL FINAL agregar exactamente este párrafo separado:
-Accedé a todas nuestras publicaciones acá:
-https://listado.mercadolibre.com.ar/_DisplayType_G_eshop_IMPALA+DESIGN
+- AL FINAL agregar exactamente este párrafo de cierre (sin URL externa):
+Visitanos en nuestras publicaciones de MercadoLibre para ver todo el catálogo de pesca, camping y outdoors.
 
 ═══ BUENAS PRÁCTICAS SEO ═══
 - No repetir palabras para forzar SEO
 - Priorizar claridad y legibilidad
-- Lenguaje natural alineado a cómo buscan los usuarios
-- No inventar datos ni agregar claims falsos
+- Lenguaje natural alineado a cómo buscan los usuarios del rubro
+- No inventar datos técnicos: si no estás seguro de una medida o especificación, no la inventes
 - No incluir precios, envíos, promociones ni condiciones comerciales
 
 Respondé SOLO JSON válido (sin markdown, sin backticks):
@@ -11228,7 +11225,7 @@ async function doOptimizeWithGoogle(){
   el.innerHTML='<div class="loading"><div class="spin"></div>🤖 IA optimizando con contexto de '+googleKws.length+' búsquedas reales de Google AR...</div>';
 
   try{
-    const r=await callClaude(`Sos un experto en SEO para MercadoLibre Argentina 2026. Tu objetivo es optimizar títulos y descripciones basándote en INTENCIÓN DE BÚSQUEDA REAL del comprador.
+    const r=await callClaude(`Sos un experto en SEO para MercadoLibre Argentina 2026 especializado en el rubro PESCA, CAMPING Y OUTDOORS (cañas, reeles, señuelos, líneas, cajas, indumentaria técnica, equipamiento de camping, náutica). Tu objetivo es optimizar títulos y descripciones basándote en INTENCIÓN DE BÚSQUEDA REAL del comprador (pescador / aventurero / outdoor).
 
 TÍTULO ACTUAL: "${title}"
 ${cat?'CATEGORÍA: '+cat:''}
@@ -11236,53 +11233,49 @@ ${desc?'DESCRIPCIÓN ACTUAL:\n'+desc.slice(0,500):''}
 ${kws?'KEYWORDS EXTRA A INCLUIR: '+kws:''}
 
 ═══ MENTALIDAD BASE ═══
-Simulá cómo busca un comprador dentro de un marketplace. El título ES una búsqueda, NO publicidad. Preguntate: ¿Qué tipearía un comprador real en ML para encontrar este producto?
+Simulá cómo busca un comprador dentro de un marketplace. El título ES una búsqueda, NO publicidad. Preguntate: ¿Qué tipearía un pescador o aventurero real en ML para encontrar este producto?
 
 ═══ REGLAS TÍTULO (ESTRICTAS) ═══
-1. Estructura Exacta: [Producto] + [Material] + [Modelo/Temática] + [KEYWORDS DEL MODELO] + [Capacidad/Medida]
-2. Naturaleza de las Keywords: Las [KEYWORDS DEL MODELO] deben derivar EXCLUSIVAMENTE del modelo o temática (ej. época del personaje, género del cantante, deporte del equipo). PROHIBIDO usar keywords genéricas relacionadas al producto, material o capacidad.
-3. Keyword principal AL INICIO — la palabra con mayor intención de compra primero.
-4. Máximo 60 caracteres ESTRICTO — contá antes de responder. Tratá de acercarte lo máximo posible al límite de 60 para no desperdiciar espacio de indexación.
+1. Estructura Exacta: [Producto] + [Marca/Modelo] + [Tipo/Aplicación] + [KEYWORDS TÉCNICAS] + [Medida/Capacidad]
+2. Naturaleza de las Keywords: Las [KEYWORDS TÉCNICAS] deben derivar EXCLUSIVAMENTE del uso del producto (tipo de pesca, ambiente, presa típica, modalidad). PROHIBIDO usar keywords genéricas vacías.
+3. Keyword principal AL INICIO — el tipo de producto que la gente tipea primero.
+4. Máximo 60 caracteres ESTRICTO — contá antes de responder.
 5. Sin puntuación ni emojis — prohibido: , . ( ) : ; ! ? / - + & @ # * % $ " ' =
-6. Sin mayúsculas excesivas — solo primera letra de palabras clave si corresponde.
+6. Sin mayúsculas excesivas.
 7. Sin palabras repetidas innecesariamente.
 
 ═══ EJEMPLOS DE APLICACIÓN DE ESTRUCTURA ═══
-- Si el input es "Taza Interior De Color Pantera Rosa" -> Output ideal: "Taza Cerámica Pantera Rosa Retro Dibujo Animado 325 ml"
-- Si el input es "Taza Mágica Joaquín Sabina" -> Output ideal: "Taza Mágica Cerámica Joaquín Sabina Cantante Español 325 ml"
+- Si el input es "Caña pesca para río" -> Output ideal: "Caña Spinning Pejerrey Truchas Río 2.10 Mt 2 Tramos"
+- Si el input es "Reel para mar" -> Output ideal: "Reel Frontal Agua Salada Pesca Embarcado Costa 4000"
+- Si el input es "Carpa para acampar" -> Output ideal: "Carpa Camping 4 Personas Iglú Impermeable Doble Techo"
 
 PALABRAS ABSOLUTAMENTE PROHIBIDAS EN TÍTULO, VARIANTES Y DESCRIPCIÓN (nunca usarlas, ni siquiera como sugerencia, ni en ninguna combinación):
-- Nombres de tienda/marca propia: "Impala", "Design", "Tienda", "Taza Impala"
+- Nombres de tienda/marca propia: "Puma", "El Puma", "El Puma Pesca", "Tienda", "Shop"
 - Palabras de venta genéricas: "Regalo", "Oferta", "Promo", "Gratis", "Envío gratis", "Stock", "Garantía", "Nuevo"
 - Cualquier variación de: "Personalizado", "Personalizada", "Personalizable", "Custom"
-- Claims vacíos: "Alta calidad", "El mejor", "Único", "Exclusivo"
-- v109: Palabras "Oficial", "Original" y cualquier combinación: "Diseño oficial", "Producto original", "Producto oficial", "Modelo original", "Versión oficial", "Versión original", "Auténtico" — PROHIBIDAS EN TÍTULO Y EN DESCRIPCIÓN.
+- Claims vacíos: "Alta calidad", "El mejor", "Único", "Exclusivo", "Premium"
+- Palabras "Oficial", "Original" y cualquier combinación: "Diseño oficial", "Producto original", "Producto oficial", "Modelo original", "Versión oficial", "Versión original", "Auténtico" — PROHIBIDAS EN TÍTULO Y EN DESCRIPCIÓN.
+- "Profesional" salvo que sea denominación oficial de una línea del fabricante.
+- "Garantía de por vida" — no prometer plazos absolutos.
 - Frases tipo slogan o publicidad de cualquier tipo
-- La palabra "lavavajillas" bajo NINGÚN contexto ni siquiera como sugerencia
-
-REGLA DE MICROONDAS (SOLO EN DESCRIPCIÓN):
-- Si el producto es taza plástica, taza cerámica, taza mágica o jarro térmico
-  -> usar la frase exacta "Apto para microondas" o "Apta para microondas" según el género del sustantivo
-  -> NO mencionar "lavavajillas" bajo ninguna circunstancia
 
 ═══ REGLAS DESCRIPCIÓN ═══
 - Longitud: entre 500 y 900 caracteres (objetivo SEO óptimo, evita truncado).
 - Priorizar info clave en los primeros 200-300 caracteres
 - Estructura:
-  1) Resumen inicial (qué es, para quién)
-  2) Beneficios y casos de uso (3-4 puntos)
-  3) Especificaciones técnicas breves
+  1) Resumen inicial (qué es, para qué tipo de pesca / actividad)
+  2) Beneficios y casos de uso técnicos (3-4 puntos)
+  3) Especificaciones técnicas breves (medidas, materiales, capacidad)
 - Saltos de línea para escanear rápido
 - Sin "Personalizado/a/able" ni nombres de tienda
 - Sin "Oficial", "Original" ni sus combinaciones (ver lista de palabras prohibidas arriba)
-- AL FINAL agregar este párrafo:
-Accedé a todas nuestras publicaciones acá:
-https://listado.mercadolibre.com.ar/_DisplayType_G_eshop_IMPALA+DESIGN
+- AL FINAL agregar este párrafo de cierre (sin URL externa):
+Visitanos en nuestras publicaciones de MercadoLibre para ver todo el catálogo de pesca, camping y outdoors.
 
 ═══ BUENAS PRÁCTICAS SEO ═══
 - No repetir palabras para forzar SEO
-- Lenguaje natural alineado a búsquedas reales
-- No inventar datos, no claims falsos
+- Lenguaje natural alineado a búsquedas reales del rubro
+- No inventar datos técnicos: si no estás seguro de una medida o especificación, no la inventes
 - No incluir precios, envíos ni promociones${googleBlock}
 
 ═══ FORMATO DE RESPUESTA — CRÍTICO ═══
@@ -11728,13 +11721,13 @@ async function analyzePotential(){
     const potential=Math.max(0,100-sc-(item.sold_quantity||0)*2);
     if(potential<20) continue;
     try{
-      const r=await callClaude(`Sos experto en posicionamiento de tazas con diseño en ML Argentina 2026. Esta publicación tiene ${item.sold_quantity||0} ventas y score SEO ${sc}/100.
+      const r=await callClaude(`Sos experto en posicionamiento de artículos de pesca, camping y outdoors en ML Argentina 2026. Esta publicación tiene ${item.sold_quantity||0} ventas y score SEO ${sc}/100.
 
 Título: "${item.title}"
 Precio: $${item.price}
 Stock: ${item.available_quantity}
 
-Producto: "${item.title}" — diseño ya definido (compra impulsiva, regalo, identificación emocional).
+Producto: "${item.title}" — artículo del rubro pesca / camping / outdoor (compra informada, comprador con conocimiento técnico del nicho).
 
 Analizá el potencial y dá 3 sugerencias MUY concretas para mejorar (título, fotos, descripción, precio, keywords).
 Respondé SOLO JSON:
@@ -14978,10 +14971,10 @@ const TMPL_LS_KEY = 'mlp_q_tmpl';
 const SYNC_TS_KEY = 'mlp_settings_synced_at';
 
 const QR_DEFAULT = [
-  {label:'📦 Stock',     color:'#22c55e', text:'Sí, tenemos stock disponible. Esperamos tu compra. Saludos - Tienda Impala Design'},
-  {label:'🚚 Envío',     color:'#3b82f6', text:'Hacemos envíos a todo el país por MercadoEnvíos. La demora es de 3-4 días hábiles aprox.'},
-  {label:'📍 Ubicación', color:'#f59e0b', text:'Somos de Mendoza, zona plaza Chile. No tenemos local físico.'},
-  {label:'✨ Mágica',    color:'#8b5cf6', text:'Es termosensible: aparece el diseño al ponerle bebida caliente. Se envía protegida en telgopor.'},
+  {label:'📦 Stock',     color:'#22c55e', text:'Sí, tenemos stock disponible. Esperamos tu compra. Saludos - El Puma Pesca'},
+  {label:'🚚 Envío',     color:'#3b82f6', text:'Hacemos envíos a todo el país por Mercado Envíos. Los plazos los maneja Mercado Libre según la zona del comprador.'},
+  {label:'📍 Ubicación', color:'#f59e0b', text:'Realizamos envíos por Mercado Envíos a todo el país. Mercado Libre te indica el costo y el plazo según tu domicilio al momento de finalizar la compra.'},
+  {label:'🛡️ Garantía',  color:'#8b5cf6', text:'El producto cuenta con la garantía del vendedor/fabricante declarada en la publicación. Ante cualquier inconveniente, podés escribirnos por mensajería interna de Mercado Libre.'},
 ];
 
 // ── Lectura local (siempre rápida, sin await) ───────────────
@@ -14990,7 +14983,7 @@ function qGetQR(){
   catch(e){ return QR_DEFAULT; }
 }
 function qGetTmpl(){
-  try{ return JSON.parse(localStorage.getItem(TMPL_LS_KEY)||'null')||{saludo:'Hola, gracias por tu consulta.',firma:'Esperamos tu compra. Saludos - Tienda Impala Design'}; }
+  try{ return JSON.parse(localStorage.getItem(TMPL_LS_KEY)||'null')||{saludo:'Hola, gracias por tu consulta.',firma:'Esperamos tu compra. Saludos - El Puma Pesca'}; }
   catch(e){ return {saludo:'',firma:''}; }
 }
 
@@ -15443,7 +15436,7 @@ function renderQuestions(){
                 <button class="btn btn-primary btn-sm" onclick="submitAns(${q.id})">✓ Enviar respuesta</button>
                 <button class="btn btn-ghost btn-sm" onclick="document.getElementById('${taId}').value=''" title="Limpiar">🧹</button>
                 <button class="btn btn-ghost btn-xs" style="font-size:10px" onclick="qOpenLink('${taId}')" title="Insertar link de publicación">🔗 #Link</button>
-                <button class="btn btn-ghost btn-xs" style="font-size:10px;background:#ede9fe;color:#7c3aed;border-color:#c4b5fd" onclick="aiAnswerQ(${q.id},this)">🤖 IA Impala</button>
+                <button class="btn btn-ghost btn-xs" style="font-size:10px;background:#ede9fe;color:#7c3aed;border-color:#c4b5fd" onclick="aiAnswerQ(${q.id},this)">🤖 IA El Puma</button>
                 <button class="btn btn-ghost btn-xs" style="font-size:10px" onclick="qOpenAnswer(${q.id},'${q.item_id||''}','${fromId}')">📝 Plantilla extendida</button>
               </div>
             </div>`:''}
@@ -15522,18 +15515,19 @@ function initAI(){
 
 ECOSISTEMA DEL VENDEDOR: El vendedor opera en dos canales:
 - MercadoLibre Argentina (canal principal de volumen y adquisicion)
-- Tienda WooCommerce propia (tiendaimpala.com.ar, canal de margen y fidelizacion)
+- Tienda WooCommerce propia (elpumapesca.com.ar, canal de margen y fidelizacion)
 Cuando analizas SEO o titulos, siempre distinguis las reglas de cada canal. En ML aplican restricciones del algoritmo (60 chars, sin adjetivos vacios). En WooCommerce aplican principios de SEO organico con keywords long-tail y contenido enriquecido para Google.
 
-ESPECIALIDAD: Drinkware personalizado con diseno impreso (tazas, termos, botellas, mates, jarras). Productos de diseno ya definido, compra impulsiva, regalo tematico.
+ESPECIALIDAD: Articulos de pesca, camping y outdoors. Catalogo: cañas de pescar (spinning, baitcasting, mosca, costa, embarcado), reeles (frontal, rotativo, baitcasting), señuelos y lineas (multifilamento, monofilamento, fluorocarbono), cajas y bolsos de pesca, indumentaria tecnica (camperas waterproof, waders, chalecos, lentes polarizados), camping (carpas, bolsas de dormir, mochilas, cocinas, linternas), articulos nauticos. Productos especificos de nicho, compra informada por el deportista/aficionado, no impulsiva.
 
 ALGORITMO ML - FACTORES EN ORDEN:
 1) Keywords exactas en titulo 2) CTR 3) Conversion 4) Precio competitivo 5) Velocidad de despacho 6) Calidad de ficha (atributos + imagenes) 7) Historial de ventas
 
-REGLAS DE TITULO ML: Maximo 60 caracteres - Sin puntuacion ni emojis - Keyword fuerte al inicio - Sin articulos ni preposiciones innecesarias
-PALABRAS PROHIBIDAS EN TITULO Y DESCRIPCION ML: Regalo Original, Diseno Oficial, Diseno Exclusivo, Producto Original, Producto Oficial, Modelo Original, Version Oficial, Version Original, Autentico, Fan, Personalizada, Personalizable, Alta calidad, Imperdible, El mejor, Envio gratis, Oficial, Original, cualquier frase tipo slogan o promesa publicitaria.
+REGLAS DE TITULO ML: Maximo 60 caracteres - Sin puntuacion ni emojis - Keyword fuerte al inicio - Sin articulos ni preposiciones innecesarias. Para articulos de pesca: incluir tipo + marca + modelo + medida tecnica relevante (ej largo de caña en pies, capacidad del reel, gramaje del señuelo).
 
-SEO PARA WOOCOMMERCE: Usa keywords long-tail (3-5 palabras con intencion de busqueda), como regalo para medico mujer. Pensa en featured snippets de Google, estructura con H1/H2, evita duplicate content con las publicaciones de ML.
+PALABRAS PROHIBIDAS EN TITULO Y DESCRIPCION ML: Regalo Original, Diseno Oficial, Diseno Exclusivo, Producto Original, Producto Oficial, Modelo Original, Version Oficial, Version Original, Autentico, Fan, Personalizada, Personalizable, Alta calidad, Imperdible, El mejor, Envio gratis, Oficial, Original, cualquier frase tipo slogan o promesa publicitaria. En el rubro pesca evitar tambien: Profesional (salvo que sea linea oficial del fabricante), Premium, Garantia de por vida.
+
+SEO PARA WOOCOMMERCE: Usa keywords long-tail (3-5 palabras con intencion de busqueda), como caña spinning para pejerrey costa o reel frontal agua salada. Pensa en featured snippets de Google, estructura con H1/H2, evita duplicate content con las publicaciones de ML.
 
 TONO: 100% Ejecutivo y Directo. TENES ESTRICTAMENTE PROHIBIDO usar saludos, despedidas o frases de cortesia. NUNCA termines tus respuestas ofreciendo mas ayuda ni haciendo preguntas como En que mas puedo ayudarte. Responde exclusivamente en espanol argentino.`},
     {role:'assistant',content:'Listo. Enviame el titulo, producto o consulta.'}
@@ -16048,7 +16042,7 @@ function pcRenderHistory(){
 
 
 // ═══════════════════════════════════════════════════════════
-// IA IMPALA — aiAnswerQ con Cerebro Tienda Impala
+// IA EL PUMA — aiAnswerQ con Cerebro Tienda El Puma Pesca
 // ═══════════════════════════════════════════════════════════
 async function aiAnswerQ(qId, btn){
   var taId   = 'ans-txt-'+qId;
@@ -16072,27 +16066,35 @@ async function aiAnswerQ(qId, btn){
   if(taEl){ taEl.value=''; taEl.placeholder='La IA está generando la respuesta...'; }
 
   try{
-    // Detectar tema de la pregunta
+    // Detectar tema de la pregunta (rubro pesca / camping / outdoors)
     var qLow = questionText.toLowerCase();
-    var esMagica   = /mágic|magico|magica|termosens|aparece|sale|diseño|cambia|caliente|agua/.test(qLow);
-    var esEnvio    = /envi|demor|llega|cuanto tarda|plazo|despacho/.test(qLow);
-    var esPersonal = /personaliz|nombre|texto|dedic|encarg/.test(qLow);
-    var esRetiro   = /retiro|busco|pasar|local|donde están/.test(qLow);
+    var esEnvio       = /envi|demor|llega|cuanto tarda|plazo|despacho|correo|encomiend/.test(qLow);
+    var esStock       = /stock|disponib|tenes|tienen|hay/.test(qLow);
+    var esRetiro      = /retiro|busco|pasar|local|donde están|direccion|sucursal/.test(qLow);
+    var esMedida      = /medida|largo|tamaño|peso|gramos|capacidad|metros|pies|cm/.test(qLow);
+    var esCompat      = /sirve para|compatibl|funciona con|usar con|para que|sirve en/.test(qLow);
+    var esMarca       = /marca|fabricante|origen|importad|nacional/.test(qLow);
+    var esGarantia    = /garantia|garantía|repuesto|service|reparac/.test(qLow);
+    var esPrecio      = /descuento|oferta|rebaja|mejor precio|menos|cuotas|efectivo/.test(qLow);
 
     var contextHint = '';
-    if(esMagica)   contextHint = 'La pregunta es sobre cómo funciona el diseño termosensibl: el diseño APARECE al contacto con agua/líquido caliente, y desaparece con el frio. Explicar esto con entusiasmo.';
-    if(esEnvio)    contextHint = 'La pregunta es sobre envio. Aclarar que los envíos salen en caja de telgopor para protección, generalmente por Correio Argentino o Mercado Envíos, 3-7 días hábiles.';
-    if(esPersonal) contextHint = 'La pregunta es sobre personalización. Aclarar que todos los diseños son fijos ya impresos, NO se puede personalizar con nombres ni textos adicionales.';
-    if(esRetiro)   contextHint = 'La pregunta es sobre retiro. Informar que NO tenemos local. Las entregas presenciales son únicamente en Plaza Chile, Mendoza capital, a coordinar por mensaje.';
+    if(esEnvio)    contextHint = 'La pregunta es sobre envío. Aclarar que enviamos por Mercado Envíos a todo el país, los plazos los maneja Mercado Libre según la zona del comprador (suelen ser 3-7 días hábiles). El producto se despacha embalado correctamente para el transporte.';
+    if(esStock)    contextHint = 'La pregunta es sobre stock. Si la publicación está activa, confirmar que tenemos stock disponible para envío inmediato. No prometer cantidades específicas si no aparecen en el contexto.';
+    if(esRetiro)   contextHint = 'La pregunta es sobre retiro. Por políticas de Mercado Libre NO se debe mencionar local físico, dirección ni canales fuera de la plataforma. Responder que los envíos se gestionan por Mercado Envíos a todo el país. Si el comprador insiste, sugerir que coordinen por mensajería interna después de la compra.';
+    if(esMedida)   contextHint = 'La pregunta es sobre medidas/especificaciones técnicas. Responder solamente con datos que estén en el título o ficha técnica del producto. Si no aparecen, sugerir al comprador que mire la sección "Ficha técnica" de la publicación o consulte una característica específica.';
+    if(esCompat)   contextHint = 'La pregunta es sobre compatibilidad o uso. Responder según el tipo de producto: para qué tipo de pesca (spinning, baitcasting, mosca, costa, embarcado), tipo de presa típica, o ambiente (agua dulce / salada). No inventar datos si no estás seguro.';
+    if(esMarca)    contextHint = 'La pregunta es sobre marca u origen. Responder con lo que aparezca en el título o ficha. No inventar nacionalidad ni fabricante.';
+    if(esGarantia) contextHint = 'La pregunta es sobre garantía. Responder que aplica la garantía del fabricante / vendedor segun lo declarado en la publicación de Mercado Libre. No prometer plazos específicos si no están publicados.';
+    if(esPrecio)   contextHint = 'La pregunta es sobre precio/descuento. NUNCA negociar precio fuera de Mercado Libre. Aclarar que el precio publicado es el vigente y que las opciones de cuotas / medios de pago las muestra ML al finalizar la compra.';
 
-    var systemPrompt = 'Sos el asistente de ventas de Tienda Impala Design, Mendoza, Argentina.\n'+
-      'Solo respondé sobre nuestros productos: tazas cerámicas con diseño sublimado, tazas mágicas (termosensibles), jarros térmicos, botellitas y chops de cerveza personalizados.\n'+
-      'NO tenemos local físico. Entregas presenciales únicamente en Plaza Chile, Mendoza.\n'+
-      'Los envíos se realizan en caja de telgopor para protección del producto.\n'+
-      'Nunca brindes datos de contacto externos ni redes sociales.\n'+
-      'Tono: amable, cercano y vendedor. Responsió en español argentino, sin formalismos.\n'+
-      'Máximo 3 oraciones por respuesta. No uses emojis en exceso.\n'+
-      (contextHint ? '\nCONTEXTO ADICIONAL: '+contextHint : '');
+    var systemPrompt = 'Sos el asistente de ventas de El Puma Pesca (tienda de artículos de pesca, camping y outdoors).\n'+
+      'Solo respondés sobre los productos del catálogo: cañas de pescar, reeles, señuelos y líneas, cajas y bolsos, indumentaria de pesca, artículos de camping y outdoors, productos náuticos.\n'+
+      'IMPORTANTE — POLÍTICA MERCADO LIBRE: Nunca menciones local físico, direcciones, teléfonos, WhatsApp, redes sociales ni ningún canal de contacto fuera de Mercado Libre. Tampoco menciones precios fuera de la plataforma ni descuentos por canales alternativos. Todo se resuelve por mensajería interna de ML.\n'+
+      'Los envíos se gestionan exclusivamente por Mercado Envíos.\n'+
+      'Si te preguntan algo técnico que no podés afirmar con seguridad (medidas exactas, compatibilidades específicas, fabricante), respondé honestamente que se confirma en la ficha técnica de la publicación o pediles que especifiquen para ayudarles mejor.\n'+
+      'Tono: amable, cercano, conocedor del rubro. Hablás como pescador/aventurero a otro pescador/aventurero pero sin exagerar. Español argentino (vos, tenés, podés, etc).\n'+
+      'Máximo 3 oraciones por respuesta. Sin emojis excesivos (uno solo está bien, ninguno también).'+
+      (contextHint ? '\n\nCONTEXTO ADICIONAL: '+contextHint : '');
 
     var userMsg = 'Producto: '+( itemTitle||'(sin especificar)' )+'\nPregunta del comprador: '+questionText+'\n\nEscribí una respuesta corta y directa para enviarle al comprador en MercadoLibre.';
 
@@ -16121,7 +16123,7 @@ async function aiAnswerQ(qId, btn){
     if(taEl){ taEl.placeholder='Error de IA: '+e.message; }
     console.warn('[aiAnswerQ]',e);
   }
-  if(btn){ btn.disabled=false; btn.textContent='🤖 IA Impala'; }
+  if(btn){ btn.disabled=false; btn.textContent='🤖 IA El Puma'; }
 }
 
 
@@ -17644,7 +17646,7 @@ async function calRunIA(){
   });
   var facturacionMes=ordenesMes.reduce(function(s,o){return s+(o.total_amount||0);},0);
 
-  var context='Contexto de la tienda Impala Design:\n'
+  var context='Contexto de la tienda El Puma Pesca:\n'
     +'- Stock total disponible: '+totalStock+' unidades\n'
     +'- Ventas este mes ('+mes+'): $'+facturacionMes.toLocaleString('es-AR')+' en '+ordenesMes.length+' órdenes\n'
     +'- Publicaciones activas: '+((allItems||[]).filter(function(i){return i.status==='active';}).length)+'\n'
@@ -17654,7 +17656,7 @@ async function calRunIA(){
       return '  · '+e.icon+' '+e.title+' (en '+diff+' días, '+e.cat+')';
     }).join('\n');
 
-  var sys='Sos un estratega de e-commerce especializado en MercadoLibre Argentina para una tienda de drinkware con diseños impresos (tazas, jarros, termos). Generás recomendaciones concretas, accionables y cortas. Máximo 5 bullets. Sin saludos. Español argentino.';
+  var sys='Sos un estratega de e-commerce especializado en MercadoLibre Argentina para una tienda de artículos de pesca, camping y outdoors (cañas, reeles, señuelos, indumentaria técnica, equipamiento de camping, náutica). Generás recomendaciones concretas, accionables y cortas, considerando estacionalidad del rubro (temporadas de pesca, vacaciones de verano, otoño/invierno camping). Máximo 5 bullets. Sin saludos. Español argentino.';
   var prompt=context+'\n\nBasándote en estos datos y eventos próximos, generá las 5 recomendaciones estratégicas más importantes para la tienda esta semana. Sé específico con acciones concretas (qué comprar, qué activar, qué optimizar).';
 
   try{
@@ -18228,7 +18230,7 @@ const titles={
   publicaciones:['📦 Publicaciones','Gestión de tu catálogo'],
   bulk:['✏️ Edición masiva','Modificá múltiples publicaciones a la vez'],
   seo:['🔍 Analizador SEO','Score y optimización de títulos'],
-  ia:['🤖 Chat IA','Experto en ML Argentina 2026 · Tazas con diseño'],
+  ia:['🤖 Chat IA','Experto en ML Argentina 2026 · Pesca, camping y outdoors'],
   'asistente-ia':['🧠 Asistente IA','Cerebro estratégico · IA predictiva + coaching operativo'],
   optimizar:['✨ Optimizador','Título, descripción y keywords con IA'],
   generador:['🔢 Generador de códigos','Generá códigos EAN-13 válidos para tus publicaciones'],
@@ -20241,28 +20243,30 @@ async function wooOptimizeField(field) {
 
   var prompt;
   if (isTitle) {
-    prompt = 'Sos un experto en SEO para WooCommerce. '
+    prompt = 'Sos un experto en SEO para WooCommerce especializado en el rubro pesca, camping y outdoors. '
            + 'Optimiza este titulo de producto para Google: "' + productTitle + '". '
            + 'Elimina muletillas de ML (envio gratis, cuotas, stock, full, etc). '
            + 'Maximo 60 caracteres. Devuelve SOLO el titulo optimizado, sin comillas ni explicaciones.';
   } else {
-    prompt = 'Sos un experto en copywriting para e-commerce argentino y SEO. '
+    prompt = 'Sos un experto en copywriting para e-commerce argentino y SEO, especializado en articulos de pesca, camping y outdoors. '
     + 'Titulo del producto: ' + productTitle + '. '
     + 'REGLAS: PROHIBIDO mencionar productos o marcas que no aparezcan en el titulo. '
-    + 'Tono argentino, cercano pero profesional. Usa <b> solo en datos tecnicos (no en titulos de seccion). '
+    + 'Tono argentino, cercano pero profesional, con conocimiento del rubro. Usa <b> solo en datos tecnicos (no en titulos de seccion). '
     + 'NO uses comillas al inicio ni al final de ninguna seccion ni del texto total.\n\n'
     + 'ESTRUCTURA: devuelve directamente el texto sin prefijos ni etiquetas de seccion. '
-    + 'Seguí este orden separando cada bloque con DOS saltos de linea:\n\n'
-    + '1) Un titulo SEO expansivo y emocional basado en el producto (solo el titulo, sin prefijo).\n\n'
-    + '2) Un parrafo de 2-3 oraciones que conecte el producto con la pasion del usuario.\n\n'
+    + 'Segui este orden separando cada bloque con DOS saltos de linea:\n\n'
+    + '1) Un titulo SEO expansivo y descriptivo basado en el producto (solo el titulo, sin prefijo).\n\n'
+    + '2) Un parrafo de 2-3 oraciones que conecte el producto con la actividad / pasion del usuario (pesca deportiva, camping en familia, aventura outdoor, segun corresponda).\n\n'
     + '3) Una lista de 5 a 7 caracteristicas tecnicas inferidas del tipo de producto. '
-    + 'Formato de cada item: - <b>Atributo:</b> descripcion breve.\n\n'
-    + '4) Una oracion sobre para quien es ideal este producto.\n\n'
-    + 'Enviamos con embalaje de seguridad anti-roturas. '
-    + 'Nuestros productos son de calidad premium con sublimado de alta durabilidad.\n\n'
-    + '5) Tips de cuidado segun tipo (ceramica: Lavar a mano, apto microondas, no lavavajillas. '
-    + 'Termico: Lavar a mano, no apto microondas, no sumergir la base. '
-    + 'Acrilico/vidrio: Fragil, no microondas ni lavavajillas.)\n\n'
+    + 'Formato de cada item: - <b>Atributo:</b> descripcion breve. Para articulos de pesca incluir cuando aplique: tipo de pesca (spinning, baitcasting, mosca, etc), ambiente (agua dulce / salada), accion, potencia, capacidad. Para camping: capacidad, materiales, resistencia al agua, temporada. Para indumentaria: materiales tecnicos, talles, impermeabilidad.\n\n'
+    + '4) Una oracion sobre para quien es ideal este producto (pescador principiante / experimentado, camping de fin de semana / expedicion, etc).\n\n'
+    + 'Enviamos con embalaje adecuado al tipo de producto para que llegue en perfectas condiciones. '
+    + 'Trabajamos con productos de calidad orientados al deportista y aventurero argentino.\n\n'
+    + '5) Tips de cuidado segun tipo. '
+    + 'Para canas/reeles: limpiar con agua dulce despues de uso en agua salada, secar bien antes de guardar, lubricar engranajes periodicamente. '
+    + 'Para indumentaria tecnica: lavar segun etiqueta, no usar suavizante en prendas impermeables. '
+    + 'Para carpas y bolsas de dormir: secar completamente antes de guardar para evitar hongos. '
+    + 'Para senuelos y lineas: enjuagar con agua dulce, guardar en lugar fresco y seco.\n\n'
     + 'Devuelve SOLO el texto final, sin comillas externas, sin encabezados de seccion, '
     + 'respetando los dobles saltos de linea entre cada bloque.';
   }
@@ -21824,8 +21828,8 @@ async function waTrigger(event, data){
 // ═══════════════════════════════════════════════════════════
 // TELEGRAM — Notificaciones de ventas y preguntas
 // ═══════════════════════════════════════════════════════════
-// Config del label de cuenta — editable desde localStorage, default "Impala Design (Cristian)"
-var _tgAccountLabel = localStorage.getItem('mlp_tg_account_label') || 'Impala Design (Cristian)';
+// Config del label de cuenta — editable desde localStorage, default "El Puma Pesca (Cristian)"
+var _tgAccountLabel = localStorage.getItem('mlp_tg_account_label') || 'El Puma Pesca (Cristian)';
 
 async function tgNotify(type, data, dedupId){
   try{
@@ -22103,7 +22107,10 @@ function gscApplyFilters(){
   const hideBrand = document.getElementById('gsc-hide-brand')?.checked || false;
   let rows = [..._gscRows];
   if(query)     rows = rows.filter(r => ((r.keys||[])[0]||'').toLowerCase().includes(query));
-  if(hideBrand) rows = rows.filter(r => !((r.keys||[])[0]||'').toLowerCase().includes('impala'));
+  if(hideBrand) rows = rows.filter(r => {
+    const kw = ((r.keys||[])[0]||'').toLowerCase();
+    return !(kw.includes('puma pesca') || kw.includes('el puma') || kw.includes('elpumapesca'));
+  });
 
   // Ordenar
   rows.sort((a,b) => {
