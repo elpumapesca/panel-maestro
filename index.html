@@ -943,16 +943,6 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <div class="card-title">Evolución 30d vs 30d anteriores</div>
         <div class="card-sub" id="dash-chart-sub"></div>
       </div>
-      <div id="dash-metric-pills" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-        <button class="dash-pill active" data-metric="revenue"   onclick="dashTogglePill(this)" style="background:#4f8ef7;color:#fff">💰 Ingresos</button>
-        <button class="dash-pill"        data-metric="units"     onclick="dashTogglePill(this)">📦 Unidades</button>
-        <button class="dash-pill"        data-metric="orders"    onclick="dashTogglePill(this)">🛒 Ventas</button>
-        <button class="dash-pill"        data-metric="questions" onclick="dashTogglePill(this)">💬 Preguntas</button>
-        <button class="dash-pill"        data-metric="visits"    onclick="dashTogglePill(this)">👁 Visitas</button>
-        <button class="dash-pill"        data-metric="conv"      onclick="dashTogglePill(this)">📈 Performance</button>
-      </div>
-      <div style="position:relative;height:220px"><canvas id="chart-main"></canvas></div>
-      <div id="dash-peak-info" style="font-size:11px;color:var(--text3);margin-top:6px;min-height:16px"></div>
     </div>
     <div id="dash-metric-pills" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
       <button class="dash-pill active" data-metric="revenue"   onclick="dashTogglePill(this)" style="background:#4f8ef7;color:#fff">💰 Ingresos</button>
@@ -1088,9 +1078,6 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <thead><tr>
           <th class="th-check"><input type="checkbox" id="check-all" onchange="toggleAll(this)"></th>
           <th>Publicación</th>
-          <th onclick="pubSort('price')" style="cursor:pointer;user-select:none;white-space:nowrap">Precio <span id="pub-sort-price" style="font-size:10px"></span></th>
-          <th onclick="pubSort('stock')" style="cursor:pointer;user-select:none;white-space:nowrap">Stock <span id="pub-sort-stock" style="font-size:10px"></span></th>
-          <th onclick="pubSort('sold')"  style="cursor:pointer;user-select:none;white-space:nowrap">Vendidas <span id="pub-sort-sold" style="font-size:10px"></span></th>
           <th onclick="pubSort('sku')"   style="cursor:pointer;user-select:none;white-space:nowrap">SKU <span id="pub-sort-sku" style="font-size:10px"></span></th>
           <th onclick="pubSort('price')" style="cursor:pointer;user-select:none;white-space:nowrap;text-align:right">Precio <span id="pub-sort-price" style="font-size:10px"></span></th>
           <th onclick="pubSort('stock')" style="cursor:pointer;user-select:none;white-space:nowrap;text-align:center">Stock <span id="pub-sort-stock" style="font-size:10px"></span></th>
@@ -7218,7 +7205,6 @@ function renderPubs(){
           <button class="btn btn-ghost btn-xs" style="padding:2px 5px;font-size:10px;opacity:.5" title="Editar stock" onclick="startStockEdit('${item.id}',${item.available_quantity??0})">✎</button>
         </div>
       </td>
-      <td>${item.sold_quantity||0}</td>
       <td style="font-size:11px;color:var(--text2)">
         <div style="display:flex;align-items:center;gap:4px">
           <span id="ean-val-${item.id}" style="font-family:var(--mono);font-size:11px">${eanDisp}</span>
