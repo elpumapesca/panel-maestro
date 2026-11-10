@@ -4,7 +4,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎣</text></svg>">
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>El Puma Pesca — Panel Maestro v8</title>
+<title>El Puma Pesca — Panel Maestro v9</title>
 <!-- v151: arreglo GLOBAL de ventanas flotantes. Todos los overlays del panel usan
      position:fixed + z-index:9999 + align-items:center, lo que recorta la parte superior
      de los modales altos (había que scrollear hacia abajo). Forzamos alineado arriba +
@@ -726,6 +726,10 @@ input::placeholder,textarea::placeholder{color:#6b7280}
 @keyframes task-pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
 
 </style>
+<style>/* v321 calculadora responsive */
+@media(max-width:1100px){.pc-layout{grid-template-columns:1fr !important}}
+@media(max-width:700px){.pc-kpis{grid-template-columns:1fr 1fr !important}#pc-ch-grid{grid-template-columns:1fr !important}}
+</style>
 </head>
 <body>
 
@@ -740,7 +744,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <span style="font-size:18px">🔑</span> <span id="login-btn-label">Conectar cuenta</span>
       </button>
     </div>
-    <div class="login-note">OAuth 2.0 oficial · No almacenamos contraseñas · <span style="opacity:.7">Panel v8</span></div>
+    <div class="login-note">OAuth 2.0 oficial · No almacenamos contraseñas · <span style="opacity:.7">Panel v9</span></div>
   </div>
 </div>
 
@@ -869,7 +873,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
 <nav id="sidebar">
   <div class="sb-logo">
     <div class="sb-icon">🎣</div>
-    <div><div class="sb-title">Panel Maestro Pro</div><div class="sb-ver">v8 · El Puma Pesca</div></div>
+    <div><div class="sb-title">Panel Maestro Pro</div><div class="sb-ver">v9 · El Puma Pesca</div></div>
   </div>
   <a class="sb-store" href="#dashboard" onclick="showSection('dashboard');return false;">
     <div><div class="sb-store-name" id="sb-store">Tu Tienda</div><div class="sb-store-sub"><div class="online-dot"></div>Conectado</div></div>
@@ -3193,20 +3197,28 @@ input::placeholder,textarea::placeholder{color:#6b7280}
 <!-- ═══════════════════════ CALCULADORA DE RENTABILIDAD ═══════════════════════ -->
 <div id="section-profit-calculator" class="section fade-in">
 
-<div class="mgt" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px">
-  <div class="mc c-blue"><div class="mc-label">Costo origen</div><div class="mc-val" id="pc-costo-total">—</div></div>
-  <div class="mc c-green"><div class="mc-label">🟡 Clásica</div><div class="mc-val" id="pc-kpi-ml-c">—</div></div>
-  <div class="mc c-purple"><div class="mc-label">🔵 Premium</div><div class="mc-val" id="pc-kpi-ml-p">—</div></div>
-  <div class="mc c-teal"><div class="mc-label">🟣 Woo</div><div class="mc-val" id="pc-kpi-woo">—</div></div>
+<!-- v321: encabezado + indicadores + canales configurables -->
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+  <div><div style="font-size:20px;font-weight:800">🧮 Calculadora de Rentabilidad</div><div style="font-size:12px;color:var(--text3)">Analizá y compará la rentabilidad de tus ventas en todos tus canales</div></div>
+  <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="pcChannelsOpen()" title="Renombrar, ordenar, activar o desactivar canales">⚙ Canales</button>
+  <button class="btn btn-sm" onclick="pcChannelsOpen(true)" style="border:2px solid var(--accent);color:var(--accent);font-weight:800;background:transparent">＋ Agregar canal</button></div>
 </div>
+<div class="mgt pc-kpis" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+  <div class="mc c-blue"><div class="mc-label">📦 Costo de origen</div><div class="mc-val" id="pc-costo-total">—</div><div style="font-size:11px;color:var(--text3)">costo total del producto</div></div>
+  <div class="mc c-green"><div class="mc-label">📈 Mejor rentabilidad</div><div id="pc-k2"><div class="mc-val">—</div></div></div>
+  <div class="mc c-purple"><div class="mc-label">💰 Mayor ganancia neta</div><div id="pc-k3"><div class="mc-val">—</div></div></div>
+  <div class="mc c-teal"><div class="mc-label">💲 Precio sugerido</div><div id="pc-k4"><div class="mc-val">—</div></div></div>
+</div>
+<div style="display:none"><span id="pc-kpi-ml-c"></span><span id="pc-kpi-ml-p"></span><span id="pc-kpi-woo"></span></div>
 
 <!-- v305: modo Mantener rentabilidad / libre -->
 <div id="pc-lock-bar"></div>
 
-<div style="display:grid;grid-template-columns:240px 1fr;gap:14px;align-items:start;margin-bottom:16px">
+<div class="pc-layout" style="display:grid;grid-template-columns:270px 1fr;gap:14px;align-items:start;margin-bottom:16px">
 
+  <div style="display:flex;flex-direction:column;gap:12px">
   <!-- BLOQUE 1: COSTOS ORIGEN (sin Packaging) -->
-  <div class="card" style="padding:12px 14px">
+  <div class="card" style="padding:12px 14px;margin:0">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:9px">📦 Costos de Origen</div>
     <div class="ff" style="margin-bottom:7px">
       <label style="font-weight:700;color:var(--accent);font-size:11px">Costo Blanco ($)</label>
@@ -3237,12 +3249,19 @@ input::placeholder,textarea::placeholder{color:#6b7280}
     </div>
   </div>
 
-  <!-- 4 CANALES 2x2 -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    <div id="pc-ch-clasica" class="card" style="padding:0;overflow:hidden"></div>
-    <div id="pc-ch-premium" class="card" style="padding:0;overflow:hidden"></div>
-    <div id="pc-ch-woo"     class="card" style="padding:0;overflow:hidden"></div>
-    <div id="pc-ch-mayor"   class="card" style="padding:0;overflow:hidden"></div>
+  <!-- v321: comparativa visual entre canales -->
+  <div class="card" style="padding:12px 14px;margin:0">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:6px">📊 Comparativa de rentabilidad</div>
+    <div id="pc-compare"></div>
+  </div>
+  </div>
+
+  <!-- v321: CANALES (los 4 de siempre + los que agregues) -->
+  <div id="pc-ch-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:12px;align-items:start">
+    <div id="pc-ch-clasica" class="card" style="padding:0;overflow:hidden;margin:0"></div>
+    <div id="pc-ch-premium" class="card" style="padding:0;overflow:hidden;margin:0"></div>
+    <div id="pc-ch-woo"     class="card" style="padding:0;overflow:hidden;margin:0"></div>
+    <div id="pc-ch-mayor"   class="card" style="padding:0;overflow:hidden;margin:0"></div>
   </div>
 
 </div>
@@ -4284,7 +4303,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
         <button class="btn btn-ghost btn-sm" onclick="ctaExportExcel()" title="Exporta a .xlsx las operaciones filtradas">📥 Exportar Excel</button>
         <button class="btn btn-ghost btn-sm" onclick="document.getElementById('cta-xlsx-file').click()" title="Importar un .xlsx exportado previamente para aplicar cambios masivos">📤 Importar Excel</button>
         <input type="file" id="cta-xlsx-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="ctaImportExcel(this.files[0])">
-        <button class="btn btn-ghost btn-sm" onclick="ctaOpenStock()" title="Ver y administrar stock + catálogo de productos">📦 Stock y catálogo</button>
+        <button class="btn btn-ghost btn-sm" onclick="ctaOpenStock()" title="Ver y administrar stock + catálogo de productos"><span style="display:inline-block;font-size:14px;line-height:1.2">📦</span> Stock y catálogo</button>
         <button class="btn btn-ghost btn-sm" onclick="ctaOpenPrecios()" title="Lista de precios editable por canal (Clásica / Premium / Woo / Mayorista y columnas propias)">💲 Lista de Precios</button>
         <button class="btn btn-ghost btn-sm" onclick="ctaOpenOrigenes()" title="Editar nombres y emojis de los orígenes (renombrar actualiza todas las filas)">⚙️ Orígenes</button>
         <button class="btn btn-ghost btn-sm" onclick="ctaOpenCategorias()" title="Editar las categorías de egreso (insumos, impuestos, proveedores...)">🧾 Egresos</button>
@@ -4381,7 +4400,7 @@ input::placeholder,textarea::placeholder{color:#6b7280}
   <div id="cta-stock-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center">
     <div class="card" style="max-width:1180px;width:97%;margin:0;max-height:92vh;overflow:auto">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <div class="card-title" style="margin:0">📦 Stock y catálogo de productos</div>
+        <div class="card-title" style="margin:0;line-height:1.5;padding:2px 0;overflow:visible"><span style="display:inline-block;font-size:17px;line-height:1.25;vertical-align:-2px;margin-right:4px">📦</span>Stock y catálogo de productos</div>
         <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="ctaStockAddRow()">➕ Producto</button>
       </div>
       <div style="font-size:11px;color:var(--text3);margin-bottom:10px">
@@ -5640,7 +5659,7 @@ async function _pollPendingShipments(){
 // v93 [P5]: detector de versión del Worker. Si el Worker está desactualizado (no v55+),
 // significa que el header `x-format-new: true` no está siendo aplicado y el bug de
 // envíos sigue activo. Mostramos un banner amarillo al usuario.
-const _MIN_WORKER_VERSION = 82; // El Puma Pesca: Worker v82 = base Maestro v150
+const _MIN_WORKER_VERSION = 83; // El Puma Pesca: Worker v83 = base Maestro v156
 async function _checkWorkerVersion(){
   try {
     const r = await fetch(WORKER + '/');
@@ -5667,7 +5686,7 @@ function _showWorkerOutdatedBanner(currentVer){
   b.style.cssText = 'position:fixed;top:8px;right:8px;left:8px;z-index:9999;background:#fbbf24;color:#78350f;padding:11px 14px;border-radius:8px;border:1px solid #f59e0b;box-shadow:0 4px 12px rgba(0,0,0,.15);font-size:12.5px;line-height:1.4;display:flex;align-items:center;gap:10px;max-width:900px;margin:0 auto';
   b.innerHTML = '<span style="font-size:20px">⚠️</span>'
     + '<div style="flex:1"><strong>Worker desactualizado (v'+currentVer+').</strong> '
-    + 'Sub\xed <code style="background:#fde68a;padding:1px 5px;border-radius:3px;font-size:11px">elpumapesca-worker-v82.js</code> (o posterior) a Cloudflare \u2014 el panel necesita sus rutas nuevas y libera cuota KV.</div>'
+    + 'Sub\xed <code style="background:#fde68a;padding:1px 5px;border-radius:3px;font-size:11px">elpumapesca-worker-v83.js</code> (o posterior) a Cloudflare \u2014 el panel necesita sus rutas nuevas y libera cuota KV.</div>'
     + '<button onclick="this.parentElement.remove()" style="background:transparent;border:1px solid #92400e;color:#78350f;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:11.5px;font-weight:600">Cerrar</button>';
   document.body.appendChild(b);
 }
@@ -5758,8 +5777,11 @@ async function loadItemsFast(){
     const results=await Promise.all(chunks.map(chunk=>
       mlGet('/items?ids='+chunk.join(',')+'&include_attributes=all&attributes=id,title,price,status,sub_status,available_quantity,sold_quantity,thumbnail,pictures,category_id,listing_type_id,permalink,seller_custom_field,video_id,attributes,tags,shipping,catalog_listing,catalog_product_id,variations,health,date_created&_nocache='+nc)
     ));
-    allItems=[];
-    results.forEach(r=>{ r.forEach(x=>{if(x.code===200)allItems.push(x.body);}); });
+    // v323: si ML rechaza un lote (403/401…) no se rompe la carga ni se vacía la lista
+    const _fast=[]; let _fastFail=0;
+    results.forEach(r=>{ if(Array.isArray(r)) r.forEach(x=>{if(x && x.code===200)_fast.push(x.body);}); else _fastFail++; });
+    if(_fast.length || !allItems.length) allItems=_fast;
+    if(_fastFail) console.warn('[loadItemsFast] '+_fastFail+' lote(s) rechazados por ML', results.find(r=>!Array.isArray(r)));
     _updateItemsUI();
     // refreshHealthScores movido a loadItemsFull (se ejecuta cuando ya están TODOS los items)
   }catch(e){console.warn('[loadItemsFast]',e);}
@@ -5979,8 +6001,9 @@ async function loadItemsFull(){
     // Para 2386 items (120 chunks de 20) pasa de ~40s a ~8s.
     // Quitado _nocache para aprovechar el HTTP cache del Worker (datos a <1h son válidos).
     const CHUNK_SIZE = 20;
-    const PARALLEL = 5;
+    const PARALLEL = 4;   // v323: 4 en paralelo (antes 5)
     const chunks = [];
+    const _mlFail = [];   // v323: lotes que ML rechazó
     for(let i=0;i<allIds.length;i+=CHUNK_SIZE){
       chunks.push(allIds.slice(i, i+CHUNK_SIZE));
     }
@@ -5993,11 +6016,31 @@ async function loadItemsFull(){
           return r || [];
         }catch(e){ return []; }
       }));
-      results.forEach(r => { r.forEach(x=>{if(x.code===200)full.push(x.body);}); });
+      results.forEach((r,k) => { if(Array.isArray(r)) r.forEach(x=>{if(x && x.code===200)full.push(x.body);}); else _mlFail.push({ chunk:batch[k], err:r }); });
       // Pausa breve cada 5 batches (25 reqs) para no saturar ML
       if(i>0 && (i/PARALLEL)%5===0) await new Promise(r=>setTimeout(r,80));
     }
-    allItems=full;_updateItemsUI();
+    // v323: lotes rechazados → renovar el acceso y reintentar una vez; si siguen fallando,
+    // se conservan los datos anteriores de esas publicaciones (la lista no queda incompleta)
+    if(_mlFail.length){
+      const msg = (_mlFail[0].err && (_mlFail[0].err.message || _mlFail[0].err.error || _mlFail[0].err.status)) || 'sin detalle';
+      console.warn('[loadItemsFull] ML rechazó '+_mlFail.length+' lote(s):', _mlFail[0].err);
+      try{ if(typeof tryRefreshToken==='function') await tryRefreshToken(); }catch(e){}
+      const quedan=[];
+      for(const f of _mlFail){
+        await new Promise(r=>setTimeout(r,600));
+        let r2=null; try{ r2=await mlGet('/items?ids='+f.chunk.join(',')+'&include_attributes=all'); }catch(e){}
+        if(Array.isArray(r2)) r2.forEach(x=>{ if(x && x.code===200) full.push(x.body); }); else quedan.push(f);
+      }
+      if(quedan.length){
+        const prev=new Map((allItems||[]).map(i=>[i.id,i])); let kept=0;
+        quedan.forEach(f=>f.chunk.forEach(id=>{ if(prev.has(id)){ full.push(prev.get(id)); kept++; } }));
+        const n=quedan.reduce((a,f)=>a+f.chunk.length,0);
+        if(typeof showToast==='function') showToast('⚠ Mercado Libre no dejó actualizar '+n+' publicaciones ('+String(msg).slice(0,80)+'). '+(kept?'Se muestran con los datos anteriores. ':'')+'Si se repite, cerrá sesión y volvé a entrar.','warn');
+      }
+    }
+    if(full.length || !allItems.length) allItems=full;
+    _updateItemsUI();
     // Actualizar health scores con datos recién bajados de ML
     refreshHealthScores();
     console.log('[loadItemsFull]',allItems.length);
@@ -24953,6 +24996,7 @@ function _pcMasivoCalc(){
     } else {
       chans.forEach(function(id){
         var ch=h.channels&&h.channels[id]; if(!ch || !(ch.precio>0)) return;
+        if(typeof _pcMasivoVisible==='function' && PC_BASE_IDS.indexOf(id)<0 && !_pcMasivoVisible(id,k)) return;   // v321: canales nuevos
         if(k==='envioAmt' && !ch.envioCheck) avisos.push(h.nombre+' · '+PC_CH_LBL[id]+': tiene el envío desactivado, se guarda el valor pero no cambia el precio');
         if(k==='hostingPct' && id!=='woo') return;
         if(k==='debcredPct' && id!=='mayor') return;
@@ -29184,34 +29228,50 @@ async function ctaEnrichWooNet() {
 // v182: marca operaciones ML como canceladas. Resta del saldo (monto a 0),
 // repone el stock (revierte el descuento si lo había) y las muestra tachadas.
 function _ctaMarcarCanceladas(idsCancel) {
-  if (!idsCancel || !idsCancel.size) return;
-  let chg = false, catChg = false;
-  Object.values(_ctaState.chunks).forEach(ch => (ch || []).forEach(op => {
-    if (!idsCancel.has(op.id) || op.cancelada) return;
-    // reponer stock (si esta venta había descontado)
-    if (op._stockApplied) { if (_ctaAplicarStock(op, -1)) catChg = true; }
-    op.cancelada = true;
-    op._montoOrig = op.monto;       // guardamos el original por si querés verlo
-    op.monto = 0;                    // sale del saldo
-    op.estado = 'cancelada';
-    op.rowColorManual = '#6b7280';   // gris
-    op.manualEdit = true;
-    _ctaState.dirty.add(op.fecha.slice(0, 7));
-    chg = true;
-  }));
+  // v320: la venta ML cancelada se QUITA de la cuenta (no queda en el listado ni cambia
+  // totales, provincias, unidades…) y, si había descontado stock, se repone. Antes quedaba
+  // en gris y, con la siguiente venta nueva, el stock se volvía a descontar.
+  // El borrado viaja a la nube como baja: no revive en la otra PC.
+  // También limpia las canceladas que quedaron en gris de versiones anteriores.
+  let catChg = false, n = 0;
+  Object.keys(_ctaState.chunks).forEach(ym => {
+    const ch = _ctaState.chunks[ym] || [];
+    const quedan = ch.filter(op => {
+      if (!op) return true;
+      const esML = op.src === 'ml' || String(op.id || '').indexOf('ml_') === 0;
+      const canc = (idsCancel && idsCancel.has(op.id)) || (op.cancelada && esML);
+      if (!canc) return true;
+      if (op._stockApplied) { if (_ctaAplicarStock(op, -1)) catChg = true; }
+      if (_ctaState.selected) _ctaState.selected.delete(op.id);
+      n++; return false;
+    });
+    if (quedan.length !== ch.length) { _ctaState.chunks[ym] = quedan; ctaMarkDirty(ym); }
+  });
   if (catChg) _ctaPersistCatalogo();
-  if (chg) ctaFlushDirty();
+  if (n) {
+    ctaFlushDirty();
+    console.log('[cta v320] ' + n + ' venta(s) ML cancelada(s) quitada(s) de la cuenta' + (catChg ? ' · stock repuesto' : ''));
+    if (typeof showToast === 'function') showToast('↩️ ' + n + ' venta' + (n > 1 ? 's' : '') + ' de Mercado Libre cancelada' + (n > 1 ? 's' : '') + ': quitada' + (n > 1 ? 's' : '') + ' de Cuenta Puma' + (catChg ? ' y stock repuesto' : ''), 'info');
+    if (typeof ctaRenderAll === 'function' && _ctaState.boot) { try { ctaRenderAll(); } catch (e) {} }
+  }
+  return n;
 }
 
 async function ctaSyncML() {
   if (typeof allOrders === 'undefined' || !Array.isArray(allOrders) || !allOrders.length) return 0;
   let nuevos = 0;
   // v182: detectar órdenes canceladas que YA están en la cuenta para marcarlas
-  const canceladasIds = new Set();
+  const canceladasIds = new Set(), mesesCanc = new Set();
   for (const o of allOrders) {
     if (o && o.id && String(o.status || '').toLowerCase() === 'cancelled') {
       canceladasIds.add('ml_' + o.id);
+      // v320: cargar también el mes de esa venta (si no estaba cargado no se encontraba)
+      const dc = new Date(o.date_closed || o.date_created || 0);
+      if (!isNaN(dc) && dc.getTime() >= CTA_SYNC_DESDE_TS) mesesCanc.add(dc.toISOString().slice(0, 7));
     }
+  }
+  for (const ym of mesesCanc) {
+    if (!_ctaState.loaded.has(ym)) { try { await _ctaFetchChunk(ym); } catch (e) {} }
   }
   _ctaMarcarCanceladas(canceladasIds);
 
@@ -30404,6 +30464,7 @@ function _ctaAplicarStock(op, signo) {
   // Las anteriores ya están contabilizadas en tu Excel y se ignoran.
   if (signo > 0) {
     if (op._stockApplied) return false;        // ya aplicada
+    if (op.cancelada) return false;            // v320: una venta cancelada nunca descuenta stock
     if ((op.fecha || '') < CTA_STOCK_DESDE) { op._stockApplied = true; return false; } // pre-corte: marcar como contabilizada SIN tocar stock
     const ch = ctaAplicarStockOp(op, 1);
     if (ch) op._stockApplied = true;
@@ -42182,7 +42243,7 @@ async function rcGetImgTicket(force){
   var r = await fetch(WORKER+'/rc/img-ticket', { method:'POST', headers:{ Authorization:'Bearer '+token } });
   if(r.status===401 && await tryRefreshToken()) r = await fetch(WORKER+'/rc/img-ticket', { method:'POST', headers:{ Authorization:'Bearer '+token } });
   var d = await r.json().catch(function(){ return {}; });
-  if(!r.ok || !d.k) throw new Error('No se pudo autorizar la descarga de fotos: '+(d.error||('HTTP '+r.status))+' (¿Worker v139 desplegado?)');
+  if(!r.ok || !d.k) throw new Error('No se pudo autorizar la descarga de fotos: '+(d.error||('HTTP '+r.status))+' (¿Worker v82 desplegado?)');
   _rcImgTicket = { k:d.k, exp:d.exp };
   return d.k;
 }
@@ -43396,8 +43457,10 @@ function wiSleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 // v309: cortes temporales del servidor de la tienda: 429 (demasiadas), 5xx y 52x de Cloudflare (servidor no responde)
 function wiIs429(d){ return d && d.error && /HTTP (429|5\d\d)\b|demasiadas|Too Many|Failed to fetch|NetworkError/i.test(String(d.error)+' '+String(d.message||'')); }
 async function wiApiPaced(path, body, onWait){
-  var waits=[30,60,90,120,180,300,300];
+  // v320: el Worker ya reintenta cada consulta a la tienda; acá esperas cortas (antes 30 s … 5 min)
+  var waits=[8,20,40,60,90,120];
   for(var k=0;;k++){
+    if(typeof _wooYield==='function') await _wooYield();   // una edición puntual pasa primero
     var d=await wiApi(path, body);
     if(!wiIs429(d) || k>=waits.length || wiS.cancel) return d;
     var fin=Date.now()+waits[k]*1000;
@@ -43454,8 +43517,8 @@ async function wiApi(path, body){
   catch(e){ return { error: (e && e.name==='AbortError') ? 'HTTP 504 · el Worker no respondió en 3 minutos' : 'Failed to fetch: '+(e&&e.message||'') }; }
   finally{ if(tmo) clearTimeout(tmo); }
   if(r.status===401 && typeof tryRefreshToken==='function' && await tryRefreshToken()) return wiApi(path, body);
-  var d = {}; try{ d = await r.json(); }catch(e){ d = { error:'Respuesta inválida del Worker (HTTP '+r.status+'). ¿Está desplegado el Worker v140?' }; }
-  if(r.status===404 && !d.error) d.error = 'El Worker no tiene esta función: desplegá el Worker v140';
+  var d = {}; try{ d = await r.json(); }catch(e){ d = { error:'Respuesta inválida del Worker (HTTP '+r.status+'). ¿Está desplegado el Worker v82?' }; }
+  if(r.status===404 && !d.error) d.error = 'El Worker no tiene esta función: desplegá el Worker v82';
   return d;
 }
 var WI_M = {
@@ -43794,7 +43857,7 @@ async function wiImageRun(){
   wiS.running=true; wiS.cancel=false;
   var prog=function(t, pc){ var e=document.getElementById('wi-load-prog'); if(e) e.textContent=t; if(pc!==false) wiFloat('img','🖼️ Comparando fotos', wiEsc(t), pc==null?null:pc, '#0891b2'); };
   try{
-    try{ await rcGetImgTicket(true); }catch(e){ throw new Error('El Worker no autorizó la descarga de fotos de ML (¿Worker v139+?)'); }
+    try{ await rcGetImgTicket(true); }catch(e){ throw new Error('El Worker no autorizó la descarga de fotos de ML (¿Worker v82+?)'); }
     var jobs = pend.map(function(r){ return { k:'ml', id:r.id, url:(r.it.pictures&&r.it.pictures[0]&&(r.it.pictures[0].secure_url||r.it.pictures[0].url))||r.it.thumbnail }; })
       .concat(libres.map(function(p){ return { k:'woo', id:p.id, url:p.img }; }));
     var done=0, vec={ ml:{}, woo:{} }, i=0;
@@ -44261,7 +44324,7 @@ function wiLToolsRender(){
 function wiLAutoRender(){
   var el=document.getElementById('wi-lauto'); if(!el) return;
   var s=wiS.status||{}, st=s.price_settings;
-  if(!st){ el.innerHTML='<div style="font-size:12px;color:#92400e;margin-bottom:10px">Para precios y reglas hace falta el Worker v146 o posterior.</div>'; return; }
+  if(!st){ el.innerHTML='<div style="font-size:12px;color:#92400e;margin-bottom:10px">Para precios y reglas hace falta el Worker v82 o posterior.</div>'; return; }
   var hours=st.hours||[];
   var opt=function(sel){ var o='<option value="">—</option>'; for(var h=0;h<24;h++) o+='<option value="'+h+'"'+(sel===h?' selected':'')+'>'+String(h).padStart(2,'0')+':00</option>'; return o; };
   el.innerHTML='<div class="wil-card" style="background:linear-gradient(180deg,#f0f9ff,#fff);border-color:#bae6fd">'+
@@ -44622,6 +44685,7 @@ function wiUpdOpen(ids){
     cb('wu-dims','Medidas y peso','Las del paquete en ML (Mercado Envíos).',false)+
     cb('wu-images','Fotos','Reemplaza las fotos de Woo por las de ML (Woo las vuelve a descargar).',false)+
     cb('wu-attrs','Atributos','Marca, modelo, material, etc. Las variaciones no se tocan.',false)+
+    cb('wu-title','Título','Copia el título de ML al producto de Woo. La dirección (URL) del producto no cambia. ⚠ Si el título de Woo está trabajado para SEO (palabra clave de Rank Math), dejalo sin tildar.',false)+
     cb('wu-desc','Descripción','⚠ Reemplaza la descripción de Woo: si las tenés optimizadas para SEO, dejala sin tildar.',false)+
     '<div id="wu-prev" style="margin-top:10px"></div>'+
     '<div style="display:flex;gap:8px;margin-top:12px"><button onclick="wiModal(null)" style="'+WI_M.cancel+'">Cancelar</button>'+
@@ -44635,6 +44699,7 @@ function wiUpdFields(){
   if(document.getElementById('wu-images').checked) f.images=true;
   if(document.getElementById('wu-attrs').checked) f.attributes=true;
   if(document.getElementById('wu-desc').checked) f.description=true;
+  var _t=document.getElementById('wu-title'); if(_t && _t.checked) f.title=true;   // v322
   return f;
 }
 async function wiUpdRun(sim){
@@ -44914,7 +44979,7 @@ function wiPriceRender(){
   var el=document.getElementById('wi-price'); if(!el) return;
   var s=wiS.status||{}, st=s.price_settings||{ enabled:false, mode:'simulacion', hours:[10], rule:'igual', pct:0, disc:0, base:'actual', round:'10', budget:40 };
   if(!s.d1){ el.innerHTML='<div style="font-size:12px;color:#92400e">Falta conectar la base D1 al Worker (ver aviso arriba).</div>'; return; }
-  if(!('price_settings' in s)){ el.innerHTML='<div style="font-size:12px;color:#92400e">Esta herramienta necesita el <b>Worker v145</b> o posterior. Subí el Worker nuevo y recargá el panel.</div>'; return; }
+  if(!('price_settings' in s)){ el.innerHTML='<div style="font-size:12px;color:#92400e">Esta herramienta necesita el <b>Worker v82</b> o posterior. Subí el Worker nuevo y recargá el panel.</div>'; return; }
   var hours=st.hours||[];
   var opt=function(sel){ var o='<option value="">—</option>'; for(var h=0;h<24;h++) o+='<option value="'+h+'"'+(sel===h?' selected':'')+'>'+String(h).padStart(2,'0')+':00</option>'; return o; };
   var card='background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px';
@@ -45329,7 +45394,7 @@ async function wseoLoad(refresh){
         var fallo = !r || !d || (d.error && (d.retry || (r && (r.status===429 || r.status>=500))));
         if(!fallo) break;
         if(intento>=4){ throw new Error((d&&d.error)||('la tienda no respondió (HTTP '+(r?r.status:'—')+')')); }
-        var w=[20,45,90,150][intento++];
+        var w=[10,25,45,75][intento++];   // v320: antes 20/45/90/150 s (encima de los reintentos del Worker)
         var _fin=Date.now()+w*1000; while(true){ var k=Math.ceil((_fin-Date.now())/1000); if(k<=0) break; say('⏳ La tienda pidió una pausa: reintento '+intento+' en '+k+' s… (ya leídos '+prods.length+(total?' de '+total:'')+', no se pierden)','#b45309'); if(typeof wiFloat==='function') wiFloat('wseo','🛍️ SEO tienda Woo','Pausa de la tienda: reintento en '+k+' s · '+prods.length+(total?' de '+total:''), total?prods.length/total*100:null, '#d97706'); await new Promise(function(res){ setTimeout(res,Math.min(1000,_fin-Date.now())); }); }
       }
       if(d.error) throw new Error(d.error+(d.detail?' · '+d.detail:''));
@@ -45379,8 +45444,14 @@ async function seoAdAction(itemId, status){
 
 // ── 5) Cuenta Puma · Factura: v317 vuelve al marcado de antes (ML no emite facturas por API) ──
 
-// ── 6) v317 · llamadas del panel a la tienda Woo: si la tienda pide pausa o corta la
-// respuesta, esperar y reintentar (como en «Importar a Woo»). No se reintenta lo que crea.
+// ── 6) v320 · llamadas del panel a la tienda Woo: UN solo nivel de reintentos.
+// Antes se apilaban tres esperas (Worker 5/12/25 s + panel 8/20/45 s + cada herramienta
+// hasta 5 min) → una acción mínima podía tardar minutos. Ahora el Worker espera y reintenta
+// (3/8/15 s, ritmo adaptativo) y acá sólo se repite UNA vez si la respuesta no llegó.
+// Además: las lecturas largas (páginas de productos) ceden el paso a una edición puntual
+// (pausar, cambiar precio…) para que no quede detrás de una carga masiva.
+window._wooEditing = 0;
+async function _wooYield(){ var t0 = Date.now(); while(window._wooEditing > 0 && Date.now() - t0 < 60000) await new Promise(function(r){ setTimeout(r, 300); }); }
 (function(){
   if(window._wooRetryOn) return; window._wooRetryOn=true;
   var raw=window.fetch.bind(window);
@@ -45389,15 +45460,23 @@ async function seoAdAction(itemId, status){
     var u=typeof input==='string'?input:(input&&input.url)||'';
     var m=String((init&&init.method)||(input&&input.method)||'GET').toUpperCase();
     if(!esWoo(u) || m==='POST') return raw(input, init);
-    var waits=[8,20,45];
-    for(var k=0;;k++){
-      var r=null, txt='';
-      try{ r=await raw(input, init); txt=await r.clone().text(); }catch(e){ r=null; }
-      var cort = !r || r.status===429 || r.status===502 || r.status===503 || r.status===504 || (r.status>=520&&r.status<=524) ||
-        (r.status>=500 && /Unexpected end|respuesta vacía|cortada|retry/i.test(txt)) || (r.ok && !txt.trim());
-      if(!cort || k>=waits.length) return r || raw(input, init);
-      if(typeof showToast==='function') showToast('⏳ La tienda pidió una pausa: reintento en '+waits[k]+' s…','warn');
-      await new Promise(function(res){ setTimeout(res, waits[k]*1000); });
+    var edit = m!=='GET';
+    if(!edit && /[?&](page|all)=/.test(u)) await _wooYield();
+    if(edit) window._wooEditing++;
+    var key='woo-retry-'+Date.now()+'-'+Math.random().toString(36).slice(2,6), avisado=false;
+    try{
+      for(var k=0;;k++){
+        var r=null, txt='';
+        try{ r=await raw(input, init); txt=await r.clone().text(); }catch(e){ r=null; }
+        var cort = !r || (r.ok && !txt.trim() && !edit);
+        if(!cort) return r;
+        if(k>=1){ if(r) return r; throw new TypeError('Failed to fetch: la tienda no respondió'); }
+        avisado=true; if(typeof wiFloat==='function') wiFloat(key,'⏳ Tienda Woo','Sin respuesta: reintento en 4 s…', null, '#d97706');
+        await new Promise(function(res){ setTimeout(res, 4000); });
+      }
+    } finally {
+      if(edit) window._wooEditing--;
+      if(avisado && typeof wiFloatEnd==='function') wiFloatEnd(key);
     }
   };
 })();
@@ -45521,6 +45600,1756 @@ var AUTO_SEO_REFRESH_H = 6;
   if(document.readyState === 'complete') setTimeout(correr, 1000); else window.addEventListener('load', function(){ setTimeout(correr, 1000); });
 })();
 
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// v320 · Cuenta Puma: ventas ML canceladas · Economía: selector de mes · Publicidad: ¿Dónde va tu inversión?
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── Cuenta Puma: los meses que se cargan después también se limpian de ventas ML canceladas ──
+(function(){
+  var orig = window._ctaFetchChunk; if (typeof orig !== 'function' || orig._v320) return;
+  var w = async function(ym){
+    var r = await orig.apply(this, arguments);
+    try{
+      var ch = _ctaState.chunks[ym] || [];
+      if (ch.some(function(op){ return op && op.cancelada && (op.src === 'ml' || String(op.id || '').indexOf('ml_') === 0); }))
+        _ctaMarcarCanceladas(new Set());
+    }catch(e){ console.warn('[cta v320] limpieza canceladas', e && e.message); }
+    return r;
+  };
+  w._v320 = true; window._ctaFetchChunk = w;
+})();
+
+// ── Economía · resumen de tarjeta: selector de mes que abre en el mes elegido ──
+// Al desplegarlo se ve el mes actual arriba y los que siguen debajo; los anteriores
+// siguen ahí, scrolleando hacia arriba.
+function _ecoMesPick(){
+  var body = document.getElementById('eco-res-body'); if(!body) return;
+  var sel = body.querySelector('select[onchange*="_ecoResSetMes"]'); if(!sel) return;
+  var opts = Array.prototype.map.call(sel.options, function(o){ return { v:o.value, t:o.textContent, s:o.selected }; });
+  var cur = opts.filter(function(o){ return o.s; })[0] || opts[0]; if(!cur) return;
+  var hoy = (typeof _ecoYmHoy === 'function') ? _ecoYmHoy() : '';
+  var wrap = document.createElement('div');
+  wrap.className = 'eco-mp'; wrap.style.cssText = 'position:relative;display:inline-block';
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.setAttribute('style', sel.getAttribute('style') || '');
+  btn.style.cursor = 'pointer'; btn.style.minWidth = '128px'; btn.style.textAlign = 'left';
+  btn.innerHTML = cur.t + ' <span style="float:right;margin-left:10px;opacity:.6">▾</span>';
+  var list = document.createElement('div');
+  list.style.cssText = 'display:none;position:absolute;z-index:20;top:100%;right:0;margin-top:4px;min-width:170px;max-height:264px;overflow-y:auto;background:'+_ECO_MODAL_BG+';border:1px solid '+_ECO_BRD+';border-radius:10px;box-shadow:0 12px 30px rgba(15,23,42,.22);padding:4px 0';
+  list.innerHTML = opts.map(function(o){
+    var pasado = hoy && o.v < hoy, esHoy = o.v === hoy;
+    return '<div data-v="'+o.v+'" style="padding:8px 14px;font-size:13px;cursor:pointer;white-space:nowrap;'+
+      (o.s ? 'background:#ede9fe;color:#5b21b6;font-weight:800;' : 'color:'+(pasado ? _ECO_TXT3 : _ECO_TXT)+';font-weight:'+(esHoy ? '700' : '500')+';')+'">'+
+      o.t + (esHoy ? ' <span style="font-size:10.5px;color:#7c3aed;font-weight:600">· mes actual</span>' : '') + '</div>';
+  }).join('');
+  list.addEventListener('mouseover', function(e){ var d = e.target.closest('[data-v]'); if(d && d.style.fontWeight !== '800') d.style.background = '#f5f3ff'; });
+  list.addEventListener('mouseout', function(e){ var d = e.target.closest('[data-v]'); if(d && d.style.fontWeight !== '800') d.style.background = ''; });
+  list.addEventListener('click', function(e){ var d = e.target.closest('[data-v]'); if(!d) return; cerrar(); if(d.getAttribute('data-v') !== cur.v) _ecoResSetMes(d.getAttribute('data-v')); });
+  var fuera = function(e){ if(!wrap.contains(e.target)) cerrar(); };
+  var esc = function(e){ if(e.key === 'Escape') cerrar(); };
+  function cerrar(){ list.style.display = 'none'; document.removeEventListener('mousedown', fuera, true); document.removeEventListener('keydown', esc, true); }
+  btn.addEventListener('click', function(){
+    if(list.style.display === 'block'){ cerrar(); return; }
+    list.style.display = 'block';
+    var s = list.querySelector('[data-v="'+cur.v+'"]');
+    list.scrollTop = s ? Math.max(0, s.offsetTop - 4) : 0;   // el mes elegido arriba, los siguientes debajo
+    document.addEventListener('mousedown', fuera, true); document.addEventListener('keydown', esc, true);
+  });
+  wrap.appendChild(btn); wrap.appendChild(list);
+  sel.parentNode.replaceChild(wrap, sel);
+}
+(function(){
+  var orig = window._ecoResRender; if(typeof orig !== 'function' || orig._v320) return;
+  var w = function(){ var r = orig.apply(this, arguments); try{ _ecoMesPick(); }catch(e){ console.warn('[eco v320] selector de mes', e && e.message); } return r; };
+  w._v320 = true; window._ecoResRender = w;
+})();
+
+// ── Publicidad · ¿Dónde va tu inversión?: un bloque por estado, hacia abajo, con sus publicaciones ──
+window.aiqRenderInversion = function(){
+  var el = document.getElementById('aiq-inv'); var D = _aiqRk.datos;
+  if (!el) return;
+  if (!D || !D.items) { el.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:10px 0">Se completa cuando carga el ranking por publicación.</div>'; return; }
+  var grupos = [
+    { k:'bien',    ic:'🚀', t:'Rinde',           s:'Escalar / Mantener',            col:'#16a34a', cl:['escalar','mantener'] },
+    { k:'mejorar', ic:'🛠️', t:'A mejorar',       s:'Optimizar',                     col:'#eab308', cl:['optimizar'] },
+    { k:'revisar', ic:'🔍', t:'Sin conclusión',  s:'Revisar / pocos datos',         col:'#94a3b8', cl:['revisar','sin_datos'] },
+    { k:'pierde',  ic:'🔻', t:'Pierde plata',    s:'Reducir / Pausar / Retirar',    col:'#dc2626', cl:['reducir','pausar','retirar'] },
+    { k:'fuera',   ic:'💤', t:'Fuera de campaña', s:'gasto anterior del período',   col:'#cbd5e1', cl:[] }
+  ];
+  var tot = 0, por = {};
+  D.items.forEach(function(i){
+    var c = i.cost || 0; if (!c) return; tot += c;
+    var k = i.reco && i.reco.clave;
+    var g = i.estado === 'idle' ? grupos[4] : grupos.filter(function(x){ return x.cl.indexOf(k) >= 0; })[0]; if (!g) return;
+    var p = por[g.k] = por[g.k] || { c:0, n:0, rev:0, items:[] };
+    p.c += c; p.n++; p.rev += (i.rev || 0); p.items.push(i);
+  });
+  if (!tot) { el.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:10px 0">Sin inversión registrada en el período.</div>'; return; }
+  var mlUrl = function(id){ var m = String(id || '').match(/^([A-Z]{3})(\d+)$/); return m ? 'https://articulo.mercadolibre.com.ar/' + m[1] + '-' + m[2] : ''; };
+  var barra = grupos.map(function(g){ var p = por[g.k]; if (!p) return ''; return '<div title="' + _aiqEsc(g.t + ': ' + aiqPesos(p.c)) + '" style="width:' + (p.c / tot * 100) + '%;background:' + g.col + '"></div>'; }).join('');
+  var filas = grupos.map(function(g){
+    var p = por[g.k] || { c:0, n:0, rev:0, items:[] };
+    var pct = p.c / tot * 100;
+    var roas = p.c > 0 && p.rev > 0 ? p.rev / p.c : null;
+    var tops = p.items.slice().sort(function(a, b){ return (b.cost || 0) - (a.cost || 0); }).slice(0, 4);
+    var pubs = tops.length ? tops.map(function(i){
+      var u = mlUrl(i.id), share = p.c ? Math.round((i.cost || 0) / p.c * 100) : 0;
+      return '<' + (u ? 'a href="' + u + '" target="_blank" rel="noopener"' : 'div') + ' title="' + _aiqEsc((i.titulo || i.id) + ' · ' + share + '% de la inversión de este estado') + '" style="display:flex;gap:8px;align-items:center;min-width:0;padding:5px 6px;border-radius:8px;border:1px solid var(--border);background:transparent;text-decoration:none;color:inherit">' +
+        '<div style="flex-shrink:0;width:34px;height:34px;border-radius:6px;overflow:hidden;background:var(--bg4);border:1px solid var(--border)">' +
+          (i.thumb ? '<img src="' + _aiqEsc(i.thumb) + '" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">' : '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:15px">🎣</div>') + '</div>' +
+        '<div style="min-width:0;flex:1"><div style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + _aiqEsc(i.titulo || i.id) + '</div>' +
+        '<div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">inv. <b style="color:var(--text)">' + aiqPesos(i.cost) + '</b> · ROAS ' + aiqX(i.roas) + ' · ' + (i.ventas || 0) + ' v.</div></div>' +
+      '</' + (u ? 'a' : 'div') + '>';
+    }).join('') + (p.n > tops.length ? '<div style="font-size:10.5px;color:var(--text3);align-self:center;padding:0 4px">+' + (p.n - tops.length) + ((p.n - tops.length) === 1 ? ' publicación más' : ' publicaciones más') + '</div>' : '')
+      : '<div style="font-size:11px;color:var(--text3);align-self:center">Ninguna publicación en este estado.</div>';
+    return '<div class="aiq-inv-row" style="display:grid;grid-template-columns:minmax(220px,280px) 1fr;gap:12px;align-items:stretch;padding:10px 0;border-bottom:1px solid var(--border)' + (p.n ? '' : ';opacity:.55') + '">' +
+      '<div style="border-left:5px solid ' + g.col + ';padding-left:10px;display:flex;flex-direction:column;justify-content:center;gap:3px">' +
+        '<div style="display:flex;align-items:center;gap:6px"><span style="font-size:16px">' + g.ic + '</span><b style="font-size:12.5px">' + g.t + '</b><span style="font-size:10.5px;color:var(--text3)">· ' + p.n + ' publ.</span></div>' +
+        '<div style="font-size:10.5px;color:var(--text3)">' + g.s + '</div>' +
+        '<div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:18px;font-weight:800;color:' + (g.k === 'fuera' ? 'var(--text2,#64748b)' : g.col) + '">' + aiqPesos(p.c) + '</span><span style="font-size:12px;font-weight:700;color:var(--text3)">' + Math.round(pct) + '%</span>' + (roas != null ? '<span style="font-size:10.5px;color:var(--text3)">· ROAS ' + aiqX(roas) + '</span>' : '') + '</div>' +
+        '<div style="height:8px;background:var(--bg3,#eef1f5);border-radius:5px;overflow:hidden"><div style="height:100%;width:' + Math.max(pct > 0 ? 2 : 0, pct) + '%;background:' + g.col + ';border-radius:5px"></div></div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;align-content:center">' + pubs + '</div>' +
+    '</div>';
+  }).join('');
+  var pierde = por.pierde ? por.pierde.c : 0;
+  el.innerHTML = '<div style="display:flex;height:14px;border-radius:7px;overflow:hidden;margin:8px 0 4px;background:var(--bg3,#eef1f5)">' + barra + '</div>' +
+    '<div style="font-size:10.5px;color:var(--text3);margin-bottom:2px">' + _aiqFmtF(D.desde) + ' – ' + _aiqFmtF(D.hasta) + ' · inversión total <b style="color:var(--text)">' + aiqPesos(tot) + '</b> · al costado de cada estado, las publicaciones donde más se invirtió (clic: abre en Mercado Libre)</div>' +
+    filas +
+    (pierde ? '<div style="font-size:11px;color:#dc2626;margin-top:6px"><b>' + aiqPesos(pierde) + '</b> fueron a publicaciones que hoy pierden plata (detalle en el Ranking).</div>' : '');
+};
+(function(){ if(document.getElementById('aiq-inv-css')) return; var st = document.createElement('style'); st.id = 'aiq-inv-css';
+  st.textContent = '@media(max-width:760px){.aiq-inv-row{grid-template-columns:1fr !important}}';
+  (document.head || document.documentElement).appendChild(st); })();
+try{ if (typeof _aiqRk !== 'undefined' && _aiqRk.datos) aiqRenderInversion(); }catch(e){}
+
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// v321 · WEB EL PUMA PESCA: trabajos masivos confiables (importar Excel / edición masiva)
+// Todo cambio masivo se guarda como TRABAJO en el Worker (D1): cada producto queda
+// pendiente / correcto / fallido con su motivo. Se procesa por lotes con confirmación
+// real de la tienda, se espera si la tienda pide pausa, se reanuda si se corta y el
+// Worker lo sigue solo (cron) si cerrás el panel.
+// ═══════════════════════════════════════════════════════════════════════════════
+var WJ_ST = { publish:'publish', publicado:'publish', publicada:'publish', activo:'publish', activa:'publish',
+  draft:'draft', borrador:'draft', pausado:'draft', pausada:'draft', pending:'pending', pendiente:'pending', private:'private', privado:'private', privada:'private' };
+var WJ_ST_LBL = { publish:'🟢 Publicado (activa)', draft:'⚫ Borrador (pausada)', pending:'🟡 Pendiente', private:'🔒 Privado' };
+var _wjRunning = {};      // id → true mientras el panel lo está procesando
+var _wjBodies = {};       // id → { woo_id: body } para actualizar la lista local al confirmar
+function _wjEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function _wjMoney(v){ return v==null||v===''||!isFinite(+v) ? '—' : '$'+Math.round(+v).toLocaleString('es-AR'); }
+function _wjSleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+// ── tarjeta flotante con detalle (varias líneas) ──
+var _wiFloatHtml = {};
+window.wiFloatPaint = function(){
+  var el=document.getElementById('wi-float');
+  var keys=Object.keys(_wiFloat);
+  if(!keys.length){ if(el) el.remove(); return; }
+  if(!el){ el=document.createElement('div'); el.id='wi-float'; document.body.appendChild(el); }
+  el.innerHTML=keys.map(function(k){ var f=_wiFloat[k], h=_wiFloatHtml[k];
+    return '<div class="wi-fcard" style="border-color:'+f.color+(h?';width:340px':'')+'" title="'+(f.section?'Ir a la sección':'')+'" onclick="'+(f.section?'try{showSection(\''+f.section+'\')}catch(e){}':'')+'">'+
+      '<div style="display:flex;gap:9px;align-items:'+(h?'flex-start':'center')+'"><span class="wi-spin" style="border-top-color:'+f.color+';width:16px;height:16px'+(h?';margin-top:2px':'')+'"></span><div style="min-width:0;flex:1"><div style="font-weight:800;font-size:12.5px;color:'+f.color+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+f.title+(f.pct!=null?' · '+Math.round(f.pct)+'%':'')+'</div>'+
+      (h ? h : '<div style="font-size:11px;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+f.text+'</div>')+
+      '<div class="wi-pbar" style="height:5px;margin-top:4px"><div class="wi-pbar-in'+(f.pct==null?' wi-pbar-ind':'')+'" style="'+(f.pct!=null?'width:'+Math.max(2,f.pct)+'%;':'')+'background:'+f.color+'"></div></div></div></div></div>'; }).join('');
+};
+(function(){ var o=window.wiFloatEnd; if(typeof o!=='function' || o._v321) return; var w=function(key){ delete _wiFloatHtml[key]; return o.apply(this, arguments); }; w._v321=true; window.wiFloatEnd=w; })();
+
+function _wjCard(j, estado){
+  var tot=j.total||0, proc=(j.ok||0)+(j.fail||0), pct=tot?proc/tot*100:0;
+  var key='wj-'+j.id;
+  _wiFloatHtml[key]='<div style="font-size:11px;color:#334155;line-height:1.5;margin-top:2px">'+
+    '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>'+_wjEsc(j.label||'Trabajo')+'</b></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:10px">'+
+      '<span>Procesados: <b>'+proc+' / '+tot+'</b></span><span>Pendientes: <b>'+(j.pending||0)+'</b></span>'+
+      '<span style="color:#15803d">Correctos: <b>'+(j.ok||0)+'</b></span><span style="color:'+(j.fail?'#b91c1c':'#64748b')+'">Fallidos: <b>'+(j.fail||0)+'</b></span>'+
+    '</div>'+
+    '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:'+(/pausa|espera/i.test(estado)?'#b45309':'#475569')+'">Estado: '+_wjEsc(estado)+'</div></div>';
+  if(typeof wiFloat==='function') wiFloat(key, (j.kind==='bulk'?'✏️ EDICIÓN MASIVA':'📤 IMPORTACIÓN DE PRODUCTOS'), estado, pct, /pausa|espera/i.test(estado)?'#d97706':'#7c3aed', 'woo-seo');
+}
+
+// Actualiza la lista local con lo que la tienda confirmó
+function _wjApplyLocal(applied){
+  (applied||[]).forEach(function(a){
+    var b=a.body||{}, patch={};
+    if(b.status!==undefined) patch.status=b.status;
+    if(b.regular_price!==undefined) patch.regular_price=parseFloat(b.regular_price)||0;
+    if(b.sale_price!==undefined) patch.sale_price = b.sale_price==='' ? null : parseFloat(b.sale_price);
+    if(b.stock_quantity!==undefined){ patch.stock_quantity=b.stock_quantity; patch.stock_status=b.stock_quantity>0?'instock':'outofstock'; }
+    ['name','sku','description','short_description'].forEach(function(k){ if(b[k]!==undefined) patch[k]=b[k]; });
+    if(Array.isArray(b.categories)) patch.categories=b.categories.map(function(c){ return c&&c.name!=null?c.name:String(c); });
+    if(Array.isArray(b.tags)) patch.tags=b.tags.map(function(c){ return c&&c.name!=null?c.name:String(c); });
+    (b.meta_data||[]).forEach(function(m){ if(/^rank_math_/.test(m.key)) patch[m.key]=m.value; });
+    var p=(typeof _wseoProducts!=='undefined')?_wseoProducts.find(function(x){ return x.id===a.woo_id; }):null;
+    if(p){
+      Object.assign(p, patch);
+      if(patch.regular_price!==undefined || patch.sale_price!==undefined){ var reg=+p.regular_price||0, sal=p.sale_price; p.price = (sal!=null && sal>0 && sal<reg) ? sal : reg; }
+    }
+  });
+  if(applied && applied.length) window._wjCacheDirty=true;   // v323: se guarda una sola vez al terminar el trabajo
+}
+
+// Procesa un trabajo hasta terminarlo (o hasta que se cancele)
+async function wjRun(job){
+  if(!job || !job.id || _wjRunning[job.id]) return;
+  _wjRunning[job.id]=true;
+  var j=job, key='wj-'+job.id, vueltas=0, errSeguidos=0;
+  try{
+    while(j.status==='running'){
+      if(j.wait_ms>0){
+        var fin=Date.now()+j.wait_ms;
+        while(Date.now()<fin){ _wjCard(j, '⏳ Pausa pedida por la tienda: sigo en '+Math.ceil((fin-Date.now())/1000)+' s (no se pierde nada)'); await _wjSleep(Math.min(1000, Math.max(50, fin-Date.now()))); }
+      }
+      _wjCard(j, 'Procesando…');
+      var d=await wiApi('/wjob/step', { id:j.id, budget_ms:22000 });
+      if(!d || d.error || !d.job){
+        errSeguidos++;
+        var w=Math.min(60, 5*errSeguidos);
+        for(var s=w;s>0;s--){ _wjCard(j, '⚠ Sin respuesta del Worker ('+String(d&&d.error||'').slice(0,60)+'): reintento en '+s+' s'); await _wjSleep(1000); }
+        if(errSeguidos>=12){ _wjCard(j, 'Detenido en el panel: el Worker lo sigue solo cada 5 min'); break; }
+        continue;
+      }
+      errSeguidos=0; j=d.job;
+      _wjApplyLocal(d.applied);
+      if(d.busy){ _wjCard(j, 'El Worker lo está procesando en segundo plano…'); await _wjSleep(6000); var st=await wiApi('/wjob/status?id='+encodeURIComponent(j.id)); if(st && st.job) j=st.job; }
+      if(++vueltas%3===0 && typeof wseoRenderTable==='function') try{ wseoRenderTable(); }catch(e){}
+    }
+  } finally {
+    delete _wjRunning[job.id];
+    if(typeof wseoRenderTable==='function') try{ wseoRenderTable(); }catch(e){}
+    var fin2 = j.status==='done';
+    if(typeof wiFloatEnd==='function'){
+      var msg = fin2 ? ((j.fail? '⚠ ' : '✅ ')+'OPERACIÓN COMPLETADA · '+j.total+' productos: '+j.ok+' correctos'+(j.fail?', '+j.fail+' con errores (abrí 📋 Trabajos para ver y reintentar)':''))
+        : j.status==='cancelled' ? '⏹ Trabajo cancelado: '+j.ok+' aplicados, '+j.pending+' quedaron sin procesar'
+        : j.status==='error' ? '⛔ Trabajo detenido: '+(j.last_error||'error')+' — '+j.pending+' pendientes guardados'
+        : '⏳ El panel dejó de seguirlo; quedan '+j.pending+' pendientes que el Worker continúa solo';
+      wiFloatEnd(key, msg, fin2 ? (j.fail?'warn':'success') : 'warn');
+    }
+    if(window._wjCacheDirty && typeof _wseoScheduleCacheSave==='function'){ window._wjCacheDirty=false; _wseoScheduleCacheSave(); }   // v323
+    if(fin2) wjShowResult(j.id, true);
+  }
+  return j;
+}
+
+async function wjCreateAndRun(kind, label, items){
+  var d=await wiApi('/wjob/create', { kind:kind, label:label, items:items });
+  if(!d || d.error || !d.job){ alert('⚠ No se pudo crear el trabajo en el Worker: '+(d&&d.error||'sin respuesta')+'\n\n¿Está desplegado el Worker v83?'); return null; }
+  _wjCard(d.job, 'Iniciando…');
+  wjRun(d.job);
+  return d.job;
+}
+
+// ── Resultado / detalle de un trabajo ──
+async function wjShowResult(id, auto){
+  var d=await wiApi('/wjob/status?id='+encodeURIComponent(id));
+  if(!d || !d.job){ if(!auto) alert('No se pudo leer el trabajo: '+(d&&d.error||'')); return; }
+  var j=d.job, fails=d.fails||[];
+  if(auto && !fails.length && j.status==='done') return;   // terminó perfecto: alcanza con el aviso
+  var titulo = j.status==='done' ? (j.fail ? '⚠ OPERACIÓN COMPLETADA CON ERRORES' : '✅ OPERACIÓN COMPLETADA') : j.status==='running' ? '⏳ EN CURSO' : j.status==='cancelled' ? '⏹ CANCELADA' : '⛔ DETENIDA';
+  wiModal('<div style="'+WI_M.title+'">'+titulo+'</div>'+
+    '<div style="'+WI_M.sub+'">'+_wjEsc(j.label)+' · creado '+new Date(j.created).toLocaleString('es-AR')+'</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;text-align:center">'+
+      [['Solicitados',j.total,'#334155'],['Correctos',j.ok,'#15803d'],['Con errores',j.fail,j.fail?'#b91c1c':'#64748b'],['Pendientes',j.pending,j.pending?'#b45309':'#64748b']].map(function(x){
+        return '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:8px"><div style="font-size:20px;font-weight:800;color:'+x[2]+'">'+(x[1]||0)+'</div><div style="font-size:11px;color:#64748b">'+x[0]+'</div></div>'; }).join('')+
+    '</div>'+
+    (j.last_error?'<div style="'+WI_M.warn+'">'+_wjEsc(j.last_error)+'</div>':'')+
+    (fails.length ? '<div style="font-size:12px;font-weight:700;color:#334155;margin-bottom:4px">Productos con error ('+fails.length+')</div>'+
+      '<div style="max-height:280px;overflow:auto;border:1px solid #e2e8f0;border-radius:10px"><table style="width:100%;border-collapse:collapse;font-size:11.5px;color:#1e293b">'+
+      '<thead><tr style="background:#f1f5f9"><th style="text-align:left;padding:5px 8px">ID</th><th style="text-align:left;padding:5px 8px">Producto</th><th style="text-align:left;padding:5px 8px">Motivo</th></tr></thead><tbody>'+
+      fails.map(function(f){ return '<tr style="border-top:1px solid #f1f5f9"><td style="padding:5px 8px;white-space:nowrap">'+(f.woo_id||'—')+'</td><td style="padding:5px 8px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+_wjEsc(f.name)+'">'+_wjEsc(f.name)+'</td><td style="padding:5px 8px;color:#b91c1c">'+_wjEsc(f.error)+'</td></tr>'; }).join('')+
+      '</tbody></table></div>' : '<div style="'+WI_M.info+'">Sin errores.</div>')+
+    '<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">'+
+      '<button onclick="wiModal(null)" style="'+WI_M.cancel+'">Cerrar</button>'+
+      (fails.length?'<button onclick="wjExportFails(\''+j.id+'\')" style="'+WI_M.cancel+'">⬇️ Descargar errores</button>':'')+
+      (j.status==='running'?'<button onclick="wjCancel(\''+j.id+'\')" style="'+WI_M.cancel+';color:#b91c1c;border-color:#fecaca">⏹ Cancelar lo pendiente</button>':'')+
+      (fails.length && j.status!=='running'?'<button onclick="wjRetry(\''+j.id+'\')" style="flex:1;padding:10px;border:none;background:#7c3aed;color:#fff;border-radius:9px;font-weight:700;cursor:pointer">🔁 Reintentar sólo los fallidos</button>':'')+
+    '</div>', true);
+  window._wjLastFails = { id:j.id, fails:fails };
+}
+function wjExportFails(id){
+  var f=(window._wjLastFails&&window._wjLastFails.id===id)?window._wjLastFails.fails:[];
+  var csv='ID;Producto;Motivo\n'+f.map(function(x){ return [x.woo_id, '"'+String(x.name||'').replace(/"/g,'""')+'"', '"'+String(x.error||'').replace(/"/g,'""')+'"'].join(';'); }).join('\n');
+  var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'})); a.download='errores-'+id+'.csv'; a.click();
+}
+async function wjRetry(id){
+  var d=await wiApi('/wjob/retry', { id:id });
+  if(!d || d.error){ alert('⚠ '+(d&&d.error||'sin respuesta')); return; }
+  wiModal(null);
+  if(!d.requeued){ showToast('No hay fallidos que se puedan reintentar (los de datos inválidos hay que corregirlos en el Excel)','info'); return; }
+  showToast('🔁 Reintentando '+d.requeued+' producto(s)…','info');
+  wjRun(d.job);
+}
+async function wjCancel(id){
+  if(!confirm('¿Cancelar lo que queda pendiente? Lo ya aplicado no se deshace.')) return;
+  await wiApi('/wjob/cancel', { id:id }); wiModal(null);
+}
+async function wjOpenList(){
+  var d=await wiApi('/wjob/list');
+  if(!d || d.error){ alert('⚠ No se pudo leer la lista de trabajos: '+(d&&d.error||'')+'\n¿Está desplegado el Worker v83?'); return; }
+  var jobs=d.jobs||[];
+  var lbl={ running:'⏳ En curso', done:'✅ Terminado', cancelled:'⏹ Cancelado', error:'⛔ Detenido' };
+  wiModal('<div style="'+WI_M.title+'">📋 Trabajos en la tienda</div><div style="'+WI_M.sub+'">Importaciones y ediciones masivas de los últimos días. Tocá uno para ver el detalle, los errores y reintentar los fallidos.</div>'+
+    (jobs.length?'<div style="max-height:380px;overflow:auto;border:1px solid #e2e8f0;border-radius:10px">'+jobs.map(function(j){
+      return '<div onclick="wjShowResult(\''+j.id+'\')" style="cursor:pointer;padding:9px 12px;border-bottom:1px solid #f1f5f9;display:flex;gap:10px;align-items:center;font-size:12.5px;color:#1e293b">'+
+        '<div style="flex:1;min-width:0"><div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+_wjEsc(j.label)+'</div><div style="font-size:11px;color:#64748b">'+new Date(j.created).toLocaleString('es-AR')+' · '+lbl[j.status]+'</div></div>'+
+        '<div style="font-size:11.5px;white-space:nowrap"><b style="color:#15803d">'+j.ok+'</b> ✓ · <b style="color:'+(j.fail?'#b91c1c':'#64748b')+'">'+j.fail+'</b> ✗ · '+j.pending+' pend. / '+j.total+'</div></div>';
+    }).join('')+'</div>':'<div style="'+WI_M.info+'">Todavía no hay trabajos.</div>')+
+    '<div style="display:flex;gap:8px;margin-top:12px"><button onclick="wiModal(null)" style="'+WI_M.cancel+';flex:1">Cerrar</button></div>', true);
+}
+
+// ── Comparación de valores (para mandar SOLO lo que cambia) ──
+function _wjNormStatus(v){ return WJ_ST[String(v==null?'':v).trim().toLowerCase()] || null; }
+function _wjDiff(p, k, v){
+  // devuelve { same:bool, val:normalizado, err:mensaje }
+  if(k==='status'){ var s=_wjNormStatus(v); if(!s) return { err:'Estado no válido: «'+v+'» (Publicado / Borrador / Pendiente / Privado)' }; return { same: !!p && p.status===s, val:s, ant:p?p.status:undefined }; }
+  if(k==='regular_price'||k==='sale_price'||k==='stock_quantity'){
+    var t=String(v).replace(/\$/g,'').replace(/\s/g,'');
+    if(/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(t)) t=t.replace(/\./g,'').replace(',','.'); else t=t.replace(',','.');
+    var n=Number(t); if(!isFinite(n) || n<0) return { err:'Valor no válido en '+(WSEO_FIELDS[k]||{label:k}).label+': «'+v+'»' };
+    if(k==='stock_quantity') n=Math.round(n);
+    var cur = p ? (k==='stock_quantity' ? p.stock_quantity : k==='sale_price' ? p.sale_price : (p.regular_price ?? p.price)) : undefined;
+    return { same: cur!=null && Number(cur)===n, val:String(n), ant:cur };
+  }
+  if(k==='categories'||k==='tags'){
+    var arr=String(v).split('|').map(function(s){ return s.trim(); }).filter(Boolean);
+    var curA=p?(p[k]||[]):null, key=function(a){ return a.map(function(s){ return String(s).toLowerCase(); }).sort().join('|'); };
+    return { same: !!curA && key(curA)===key(arr), val:arr, ant:curA?curA.join(' | '):undefined };
+  }
+  var curS = p ? String((WSEO_FIELDS[k]&&WSEO_FIELDS[k].get(p))||'').trim() : undefined;
+  return { same: curS!=null && curS===String(v).trim(), val:String(v), ant:curS };
+}
+function _wjShow(k, v){
+  if(v==null || v==='') return '<span style="color:#94a3b8">(vacío)</span>';
+  if(k==='status') return WJ_ST_LBL[v]||_wjEsc(v);
+  if(k==='regular_price'||k==='sale_price') return _wjMoney(v);
+  if(Array.isArray(v)) return _wjEsc(v.join(' | '));
+  var s=String(v); return _wjEsc(s.length>60?s.slice(0,60)+'…':s);
+}
+
+// ── Importar Excel: vista previa con lo que cambia + trabajo confiable ──
+window.wseoImportExcel = async function(file){
+  if(!file) return;
+  var st=document.getElementById('wseo-status');
+  if(st) st.textContent='📤 Leyendo…';
+  try{
+    var XLSX=await _seoLoadSheetJS();
+    var wb=XLSX.read(await file.arrayBuffer(), { type:'array' });
+    var ws=wb.Sheets[wb.SheetNames[0]];
+    var aoa=XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
+    if(aoa.length<2) throw new Error('Excel vacío');
+    var labelToKey={}; Object.keys(WSEO_FIELDS).forEach(function(k){ labelToKey[WSEO_FIELDS[k].label.toLowerCase()]=k; labelToKey[k]=k; });
+    var colKey=aoa[0].map(function(h){ return labelToKey[String(h||'').toLowerCase().trim()]||null; });
+    var idCol=colKey.indexOf('id'), skuCol=colKey.indexOf('sku');
+    if(idCol<0 && skuCol<0) throw new Error('El Excel debe tener columna ID o SKU para identificar productos');
+    var R={ filas:0, items:[], sinCambios:0, noEncontrados:[], invalidos:[], cambios:[] }, vistos={};
+    for(var r=1;r<aoa.length;r++){
+      var row=aoa[r]; if(!row || !row.some(function(c){ return String(c).trim()!==''; })) continue;
+      R.filas++;
+      var idv = idCol>=0 ? String(row[idCol]).trim() : '', skuv = skuCol>=0 ? String(row[skuCol]).trim() : '';
+      var p=null;
+      if(idv) p=_wseoProducts.find(function(x){ return String(x.id)===idv; });
+      if(!p && skuv) p=_wseoProducts.find(function(x){ return (x.sku||'')===skuv; });
+      var wid = p ? p.id : (/^\d+$/.test(idv) ? +idv : null);
+      if(!wid){ R.noEncontrados.push('Fila '+(r+1)+': '+(idv||skuv||'sin ID/SKU')); continue; }
+      if(vistos[wid]){ R.invalidos.push('Fila '+(r+1)+': producto #'+wid+' repetido (se usa la fila '+vistos[wid]+')'); continue; }
+      vistos[wid]=r+1;
+      var body={}, errs=[], det=[];
+      colKey.forEach(function(k,ci){
+        if(!k || WSEO_FIELDS[k].ro) return;
+        if(k==='sku' && skuCol===ci && !p) return;
+        var v=row[ci]; if(v===''||v==null) return;
+        var d=_wjDiff(p, k, v);
+        if(d.err){ errs.push(d.err); return; }
+        if(d.same) return;
+        body[k]=d.val; det.push({ k:k, ant:d.ant, val:d.val });
+      });
+      if(errs.length){ R.invalidos.push('Fila '+(r+1)+' (#'+wid+' '+(p?p.name:'')+'): '+errs.join(' · ')); }
+      if(!Object.keys(body).length){ if(!errs.length) R.sinCambios++; continue; }
+      R.items.push({ id:wid, name:p?p.name:('#'+wid), body:body });
+      R.cambios.push({ id:wid, name:p?p.name:('#'+wid+' (no está en la lista cargada)'), det:det });
+    }
+    if(st) st.textContent='';
+    _wjImportPrev=R;
+    var resumen=[['Filas leídas',R.filas],['Con cambios',R.items.length],['Sin cambios',R.sinCambios],['No encontrados',R.noEncontrados.length],['Con datos inválidos',R.invalidos.length]];
+    wiModal('<div style="'+WI_M.title+'">📤 Importar Excel · vista previa</div>'+
+      '<div style="'+WI_M.sub+'">Se envía a la tienda <b>sólo lo que cambia</b> en cada producto. El trabajo se procesa por lotes, se confirma producto por producto y, si se corta, sigue desde donde quedó.</div>'+
+      '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px;text-align:center">'+resumen.map(function(x,i){ return '<div style="border:1px solid #e2e8f0;border-radius:9px;padding:6px"><div style="font-size:17px;font-weight:800;color:'+(i===1?'#7c3aed':i>=3&&x[1]?'#b45309':'#334155')+'">'+x[1]+'</div><div style="font-size:10.5px;color:#64748b">'+x[0]+'</div></div>'; }).join('')+'</div>'+
+      (R.cambios.length?'<div style="max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:8px"><table style="width:100%;border-collapse:collapse;font-size:11.5px;color:#1e293b"><thead><tr style="background:#f1f5f9;position:sticky;top:0"><th style="text-align:left;padding:5px 8px">Producto</th><th style="text-align:left;padding:5px 8px">Campo</th><th style="text-align:left;padding:5px 8px">Actual</th><th style="text-align:left;padding:5px 8px">Nuevo</th></tr></thead><tbody>'+
+        R.cambios.slice(0,400).map(function(c){ return c.det.map(function(x,i){ return '<tr style="border-top:1px solid #f1f5f9">'+(i===0?'<td rowspan="'+c.det.length+'" style="padding:5px 8px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:top" title="'+_wjEsc(c.name)+'">#'+c.id+' '+_wjEsc(c.name)+'</td>':'')+'<td style="padding:5px 8px;white-space:nowrap">'+_wjEsc(WSEO_FIELDS[x.k].label)+'</td><td style="padding:5px 8px;color:#94a3b8">'+_wjShow(x.k,x.ant)+'</td><td style="padding:5px 8px;font-weight:700">'+_wjShow(x.k,x.val)+'</td></tr>'; }).join(''); }).join('')+
+        '</tbody></table></div>'+(R.cambios.length>400?'<div style="font-size:11px;color:#64748b">… y '+(R.cambios.length-400)+' productos más</div>':''):'')+
+      ((R.noEncontrados.length||R.invalidos.length)?'<details style="'+WI_M.warn+'"><summary style="cursor:pointer;font-weight:700">Filas que no se aplican ('+(R.noEncontrados.length+R.invalidos.length)+')</summary><div style="margin-top:6px;max-height:140px;overflow:auto">'+R.invalidos.concat(R.noEncontrados).map(_wjEsc).join('<br>')+'</div></details>':'')+
+      '<div style="display:flex;gap:8px;margin-top:12px"><button onclick="wiModal(null)" style="'+WI_M.cancel+'">Cancelar</button>'+
+      (R.items.length?'<button onclick="wjImportGo()" style="flex:1;padding:10px;border:none;background:#7c3aed;color:#fff;border-radius:9px;font-weight:700;cursor:pointer">Confirmar y aplicar a '+R.items.length+' producto(s)</button>':'<div style="flex:1;align-self:center;font-size:12px;color:#64748b">No hay cambios para aplicar.</div>')+
+      '</div>', true);
+  }catch(e){
+    console.error('[wseo import]', e);
+    if(st) st.textContent='⚠ '+e.message;
+    alert('⚠ No se pudo importar: '+e.message);
+  }
+  var fi=document.getElementById('wseo-import-file'); if(fi) fi.value='';
+};
+var _wjImportPrev=null;
+function wjImportGo(){
+  var R=_wjImportPrev; if(!R || !R.items.length) return;
+  wiModal(null);
+  wjCreateAndRun('import', 'Importación Excel · '+R.items.length+' productos', R.items);
+  _wjImportPrev=null;
+}
+
+// ── Exportar: aviso en la tarjeta flotante ──
+(function(){
+  var o=window.wseoExportRun; if(typeof o!=='function' || o._v321) return;
+  var w=async function(){
+    var n=(typeof _wseoExportRows!=='undefined'&&_wseoExportRows)?_wseoExportRows.length:0;
+    if(typeof wiFloat==='function') wiFloat('wseo-export','📥 EXPORTACIÓN DE PRODUCTOS','Armando el Excel con '+n+' productos…', null, '#2563eb', 'woo-seo');
+    try{ return await o.apply(this, arguments); }
+    finally{ if(typeof wiFloatEnd==='function') wiFloatEnd('wseo-export'); }
+  };
+  w._v321=true; window.wseoExportRun=w;
+})();
+
+// ── EDICIÓN MASIVA de las seleccionadas ──
+function _wjSelRows(){ return (typeof _wseoProducts!=='undefined'?_wseoProducts:[]).filter(function(p){ return _wseoSelected.has(p.id); }); }
+function wjBulkBarPaint(){
+  var tbl=document.getElementById('wseo-table'); if(!tbl) return;
+  var wrap=tbl.closest('.tw')||tbl;
+  var bar=document.getElementById('wseo-bulkbar');
+  var n=_wseoSelected.size;
+  if(!n){ if(bar) bar.remove(); return; }
+  if(!bar){ bar=document.createElement('div'); bar.id='wseo-bulkbar'; wrap.parentNode.insertBefore(bar, wrap); }
+  var vis=(typeof wseoGetFilteredRows==='function')?wseoGetFilteredRows():[];
+  bar.style.cssText='display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#f5f3ff;border:2px solid #7c3aed;border-radius:12px;padding:10px 14px;margin:8px 0;position:sticky;top:0;z-index:5;box-shadow:0 6px 18px rgba(124,58,237,.15)';
+  var b='class="btn btn-sm" style="background:#fff;border:1px solid #c4b5fd;color:#5b21b6;font-weight:700"';
+  bar.innerHTML='<b style="font-size:14px;color:#5b21b6;margin-right:4px">'+n+' publicaci'+(n===1?'ón seleccionada':'ones seleccionadas')+'</b>'+
+    (vis.length>n?'<a href="#" onclick="wseoToggleAll(true);return false" style="font-size:12px">seleccionar las '+vis.length+' filtradas</a>':'')+
+    '<span style="flex:1"></span>'+
+    '<button '+b+' onclick="wjBulkOpen(\'status\')">🔄 Cambiar estado</button>'+
+    '<button '+b+' onclick="wjBulkOpen(\'price\')">💲 Modificar precio</button>'+
+    '<button '+b+' onclick="wjBulkOpen(\'sale\')">🏷️ Precio oferta</button>'+
+    '<button '+b+' onclick="wjBulkOpen(\'stock\')">📦 Stock</button>'+
+    '<button class="btn btn-ghost btn-sm" onclick="wjBulkClear()">✕ Cancelar selección</button>';
+}
+function wjBulkClear(){ _wseoSelected.clear(); if(typeof wseoRenderTable==='function') wseoRenderTable(); wjBulkBarPaint(); }
+(function(){
+  var o=window._wseoUpdateSelUI; if(typeof o!=='function' || o._v321) return;
+  var w=function(){ var r=o.apply(this, arguments); try{ wjBulkBarPaint(); }catch(e){} return r; };
+  w._v321=true; window._wseoUpdateSelUI=w;
+})();
+
+var _wjBulk={ op:null, plan:null };
+function wjBulkOpen(op){
+  var rows=_wjSelRows(); if(!rows.length){ showToast('No hay publicaciones seleccionadas','warn'); return; }
+  _wjBulk={ op:op, plan:null };
+  var I=WI_M.input, L=WI_M.label, ctrl='';
+  if(op==='status') ctrl='<label style="'+L+'">Nuevo estado</label><select id="wjb-st" style="'+I+'" onchange="wjBulkPreview()">'+Object.keys(WJ_ST_LBL).map(function(k){ return '<option value="'+k+'">'+WJ_ST_LBL[k]+'</option>'; }).join('')+'</select>';
+  if(op==='price') ctrl='<div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px"><div><label style="'+L+'">Cómo</label><select id="wjb-mode" style="'+I+'" onchange="wjBulkPreview()"><option value="pct">Subir / bajar %</option><option value="add">Sumar / restar $</option><option value="set">Nuevo precio $</option></select></div>'+
+    '<div><label style="'+L+'">Valor</label><input id="wjb-val" type="number" step="0.5" placeholder="ej: 10 ó -5" style="'+I+'" oninput="wjBulkPreview()"></div>'+
+    '<div><label style="'+L+'">Redondeo</label><select id="wjb-round" style="'+I+'" onchange="wjBulkPreview()"><option value="1">Sin redondeo</option><option value="10">a $10</option><option value="100" selected>a $100</option></select></div></div>'+
+    '<div style="font-size:11px;color:#64748b;margin-top:4px">Cambia el <b>precio regular</b>. Mínimo permitido: $'+WSEO_MIN_PRICE+'.</div>';
+  if(op==='sale') ctrl='<div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px"><div><label style="'+L+'">Cómo</label><select id="wjb-mode" style="'+I+'" onchange="wjBulkPreview()"><option value="desc">% de descuento sobre el regular</option><option value="set">Precio oferta $</option><option value="clear">Quitar la oferta</option></select></div>'+
+    '<div><label style="'+L+'">Valor</label><input id="wjb-val" type="number" step="0.5" placeholder="ej: 15" style="'+I+'" oninput="wjBulkPreview()"></div>'+
+    '<div><label style="'+L+'">Redondeo</label><select id="wjb-round" style="'+I+'" onchange="wjBulkPreview()"><option value="1">Sin redondeo</option><option value="10">a $10</option><option value="100" selected>a $100</option></select></div></div>'+
+    '<div style="font-size:11px;color:#64748b;margin-top:4px">La oferta tiene que quedar por debajo del precio regular.</div>';
+  if(op==='stock') ctrl='<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:8px"><div><label style="'+L+'">Cómo</label><select id="wjb-mode" style="'+I+'" onchange="wjBulkPreview()"><option value="set">Fijar stock</option><option value="add">Sumar / restar unidades</option></select></div>'+
+    '<div><label style="'+L+'">Valor</label><input id="wjb-val" type="number" step="1" placeholder="ej: 10" style="'+I+'" oninput="wjBulkPreview()"></div></div>';
+  var T={ status:'🔄 Cambiar estado', price:'💲 Modificar precio', sale:'🏷️ Precio oferta', stock:'📦 Stock' };
+  wiModal('<div style="'+WI_M.title+'">'+T[op]+' · '+rows.length+' publicaciones</div>'+
+    '<div style="'+WI_M.sub+'">Sólo se modifican las publicaciones seleccionadas. Primero ves el valor actual y el nuevo; nada se cambia hasta que confirmes.</div>'+
+    ctrl+'<div id="wjb-prev" style="margin-top:12px"></div>'+
+    '<div style="display:flex;gap:8px;margin-top:12px"><button onclick="wiModal(null)" style="'+WI_M.cancel+'">Cancelar</button>'+
+    '<button id="wjb-go" disabled onclick="wjBulkGo()" style="flex:1;padding:10px;border:none;background:#7c3aed;color:#fff;border-radius:9px;font-weight:700;cursor:pointer;opacity:.5">Confirmar</button></div>', true);
+  wjBulkPreview();
+}
+function _wjRound(v, r){ r=+r||1; return r>1 ? Math.round(v/r)*r : Math.round(v*100)/100; }
+function wjBulkPreview(){
+  var op=_wjBulk.op, rows=_wjSelRows(), box=document.getElementById('wjb-prev'), go=document.getElementById('wjb-go'); if(!box) return;
+  var g=function(id){ var e=document.getElementById(id); return e?e.value:''; };
+  var mode=g('wjb-mode'), val=parseFloat(g('wjb-val')), rnd=g('wjb-round');
+  var plan=[], skip=[];
+  rows.forEach(function(p){
+    var reg=+(p.regular_price ?? p.price)||0, ant, nue, body=null, why=null;
+    if(op==='status'){ ant=p.status; nue=g('wjb-st'); if(ant!==nue) body={ status:nue }; else why='ya está así'; }
+    else if(op==='price'){
+      ant=reg;
+      if(!isFinite(val)) why='falta el valor';
+      else { nue = mode==='pct' ? reg*(1+val/100) : mode==='add' ? reg+val : val; nue=_wjRound(nue, rnd);
+        if(nue<WSEO_MIN_PRICE) why='quedaría en '+_wjMoney(nue)+' (mínimo $'+WSEO_MIN_PRICE+')';
+        else if(p.sale_price!=null && p.sale_price>0 && p.sale_price>=nue) why='la oferta actual ('+_wjMoney(p.sale_price)+') quedaría por encima del nuevo regular';
+        else if(Math.round(nue*100)===Math.round(reg*100)) why='sin cambio';
+        else body={ regular_price:String(nue) }; }
+    }
+    else if(op==='sale'){
+      ant=(p.sale_price!=null&&p.sale_price>0)?p.sale_price:null;
+      if(mode==='clear'){ nue=null; if(ant==null && p.sale_price!==undefined) why='no tiene oferta'; else body={ sale_price:'' }; }
+      else if(!isFinite(val)) why='falta el valor';
+      else { nue = mode==='desc' ? reg*(1-val/100) : val; nue=_wjRound(nue, rnd);
+        if(!(nue>0) || nue>=reg) why='la oferta ('+_wjMoney(nue)+') tiene que ser menor al regular ('+_wjMoney(reg)+')';
+        else if(nue<WSEO_MIN_PRICE) why='quedaría en '+_wjMoney(nue)+' (mínimo $'+WSEO_MIN_PRICE+')';
+        else if(ant!=null && Math.round(ant)===Math.round(nue)) why='sin cambio';
+        else body={ sale_price:String(nue) }; }
+    }
+    else if(op==='stock'){
+      ant=p.stock_quantity;
+      if(!isFinite(val)) why='falta el valor';
+      else { nue = mode==='add' ? (+ant||0)+Math.round(val) : Math.round(val);
+        if(nue<0) why='quedaría negativo ('+nue+')'; else if(ant===nue) why='sin cambio'; else body={ stock_quantity:nue }; }
+    }
+    if(body) plan.push({ p:p, ant:ant, nue:nue, body:body }); else skip.push({ p:p, why:why });
+  });
+  _wjBulk.plan=plan;
+  var fmt=function(v){ return op==='status'?(WJ_ST_LBL[v]||v):op==='stock'?(v==null?'—':v):(v==null?'(sin oferta)':_wjMoney(v)); };
+  box.innerHTML='<div style="font-size:12px;color:#334155;margin-bottom:6px"><b>'+plan.length+'</b> se modifican'+(skip.length?' · <span style="color:#b45309">'+skip.length+' no (ver motivo)</span>':'')+'</div>'+
+    '<div style="max-height:300px;overflow:auto;border:1px solid #e2e8f0;border-radius:10px"><table style="width:100%;border-collapse:collapse;font-size:11.5px;color:#1e293b"><thead><tr style="background:#f1f5f9;position:sticky;top:0"><th style="text-align:left;padding:5px 8px">Publicación</th><th style="text-align:right;padding:5px 8px">Actual</th><th style="text-align:right;padding:5px 8px">Nuevo</th></tr></thead><tbody>'+
+    plan.map(function(x){ return '<tr style="border-top:1px solid #f1f5f9"><td style="padding:5px 8px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+_wjEsc(x.p.name)+'">#'+x.p.id+' '+_wjEsc(x.p.name)+'</td><td style="padding:5px 8px;text-align:right;color:#94a3b8">'+fmt(x.ant)+'</td><td style="padding:5px 8px;text-align:right;font-weight:700">'+fmt(x.nue)+'</td></tr>'; }).join('')+
+    skip.map(function(x){ return '<tr style="border-top:1px solid #f1f5f9;background:#fffbeb"><td style="padding:5px 8px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#92400e">#'+x.p.id+' '+_wjEsc(x.p.name)+'</td><td colspan="2" style="padding:5px 8px;text-align:right;color:#92400e">no se modifica: '+_wjEsc(x.why)+'</td></tr>'; }).join('')+
+    '</tbody></table></div>';
+  if(go){ go.disabled=!plan.length; go.style.opacity=plan.length?'1':'.5'; go.textContent=plan.length?'Confirmar y modificar '+plan.length+' publicación(es)':'Nada para modificar'; }
+}
+function wjBulkGo(){
+  var plan=_wjBulk.plan||[]; if(!plan.length) return;
+  var T={ status:'Cambiar estado', price:'Modificar precio', sale:'Precio oferta', stock:'Stock' };
+  if(!confirm('¿Modificar '+plan.length+' publicación(es) en la tienda?\n\n'+T[_wjBulk.op]+'. El cambio es real en WooCommerce.')) return;
+  wiModal(null);
+  wjCreateAndRun('bulk', 'Edición masiva · '+T[_wjBulk.op]+' · '+plan.length+' publicaciones', plan.map(function(x){ return { id:x.p.id, name:x.p.name, body:x.body }; }));
+}
+
+// ── botón 📋 Trabajos + retomar trabajos sin terminar al abrir el panel ──
+(function(){
+  function boton(){
+    var imp=document.getElementById('wseo-import-btn'); if(!imp || document.getElementById('wseo-jobs-btn')) return;
+    var b=document.createElement('button'); b.id='wseo-jobs-btn'; b.className='btn btn-ghost btn-sm'; b.textContent='📋 Trabajos'; b.title='Importaciones y ediciones masivas: avance, errores y reintentos';
+    b.onclick=function(){ wjOpenList(); };
+    imp.insertAdjacentElement('afterend', b);
+  }
+  async function retomar(){
+    var t0=Date.now();
+    while(!(typeof token!=='undefined' && token) && Date.now()-t0<10*60000) await _wjSleep(3000);
+    await _wjSleep(15000);
+    var d=await wiApi('/wjob/list'); if(!d || !d.jobs) return;
+    d.jobs.filter(function(j){ return j.status==='running'; }).forEach(function(j){ wjRun(j); });
+  }
+  if(document.readyState==='complete'){ boton(); retomar(); } else window.addEventListener('load', function(){ boton(); retomar(); });
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// v321 · CALCULADORA DE RENTABILIDAD: canales configurables y conceptos con % + $ fijo
+//
+// Cómo calcula (igual que antes, ampliado):
+//   Costo de origen  O = blanco + flete + producción + extra
+//   Cada concepto activo cuesta:  % × base  +  $ fijo        (base = precio final o costo de origen)
+//   Costos del canal  = Σ conceptos activos de tipo «costo» + costo fijo + envío vendedor (si está tildado)
+//   Ganancia neta     G = Precio − Costos del canal − O
+//   Rentabilidad      = G ÷ O   (recargo sobre el COSTO; no es margen sobre el precio)
+//   Precio sugerido   P = (G + O + Σ $ fijos + Σ %×O de los conceptos sobre costo) ÷ (1 − Σ % sobre precio)
+// Con los valores de siempre ($ fijo = 0, base = precio, todos activos) da exactamente lo mismo que v320.
+// Los conceptos de tipo «recuperable» (retenciones / percepciones que después se descuentan de impuestos)
+// se muestran pero NO restan ganancia ni mueven el precio.
+// ═══════════════════════════════════════════════════════════════════════════════
+var PC_CFG_KEY = 'epp_pc_cfg';
+var PC_BASE_IDS = ['clasica','premium','woo','mayor'];
+var PC_FIELD_NAMES = { com:'Comisión canal', flatfee:'Costo fijo', iibb:'IIBB', retenciones:'Retenciones', contable:'Costo contable', publicidad:'Publicidad',
+  packaging:'Packaging', hosting:'Hosting', debcred:'Déb/Créd', envio:'Envío vendedor' };
+var PC_FIELD_SUB = { contable:'(Contador+Mono+Arca) % ventas', publicidad:'(Publicidad+Página+Percepc.)', hosting:'(% ventas)' };
+var PC_DEFAULT_FIELDS = {
+  clasica:['com','flatfee','iibb','retenciones','contable','publicidad','packaging','envio'],
+  premium:['com','flatfee','iibb','retenciones','contable','publicidad','packaging','envio'],
+  woo:    ['com','flatfee','publicidad','hosting','contable','packaging','envio'],
+  mayor:  ['com','flatfee','iibb','debcred','contable','packaging','envio'],
+  _nuevo: ['com','flatfee','iibb','retenciones','contable','publicidad','packaging','envio']
+};
+var PC_LEGACY_BASE = PC_CHANNELS.map(function(c){ return JSON.parse(JSON.stringify(c)); });   // los 4 canales tal como venían
+var _pcCfg = null, _pcOpen = {}, _pcCfgTimer = null;
+try{ _pcOpen = JSON.parse(localStorage.getItem('epp_pc_open')||'{}')||{}; }catch(e){}
+
+function _pcDefaultCfg(){
+  return { v:1, channels: PC_LEGACY_BASE.map(function(c){
+    var names = {}; if(c.id==='clasica'||c.id==='premium') names.flatfee='Costo fijo ML'; if(c.id==='mayor') names.com='Comisión';
+    return { id:c.id, label:c.label, icon:c.icon, color:c.color, active:true, base:true, fields:PC_DEFAULT_FIELDS[c.id].slice(), names:names, defaults:null };
+  }) };
+}
+function _pcCfgNormalize(cfg){
+  if(!cfg || !Array.isArray(cfg.channels) || !cfg.channels.length) cfg=_pcDefaultCfg();
+  // los 4 de siempre no se pierden nunca (se pueden desactivar)
+  PC_LEGACY_BASE.forEach(function(c){ if(!cfg.channels.some(function(x){ return x.id===c.id; })) cfg.channels.push(_pcDefaultCfg().channels.find(function(x){ return x.id===c.id; })); });
+  cfg.channels.forEach(function(c){ c.fields=Array.isArray(c.fields)?c.fields:(PC_DEFAULT_FIELDS[c.id]||PC_DEFAULT_FIELDS._nuevo).slice(); c.names=c.names||{}; c.base=PC_BASE_IDS.indexOf(c.id)>=0; if(c.active==null) c.active=true; });
+  return cfg;
+}
+function _pcChCfg(id){ return (_pcCfg&&_pcCfg.channels||[]).find(function(c){ return c.id===id; }) || null; }
+function _pcName(chId, f){ var c=_pcChCfg(chId); return (c&&c.names&&c.names[f]) || PC_FIELD_NAMES[f] || f; }
+function _pcHas(chId, f){ var c=_pcChCfg(chId); return !c || c.fields.indexOf(f)>=0; }
+
+// Aplica la configuración: PC_CHANNELS = canales activos (en orden), etiquetas del historial
+function _pcApplyCfg(){
+  _pcCfg=_pcCfgNormalize(_pcCfg);
+  PC_CHANNELS.length=0;
+  _pcCfg.channels.forEach(function(c){
+    if(!c.active) return;
+    var leg=PC_LEGACY_BASE.find(function(x){ return x.id===c.id; }) || { comPct:0, flatFee:0, envioCheck:false, envioCosto:0 };
+    PC_CHANNELS.push(Object.assign({}, leg, { id:c.id, label:c.label, icon:c.icon||'🛒', color:c.color||'#475569' }));
+    if(!_pcState[c.id]) _pcState[c.id]=_pcInitState(PC_CHANNELS[PC_CHANNELS.length-1]);
+  });
+  PC_CH_IDS.length=0; PC_CHANNELS.forEach(function(c){ PC_CH_IDS.push(c.id); });
+  _pcCfg.channels.forEach(function(c){ PC_CH_LBL[c.id]=(c.icon||'🛒')+' '+c.label; });
+}
+function _pcSaveCfg(silent){
+  try{ localStorage.setItem(PC_CFG_KEY, JSON.stringify(_pcCfg)); }catch(e){}
+  if(_pcCfgTimer) clearTimeout(_pcCfgTimer);
+  _pcCfgTimer=setTimeout(async function(){
+    try{
+      var d=await wiApi('/pcfg', { config:_pcCfg });
+      if(d && d.ok){ _pcCfg.saved_at=d.saved_at; try{ localStorage.setItem(PC_CFG_KEY, JSON.stringify(_pcCfg)); }catch(e){} }
+      else if(!silent) console.warn('[pc cfg] no se pudo guardar en el Worker:', d&&d.error);
+    }catch(e){ console.warn('[pc cfg]', e.message); }
+  }, 1500);
+}
+function _pcLoadCfgLocal(){ try{ _pcCfg=JSON.parse(localStorage.getItem(PC_CFG_KEY)||'null'); }catch(e){ _pcCfg=null; } _pcApplyCfg(); }
+var _pcCfgCloudDone=false;
+async function _pcLoadCfgCloud(){
+  if(_pcCfgCloudDone || typeof wiApi!=='function' || !(typeof token!=='undefined' && token)) return;
+  _pcCfgCloudDone=true;
+  try{
+    var d=await wiApi('/pcfg');
+    if(d && d.config && Array.isArray(d.config.channels)){
+      var loc=_pcCfg&&_pcCfg.saved_at||'';
+      if(!loc || String(d.config.saved_at||'')>loc){ _pcCfg=d.config; try{ localStorage.setItem(PC_CFG_KEY, JSON.stringify(_pcCfg)); }catch(e){}
+        _pcApplyCfg(); PC_CHANNELS.forEach(function(ch){ if(!_pcLock.histId) _pcState[ch.id]=_pcInitState(ch); }); pcInit(); }
+    } else if(d && d.ok && !d.config && _pcCfg){ _pcSaveCfg(true); }   // primera vez: subir la de esta PC
+  }catch(e){}
+}
+
+// ── estado de un canal: valores de siempre + predeterminados guardados + campos nuevos ──
+var _pcInitStateV320 = _pcInitState;
+window._pcInitState = function(ch){
+  var s=_pcInitStateV320(ch);
+  var c=_pcChCfg(ch.id), d=c&&c.defaults;
+  if(d) Object.keys(d).forEach(function(k){ if(k!=='precio' && k!=='ganancia' && !/Amt$/.test(k) || k==='envioAmt') s[k]=JSON.parse(JSON.stringify(d[k])); });
+  return _pcEnsure(s);
+};
+function _pcEnsure(s){
+  PC_ALL_FIELDS.forEach(function(f){
+    if(s[f+'Fix']==null) s[f+'Fix']=0;
+    if(s[f+'Base']!=='costo') s[f+'Base']='precio';
+    if(s[f+'On']==null) s[f+'On']=true;
+    if(s[f+'Tipo']!=='recuperable') s[f+'Tipo']='costo';
+  });
+  if(!Array.isArray(s.extras)) s.extras=[];
+  return s;
+}
+Object.keys(_pcState).forEach(function(k){ _pcEnsure(_pcState[k]); });
+
+// ── conceptos de un canal (para cualquier estado: el actual o uno guardado en el historial) ──
+function _pcConceptos(s){
+  var out=[];
+  PC_ALL_FIELDS.forEach(function(f){ out.push({ f:f, pct:+s[f+'Pct']||0, fix:+s[f+'Fix']||0, base:s[f+'Base']==='costo'?'costo':'precio', on:s[f+'On']!==false, tipo:s[f+'Tipo']==='recuperable'?'recuperable':'costo' }); });
+  (s.extras||[]).forEach(function(x){ out.push({ x:x, pct:+x.pct||0, fix:+x.fix||0, base:x.base==='costo'?'costo':'precio', on:x.on!==false, tipo:x.tipo==='recuperable'?'recuperable':'costo' }); });
+  return out;
+}
+function _pcMonto(c, P, O){ return c.on ? (c.pct/100*(c.base==='costo'?O:P) + c.fix) : 0; }
+function _pcDesc(s, P, O){
+  var t=(+s.flatFee||0) + (s.envioCheck ? (+s.envioAmt||0) : 0);
+  _pcConceptos(s).forEach(function(c){ if(c.tipo==='costo') t+=_pcMonto(c, P, O); });
+  return t;
+}
+function _pcSolve(s, G, O){
+  var pctP=0, fijos=(+s.flatFee||0) + (s.envioCheck ? (+s.envioAmt||0) : 0);
+  _pcConceptos(s).forEach(function(c){ if(!c.on || c.tipo!=='costo') return; if(c.base==='precio') pctP+=c.pct/100; else fijos+=c.pct/100*O; fijos+=c.fix; });
+  var den=1-pctP; if(den<0.01) return 0;
+  return (G + O + fijos)/den;
+}
+
+// ── reemplazos de las fórmulas (mismo nombre: todo lo demás las sigue usando) ──
+window.pcSumPct = function(chId){ var p=0; _pcConceptos(_pcState[chId]).forEach(function(c){ if(c.on && c.tipo==='costo' && c.base==='precio') p+=c.pct/100; }); return p; };
+window.pcSumDescuentos = function(chId){ var s=_pcState[chId]; return _pcDesc(s, s.precio||0, _pcOrigenCosto); };
+window.pcCalcGanancia = function(chId){ var s=_pcState[chId]; return (s.precio||0) - _pcDesc(s, s.precio||0, _pcOrigenCosto) - _pcOrigenCosto; };
+window.pcPrecioDesdeGanancia = function(chId, target){ return _pcSolve(_pcState[chId], target, _pcOrigenCosto); };
+window.pcDeriveAmounts = function(chId){
+  var s=_pcEnsure(_pcState[chId]), P=s.precio||0, O=_pcOrigenCosto;
+  _pcConceptos(s).forEach(function(c){ var m=_pcMonto(c, P, O); if(c.f) s[c.f+'Amt']=m; else c.x.amt=m; });
+  s.ganancia = P - _pcDesc(s, P, O) - O;
+};
+window.pcDeriveGanancia = function(chId){ pcDeriveAmounts(chId); pcRefreshChannelUI(chId); };
+window.pcAfterChange = function(chId){ if(!pcLockReprice(chId)) pcDeriveAmounts(chId); pcRefreshChannelUI(chId); pcUpdateKPIs(); };
+window.pcOnPctChange = function(chId, f){ _pcState[chId][f+'Pct']=pcV('pcc-'+chId+'-'+f+'pct'); pcAfterChange(chId); };
+// El total $ de un concepto sigue siendo editable: despeja el % (descontando el $ fijo)
+window.pcOnAmtChange = function(chId, f){
+  var s=_pcState[chId], amt=pcV('pcc-'+chId+'-'+f+'amt'), base=s[f+'Base']==='costo'?_pcOrigenCosto:s.precio;
+  if(base>0) s[f+'Pct']=Math.max(0,(amt-(+s[f+'Fix']||0)))/base*100;
+  pcSafeSet('pcc-'+chId+'-'+f+'pct', Math.round(s[f+'Pct']*100)/100);
+  pcAfterChange(chId);
+};
+function pcOnConcSet(chId, f, key, el){
+  var s=_pcState[chId];
+  if(key==='Fix') s[f+'Fix']=parseFloat(el.value)||0;
+  else if(key==='On') s[f+'On']=!!el.checked;
+  else s[f+key]=el.value;
+  pcAfterChange(chId); _pcRowStyle(chId, f);
+}
+function pcRenameConc(chId, f, el){
+  var c=_pcChCfg(chId); if(!c) return; var v=String(el.value||'').trim();
+  if(v && v!==PC_FIELD_NAMES[f]) c.names[f]=v; else delete c.names[f];
+  _pcSaveCfg(); pcRefreshChannelUI(chId);
+}
+function pcRemoveConc(chId, f){
+  if(!confirm('¿Quitar «'+_pcName(chId,f)+'» de '+_pcLbl(chId)+'? Deja de contar en el cálculo (podés volver a agregarlo).')) return;
+  var c=_pcChCfg(chId); if(c) c.fields=c.fields.filter(function(x){ return x!==f; });
+  var s=_pcState[chId];
+  if(f==='flatfee') s.flatFee=0; else if(f==='envio'){ s.envioCheck=false; } else { s[f+'Pct']=0; s[f+'Fix']=0; }
+  _pcSaveCfg(); pcRerenderChannel(chId);
+}
+function pcAddConc(chId, sel){
+  var v=sel.value; sel.value=''; if(!v) return;
+  if(v==='_custom'){
+    var n=prompt('Nombre del concepto (ej.: Percepción IVA, Cuotas sin interés, Etiquetas):'); if(!n) return;
+    _pcState[chId].extras.push({ id:'x'+Date.now().toString(36), name:String(n).slice(0,40), pct:0, fix:0, base:'precio', on:true, tipo:'costo' });
+  } else { var c=_pcChCfg(chId); if(c && c.fields.indexOf(v)<0) c.fields.push(v); _pcSaveCfg(); }
+  _pcOpen[chId]=true; pcRerenderChannel(chId);
+}
+function pcExtraSet(chId, i, key, el){
+  var x=_pcState[chId].extras[i]; if(!x) return;
+  if(key==='pct'||key==='fix') x[key]=parseFloat(el.value)||0; else if(key==='on') x.on=!!el.checked; else x[key]=el.value;
+  if(key==='amt'){ var base=x.base==='costo'?_pcOrigenCosto:_pcState[chId].precio; if(base>0) x.pct=Math.max(0,(parseFloat(el.value)||0)-(+x.fix||0))/base*100; var pe=document.getElementById('pcx-'+chId+'-'+i+'-pct'); if(pe) pe.value=Math.round(x.pct*100)/100; }
+  pcAfterChange(chId);
+}
+function pcExtraDel(chId, i){
+  var x=_pcState[chId].extras[i]; if(!x) return;
+  if(!confirm('¿Quitar «'+x.name+'»?')) return;
+  _pcState[chId].extras.splice(i,1); pcRerenderChannel(chId);
+}
+function pcSaveDefaults(chId){
+  var c=_pcChCfg(chId); if(!c) return;
+  var s=_pcState[chId], d={};
+  Object.keys(s).forEach(function(k){ if(k==='precio'||k==='ganancia'||(/Amt$/.test(k)&&k!=='envioAmt')) return; d[k]=JSON.parse(JSON.stringify(s[k])); });
+  (d.extras||[]).forEach(function(x){ delete x.amt; });
+  c.defaults=d; _pcSaveCfg();
+  showToast('💾 '+_pcLbl(chId)+': estos costos e impuestos quedan como predeterminados (en todas tus PCs)','success');
+}
+function _pcSpan(chId){ var el=document.getElementById('pc-ch-'+chId); if(el) el.style.gridColumn=_pcOpen[chId]?'1 / -1':''; }
+function pcToggleOpen(chId){ _pcOpen[chId]=!_pcOpen[chId]; _pcSpan(chId); try{ localStorage.setItem('epp_pc_open', JSON.stringify(_pcOpen)); }catch(e){} var b=document.getElementById('pcc-'+chId+'-conc'); if(b) b.style.display=_pcOpen[chId]?'':'none'; var t=document.getElementById('pcc-'+chId+'-tog'); if(t) t.textContent=_pcOpen[chId]?'▲':'▼'; }
+function _pcLbl(chId){ var c=_pcChCfg(chId); return c ? (c.icon||'')+' '+c.label : chId; }
+function pcRerenderChannel(chId){
+  var ch=PC_CHANNELS.find(function(c){ return c.id===chId; }); var el=document.getElementById('pc-ch-'+chId);
+  if(ch && el){ el.innerHTML=pcRenderCard(ch); _pcSpan(chId); pcAfterChange(chId); }
+}
+
+// ── tarjeta de canal ──
+var _PCI='font-size:12px;padding:3px 5px;width:100%;border-radius:5px;text-align:right;min-width:0;border:1px solid var(--border);background:var(--bg1,#fff);color:var(--text)';
+window.pcRenderCard = function(ch){
+  var cid=ch.id, s=_pcEnsure(_pcState[cid]), col=ch.color, open=!!_pcOpen[cid];
+  var fields=(_pcChCfg(cid)||{fields:PC_DEFAULT_FIELDS._nuevo}).fields;
+  var rowConc=function(f){
+    if(f==='flatfee') return '<tr id="pcc-'+cid+'-row-flatfee"><td></td><td><input value="'+_pcEsc(_pcName(cid,f))+'" onchange="pcRenameConc(\''+cid+'\',\'flatfee\',this)" style="'+_PCI+';text-align:left;font-weight:600"></td><td style="text-align:center;color:var(--text3)">—</td><td></td>'+
+      '<td><input type="number" id="pcc-'+cid+'-flatfee" value="'+(+s.flatFee||0)+'" min="0" step="50" style="'+_PCI+'" oninput="pcOnFlatFeeChange(\''+cid+'\')"></td><td style="text-align:right;font-weight:700" id="pcc-'+cid+'-flatfee-tot"></td><td></td><td><button class="btn btn-ghost btn-xs" onclick="pcRemoveConc(\''+cid+'\',\'flatfee\')" title="Quitar">🗑</button></td></tr>';
+    if(f==='envio') return '<tr id="pcc-'+cid+'-row-envio"><td><input type="checkbox" id="pcc-'+cid+'-enviocheck"'+(s.envioCheck?' checked':'')+' style="accent-color:'+col+'" onchange="pcOnEnvioCheck(\''+cid+'\')" title="Activar"></td><td><input value="'+_pcEsc(_pcName(cid,f))+'" onchange="pcRenameConc(\''+cid+'\',\'envio\',this)" style="'+_PCI+';text-align:left;font-weight:600"></td><td style="text-align:center;color:var(--text3)">—</td><td></td>'+
+      '<td><div id="pcc-'+cid+'-enviorow" style="'+(s.envioCheck?'':'display:none')+'"><input type="number" id="pcc-'+cid+'-envioamt" value="'+(+s.envioAmt||0)+'" min="0" step="50" style="'+_PCI+'" oninput="pcOnEnvioAmtChange(\''+cid+'\')"></div></td><td style="text-align:right;font-weight:700" id="pcc-'+cid+'-envio-tot"></td><td></td><td><button class="btn btn-ghost btn-xs" onclick="pcRemoveConc(\''+cid+'\',\'envio\')" title="Quitar">🗑</button></td></tr>';
+    var on=s[f+'On']!==false;
+    return '<tr id="pcc-'+cid+'-row-'+f+'"'+(on?'':' style="opacity:.5"')+'><td><input type="checkbox"'+(on?' checked':'')+' style="accent-color:'+col+'" onchange="pcOnConcSet(\''+cid+'\',\''+f+'\',\'On\',this)" title="Activar / desactivar"></td>'+
+      '<td><input value="'+_pcEsc(_pcName(cid,f))+'" onchange="pcRenameConc(\''+cid+'\',\''+f+'\',this)" title="'+_pcEsc(PC_FIELD_SUB[f]||'')+'" style="'+_PCI+';text-align:left;font-weight:600"></td>'+
+      '<td><input type="number" id="pcc-'+cid+'-'+f+'pct" value="'+(Math.round((+s[f+'Pct']||0)*100)/100)+'" min="0" max="100" step="0.1" style="'+_PCI+'" oninput="pcOnPctChange(\''+cid+'\',\''+f+'\')"></td>'+
+      '<td><select onchange="pcOnConcSet(\''+cid+'\',\''+f+'\',\'Base\',this)" style="'+_PCI+';text-align:left;padding:3px 2px" title="Sobre qué se calcula el %"><option value="precio"'+(s[f+'Base']!=='costo'?' selected':'')+'>del precio</option><option value="costo"'+(s[f+'Base']==='costo'?' selected':'')+'>del costo</option></select></td>'+
+      '<td><input type="number" id="pcc-'+cid+'-'+f+'fix" value="'+(+s[f+'Fix']||0)+'" min="0" step="10" style="'+_PCI+'" onchange="pcOnConcSet(\''+cid+'\',\''+f+'\',\'Fix\',this)" oninput="pcOnConcSet(\''+cid+'\',\''+f+'\',\'Fix\',this)"></td>'+
+      '<td><input type="number" id="pcc-'+cid+'-'+f+'amt" value="'+Math.round(s[f+'Amt']||0)+'" min="0" step="1" style="'+_PCI+';font-weight:700" title="Total $ del concepto (% + fijo). Si lo escribís, se despeja el %." oninput="pcOnAmtChange(\''+cid+'\',\''+f+'\')"></td>'+
+      '<td><select onchange="pcOnConcSet(\''+cid+'\',\''+f+'\',\'Tipo\',this)" style="'+_PCI+';text-align:left;padding:3px 2px" title="Costo: resta ganancia. Recuperable: retención/percepción que después descontás de impuestos (se informa, no resta)"><option value="costo"'+(s[f+'Tipo']!=='recuperable'?' selected':'')+'>costo</option><option value="recuperable"'+(s[f+'Tipo']==='recuperable'?' selected':'')+'>recuperable</option></select></td>'+
+      '<td><button class="btn btn-ghost btn-xs" onclick="pcRemoveConc(\''+cid+'\',\''+f+'\')" title="Quitar este concepto del canal">🗑</button></td></tr>';
+  };
+  var rowExtra=function(x,i){
+    var on=x.on!==false, k='pcx-'+cid+'-'+i;
+    return '<tr'+(on?'':' style="opacity:.5"')+'><td><input type="checkbox"'+(on?' checked':'')+' style="accent-color:'+col+'" onchange="pcExtraSet(\''+cid+'\','+i+',\'on\',this);this.closest(\'tr\').style.opacity=this.checked?\'\':\'.5\'"></td>'+
+      '<td><input value="'+_pcEsc(x.name)+'" onchange="pcExtraSet(\''+cid+'\','+i+',\'name\',this)" style="'+_PCI+';text-align:left;font-weight:600"></td>'+
+      '<td><input type="number" id="'+k+'-pct" value="'+(Math.round((+x.pct||0)*100)/100)+'" min="0" max="100" step="0.1" style="'+_PCI+'" oninput="pcExtraSet(\''+cid+'\','+i+',\'pct\',this)"></td>'+
+      '<td><select onchange="pcExtraSet(\''+cid+'\','+i+',\'base\',this)" style="'+_PCI+';text-align:left;padding:3px 2px"><option value="precio"'+(x.base!=='costo'?' selected':'')+'>del precio</option><option value="costo"'+(x.base==='costo'?' selected':'')+'>del costo</option></select></td>'+
+      '<td><input type="number" value="'+(+x.fix||0)+'" min="0" step="10" style="'+_PCI+'" oninput="pcExtraSet(\''+cid+'\','+i+',\'fix\',this)"></td>'+
+      '<td><input type="number" id="'+k+'-amt" value="'+Math.round(x.amt||0)+'" step="1" style="'+_PCI+';font-weight:700" oninput="pcExtraSet(\''+cid+'\','+i+',\'amt\',this)"></td>'+
+      '<td><select onchange="pcExtraSet(\''+cid+'\','+i+',\'tipo\',this)" style="'+_PCI+';text-align:left;padding:3px 2px"><option value="costo"'+(x.tipo!=='recuperable'?' selected':'')+'>costo</option><option value="recuperable"'+(x.tipo==='recuperable'?' selected':'')+'>recuperable</option></select></td>'+
+      '<td><button class="btn btn-ghost btn-xs" onclick="pcExtraDel(\''+cid+'\','+i+')" title="Quitar">🗑</button></td></tr>';
+  };
+  var ocultos=Object.keys(PC_FIELD_NAMES).filter(function(f){ return fields.indexOf(f)<0; });
+  var big='font-size:20px;font-weight:800;padding:4px 8px;border-radius:8px;width:100%;min-width:0;';
+  return '<div style="border-top:4px solid '+col+';padding:12px 14px">'+
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'+
+      '<span style="font-size:22px;line-height:1">'+ch.icon+'</span>'+
+      '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:800;color:'+col+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+_pcEsc(ch.label)+'</div><div id="pcc-'+cid+'-sumline" style="font-size:10.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div></div>'+
+      '<span id="pcc-'+cid+'-best"></span>'+
+      '<button class="btn btn-ghost btn-xs" onclick="pcToggleOpen(\''+cid+'\')" title="Costos, comisiones e impuestos del canal" style="white-space:nowrap">✏️ Costos e impuestos <span id="pcc-'+cid+'-tog">'+(open?'▲':'▼')+'</span></button>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:1.25fr 1fr .8fr;gap:8px;align-items:end">'+
+      '<div><label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:'+col+'">Precio final</label>'+
+        '<input type="number" id="pcc-'+cid+'-precio" value="'+(s.precio||0)+'" min="0" step="100" style="'+big+'border:2px solid '+col+';color:'+col+'" oninput="pcOnPrecioChange(\''+cid+'\')"></div>'+
+      '<div><label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3)">💰 Ganancia neta</label>'+
+        '<input type="number" id="pcc-'+cid+'-ganancia" value="'+Math.round(s.ganancia||0)+'" style="'+big+'border:1.5px solid var(--border);background:var(--bg3)" oninput="pcOnGananciaChange(\''+cid+'\')" title="Editable: escribí la ganancia que querés y se calcula el precio"></div>'+
+      '<div><label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text3)" title="Rentabilidad = ganancia neta ÷ costo de origen (recargo sobre costo)">📈 Rentab. <span id="pcc-'+cid+'-lockico"></span></label>'+
+        '<div style="position:relative"><input type="number" id="pcc-'+cid+'-rent" step="1" style="'+big+'padding-right:22px;border:1.5px solid var(--border)" oninput="pcOnRentChange(\''+cid+'\')" title="Escribí la rentabilidad sobre el costo y se calcula el precio"><span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text3)">%</span></div></div>'+
+    '</div>'+
+    '<div style="height:7px;background:var(--bg3);border-radius:5px;margin:9px 0 4px;overflow:hidden"><div id="pcc-'+cid+'-bar" style="height:100%;width:0;background:'+col+';border-radius:5px;transition:width .3s"></div></div>'+
+    '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:11px;min-height:18px"><span id="pcc-'+cid+'-insight"></span><span id="pcc-'+cid+'-margen" style="color:var(--text3)"></span><span id="pcc-'+cid+'-diff" style="flex-basis:100%"></span></div>'+
+    '<div id="pcc-'+cid+'-conc" style="'+(open?'':'display:none;')+'margin-top:10px;border-top:1px dashed var(--border);padding-top:8px">'+
+      '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px;min-width:640px"><thead><tr style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.3px">'+
+        '<th style="width:22px"></th><th style="text-align:left;min-width:150px">Concepto</th><th style="width:78px">%</th><th style="width:104px">Base del %</th><th style="width:96px">$ fijo</th><th style="width:100px" title="% × base + $ fijo">Total $</th><th style="width:118px">Tipo</th><th style="width:26px"></th></tr></thead>'+
+      '<tbody>'+fields.map(rowConc).join('')+(s.extras||[]).map(rowExtra).join('')+'</tbody></table></div>'+
+      '<div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap">'+
+        '<select onchange="pcAddConc(\''+cid+'\',this)" style="font-size:12px;padding:4px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg1,#fff);color:var(--text)"><option value="">➕ Agregar concepto…</option><option value="_custom">Concepto nuevo (personalizado)</option>'+
+          ocultos.map(function(f){ return '<option value="'+f+'">'+PC_FIELD_NAMES[f]+'</option>'; }).join('')+'</select>'+
+        '<span style="flex:1"></span>'+
+        '<button class="btn btn-ghost btn-xs" onclick="pcSaveDefaults(\''+cid+'\')" title="Guardar estos costos e impuestos como los de siempre para este canal (se guardan en la nube)">💾 Guardar como predeterminado</button>'+
+      '</div>'+
+      '<div style="font-size:10px;color:var(--text3);margin-top:5px">Cada concepto suma <b>% × base + $ fijo</b>. «Recuperable» = retención o percepción que después descontás de impuestos: se informa pero no resta ganancia.</div>'+
+    '</div>'+
+  '</div>';
+};
+function _pcRowStyle(chId, f){ var r=document.getElementById('pcc-'+chId+'-row-'+f); if(r) r.style.opacity=_pcState[chId][f+'On']===false?'.5':''; }
+
+window.pcRenderChannels = function(){
+  var grid=document.getElementById('pc-ch-grid');
+  if(grid){
+    grid.innerHTML=PC_CHANNELS.map(function(ch){ return '<div id="pc-ch-'+ch.id+'" class="card" style="padding:0;overflow:hidden;margin:0"></div>'; }).join('')+
+      '<div onclick="pcChannelsOpen(true)" class="card" style="margin:0;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;border:2px dashed var(--border2);min-height:120px;color:var(--accent)"><span style="font-size:28px">＋</span><div><div style="font-weight:800;font-size:14px">Agregar un canal</div><div style="font-size:11px;color:var(--text3)">Shopee, venta directa, WhatsApp, distribuidores…</div></div></div>';
+  }
+  PC_CHANNELS.forEach(function(ch){ var el=document.getElementById('pc-ch-'+ch.id); if(el){ el.innerHTML=pcRenderCard(ch); _pcSpan(ch.id); } });
+};
+
+// ── refresco de una tarjeta: lo de antes + totales, línea resumen y barra ──
+var _pcRefreshV320 = pcRefreshChannelUI;
+window.pcRefreshChannelUI = function(chId){
+  var s=_pcEnsure(_pcState[chId]);
+  _pcRefreshV320(chId);
+  var P=s.precio||0, O=_pcOrigenCosto;
+  var set=function(id, v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+  set('pcc-'+chId+'-flatfee-tot', pcFmt(+s.flatFee||0));
+  set('pcc-'+chId+'-envio-tot', s.envioCheck ? pcFmt(+s.envioAmt||0) : '—');
+  (s.extras||[]).forEach(function(x,i){ var e=document.getElementById('pcx-'+chId+'-'+i+'-amt'); if(e && document.activeElement!==e) e.value=Math.round(x.amt||0); });
+  PC_ALL_FIELDS.forEach(function(f){ var e=document.getElementById('pcc-'+chId+'-'+f+'amt'); if(e && document.activeElement!==e) e.value=Math.round(s[f+'Amt']||0); });
+  var costos=_pcDesc(s, P, O), rent=O>0&&P>0 ? s.ganancia/O*100 : null, marg=P>0 ? s.ganancia/P*100 : null;
+  var c=_pcChCfg(chId), fields=c?c.fields:[];
+  var partes=[];
+  fields.forEach(function(f){ if(f==='flatfee'){ if(+s.flatFee) partes.push(_pcName(chId,f)+' '+pcFmt(s.flatFee)); return; } if(f==='envio'){ if(s.envioCheck) partes.push('Envío '+pcFmt(s.envioAmt)); return; }
+    if(s[f+'On']===false) return; var t=[]; if(+s[f+'Pct']) t.push(_pcNum(s[f+'Pct'])+'%'+(s[f+'Base']==='costo'?' s/costo':'')); if(+s[f+'Fix']) t.push(pcFmt(s[f+'Fix'])); if(t.length) partes.push(_pcName(chId,f)+' '+t.join(' + ')); });
+  (s.extras||[]).forEach(function(x){ if(x.on===false) return; var t=[]; if(+x.pct) t.push(_pcNum(x.pct)+'%'); if(+x.fix) t.push(pcFmt(x.fix)); if(t.length) partes.push(x.name+' '+t.join(' + ')); });
+  set('pcc-'+chId+'-sumline', partes.join(' · ') || 'Sin costos cargados');
+  var m=document.getElementById('pcc-'+chId+'-margen');
+  if(m) m.textContent = P>0 ? 'Costos del canal '+pcFmt(costos)+' · margen s/precio '+(marg==null?'—':marg.toFixed(1).replace('.',',')+'%') : '';
+  var bar=document.getElementById('pcc-'+chId+'-bar'); if(bar) bar.style.width=(rent==null?0:Math.max(0,Math.min(100,rent)))+'%';
+  var g=document.getElementById('pcc-'+chId+'-ganancia'); if(g && document.activeElement!==g){ g.style.color=s.ganancia>=0?'#16a34a':'#dc2626'; }
+};
+
+// ── indicadores y comparación ──
+window.pcUpdateKPIs = function(){
+  function ks(id,val){ var e=document.getElementById(id); if(e) e.textContent=val>0?'$'+Math.round(val).toLocaleString('es-AR'):'—'; }
+  if(_pcState.clasica) ks('pc-kpi-ml-c', _pcState.clasica.precio);
+  if(_pcState.premium) ks('pc-kpi-ml-p', _pcState.premium.precio);
+  if(_pcState.woo) ks('pc-kpi-woo', _pcState.woo.precio);
+  var O=_pcOrigenCosto;
+  var rows=PC_CHANNELS.map(function(ch){ var s=_pcState[ch.id]; return { ch:ch, P:s.precio||0, G:s.ganancia||0, R:O>0&&s.precio>0?s.ganancia/O*100:null, C:s.precio>0?_pcDesc(s,s.precio,O):0 }; }).filter(function(r){ return r.P>0; });
+  var max=function(k){ return rows.reduce(function(a,b){ return (a==null||b[k]>a[k])?b:a; }, null); };
+  var min=function(k){ return rows.reduce(function(a,b){ return (a==null||b[k]<a[k])?b:a; }, null); };
+  var bR=max('R'), bG=max('G'), bC=max('C'), lP=min('P'), hP=max('P');
+  var put=function(id, html){ var e=document.getElementById(id); if(e) e.innerHTML=html; };
+  var nm=function(r){ return r ? r.ch.icon+' '+_pcEsc(r.ch.label) : '—'; };
+  put('pc-k2', bR&&bR.R!=null ? '<div class="mc-val" style="color:#16a34a">'+bR.R.toFixed(1).replace('.',',')+'%</div><div style="font-size:11px;color:var(--text3)">'+nm(bR)+'</div>' : '<div class="mc-val">—</div>');
+  put('pc-k3', bG ? '<div class="mc-val">'+pcFmt(bG.G)+'</div><div style="font-size:11px;color:var(--text3)">'+nm(bG)+'</div>' : '<div class="mc-val">—</div>');
+  put('pc-k4', rows.length ? '<div class="mc-val">'+pcFmt(rows.reduce(function(a,r){ return a+r.P; },0)/rows.length)+'</div><div style="font-size:11px;color:var(--text3)">promedio de '+rows.length+' canal'+(rows.length>1?'es':'')+'</div>' : '<div class="mc-val">—</div>');
+  PC_CHANNELS.forEach(function(ch){ var e=document.getElementById('pcc-'+ch.id+'-best'); if(e) e.innerHTML = bR && rows.length>1 && bR.ch.id===ch.id ? '<span class="badge bg-green" style="font-size:10px;font-weight:700">🏆 Más rentable</span>' : ''; });
+  // gráfico de barras
+  var cmp=document.getElementById('pc-compare'); if(!cmp) return;
+  if(!rows.length){ cmp.innerHTML='<div style="color:var(--text3);font-size:12px;padding:20px 0;text-align:center">Cargá el costo de origen y un precio para comparar los canales.</div>'; return; }
+  var top=Math.max(10, Math.max.apply(null, rows.map(function(r){ return r.R||0; })));
+  cmp.innerHTML='<div style="display:flex;align-items:flex-end;gap:10px;height:170px;padding:6px 4px 0;border-bottom:1px solid var(--border)">'+
+    rows.map(function(r){ var h=r.R==null?0:Math.max(2, r.R/top*150); return '<div style="flex:1;min-width:34px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%" title="'+_pcEsc(r.ch.label)+': '+(r.R==null?'—':r.R.toFixed(1)+'%')+' · ganancia '+pcFmt(r.G)+'">'+
+      '<div style="font-size:11.5px;font-weight:800;color:'+r.ch.color+'">'+(r.R==null?'—':r.R.toFixed(1).replace('.',',')+'%')+'</div><div style="width:70%;max-width:46px;height:'+h+'px;background:'+(r.R<0?'#dc2626':r.ch.color)+';border-radius:6px 6px 0 0"></div></div>'; }).join('')+'</div>'+
+    '<div style="display:flex;gap:10px;padding:4px 4px 0">'+rows.map(function(r){ return '<div style="flex:1;min-width:34px;text-align:center;font-size:10.5px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+_pcEsc(r.ch.label)+'">'+r.ch.icon+' '+_pcEsc(r.ch.label)+'</div>'; }).join('')+'</div>'+
+    '<div style="display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-size:11.5px;margin-top:10px">'+
+      '<span>💲 Precio sugerido más bajo</span><b>'+nm(lP)+' · '+pcFmt(lP.P)+'</b>'+
+      '<span>💰 Mayor ganancia neta</span><b>'+nm(bG)+' · '+pcFmt(bG.G)+'</b>'+
+      '<span>📈 Mayor rentabilidad</span><b>'+nm(bR)+' · '+(bR.R==null?'—':bR.R.toFixed(1).replace('.',',')+'%')+'</b>'+
+      '<span>🧾 Canal con más costos</span><b>'+nm(bC)+' · '+pcFmt(bC.C)+'</b>'+
+      '<span>↔️ Diferencia entre precios</span><b>'+pcFmt(hP.P-lP.P)+(lP.P>0?' ('+((hP.P-lP.P)/lP.P*100).toFixed(1).replace('.',',')+'%)':'')+'</b>'+
+    '</div>'+
+    '<div style="font-size:10.5px;color:var(--text3);margin-top:8px;background:var(--bg3);border-radius:8px;padding:6px 9px">📐 <b>Rentabilidad</b> = ganancia neta ÷ costo de origen (recargo sobre el costo). El <b>margen s/precio</b> de cada tarjeta = ganancia neta ÷ precio final.</div>';
+};
+
+// ── historial con columnas según los canales activos ──
+window.pcHistSumPct = function(ch){ var p=0; _pcConceptos(_pcEnsure(JSON.parse(JSON.stringify(ch)))).forEach(function(c){ if(c.on&&c.tipo==='costo'&&c.base==='precio') p+=c.pct/100; }); return p; };
+window.pcHistDesc = function(ch, O){ return _pcDesc(_pcEnsure(ch), ch.precio||0, O||0); };
+window.pcHistReprice = function(h){
+  var o=h.origen||0;
+  PC_CH_IDS.forEach(function(id){
+    var ch=h.channels&&h.channels[id];
+    if(!ch || !(ch.precio>0) || h.rent[id]==null || !(o>0)) return;
+    _pcEnsure(ch);
+    var p=_pcSolve(ch, h.rent[id]/100*o, o); if(!(p>0)) return;
+    ch.precio=pcRound100(p);
+    _pcConceptos(ch).forEach(function(c){ var m=_pcMonto(c, ch.precio, o); if(c.f){ if(ch[c.f+'Pct']!=null) ch[c.f+'Amt']=m; } else c.x.amt=m; });
+    ch.ganancia=ch.precio-_pcDesc(ch, ch.precio, o)-o;
+  });
+  return h;
+};
+function _pcHistHead(){
+  var t=document.getElementById('pc-history-table'); if(!t) return;
+  var th=t.querySelector('thead'); if(!th) return;
+  var b='border-left:2px solid var(--border2)';
+  th.innerHTML='<tr style="font-size:10px;color:var(--text3);background:var(--bg3);border-bottom:2px solid var(--border)">'+
+    '<th style="text-align:left;padding:6px 8px;white-space:nowrap" rowspan="2">Fecha</th><th style="text-align:left;padding:6px 8px" rowspan="2">Producto</th>'+
+    '<th style="text-align:right;padding:6px 6px;font-size:9.5px" rowspan="2" title="Costo Blanco (insumo base). Editable: recalcula el precio final de cada plataforma manteniendo la rentabilidad. Debajo se ve el costo total de origen.">Costo Blanco ($)</th>'+
+    PC_CH_IDS.map(function(id){ var c=_pcChCfg(id); return '<th style="text-align:center;padding:6px 8px;'+b+';color:'+(c&&c.color||'inherit')+'" colspan="3">'+_pcEsc(PC_CH_LBL[id]||id)+'</th>'; }).join('')+
+    '<th style="padding:6px 8px;text-align:center" rowspan="2">Acciones</th></tr>'+
+    '<tr style="font-size:9px;color:var(--text3);background:var(--bg3);border-bottom:2px solid var(--border)">'+
+    PC_CH_IDS.map(function(){ return '<th style="text-align:right;padding:3px 8px;'+b+'">Precio</th><th style="text-align:right;padding:3px 4px" title="Rentabilidad sobre costo (editable)">Rentab.</th><th style="text-align:right;padding:3px 4px">Ganan.</th>'; }).join('')+'</tr>';
+}
+var _pcRenderHistoryV320 = pcRenderHistory;
+window.pcRenderHistory = function(){
+  _pcHistHead();
+  var tb=document.getElementById('pc-history-tbody');
+  // v320 dibujaba siempre las 4 columnas fijas: se reemplaza la parte de canales por las activas
+  var hist=pcLoadHistory(), wrap=document.getElementById('pc-history-wrap'), empty=document.getElementById('pc-history-empty');
+  if(!wrap||!tb) return;
+  var has=hist.length>0; wrap.style.display=has?'':'none'; if(empty) empty.style.display=has?'none':''; if(!has){ tb.innerHTML=''; return; }
+  _pcRenderHistoryV320();   // arma las filas como antes (fecha, producto, costo, 4 canales, acciones)
+  // reconstruir las celdas de canales según los activos, sin tocar los datos guardados
+  Array.prototype.forEach.call(tb.rows, function(tr, i){
+    var h=pcHistEnsure(hist[i]); if(!h) return;
+    var cells=tr.cells; if(cells.length<4) return;
+    var acc=cells[cells.length-1], keep=[cells[0],cells[1],cells[2]];
+    var html=PC_CH_IDS.map(function(id){ return _pcHistCells(h, id); }).join('');
+    while(tr.cells.length>3) tr.deleteCell(3);
+    tr.insertAdjacentHTML('beforeend', html); tr.appendChild(acc);
+  });
+};
+function _pcHistCells(h, id){
+  var ch=h.channels&&h.channels[id], prevP=(h.precios_hist&&h.precios_hist[0])?h.precios_hist[0]:null;
+  if(!ch || !(ch.precio>0)) return '<td style="padding:6px 8px;text-align:right;color:var(--text3);border-left:2px solid var(--border2)">—</td><td style="padding:6px 4px;text-align:right;color:var(--text3);font-size:10px">—</td><td style="padding:6px 4px;text-align:right;color:var(--text3);font-size:10px">—</td>';
+  var ant=prevP&&prevP.precios&&prevP.precios[id]&&Math.round(prevP.precios[id])!==Math.round(ch.precio)?prevP.precios[id]:null;
+  var c=_pcChCfg(id);
+  var p='<td id="pch-'+h.id+'-'+id+'-precio" style="padding:6px 8px;text-align:right;color:'+(c&&c.color||'#2563eb')+';font-weight:700;border-left:2px solid var(--border2)"'+(ant?' title="Antes: '+_pcMoney(ant)+' ('+prevP.fecha+')"':'')+'>'+_pcMoney(ch.precio)+(ant?'<div style="font-size:9px;color:var(--text3);font-weight:500"><s>'+_pcMoney(ant)+'</s></div>':'')+'</td>';
+  var m=(!(h.origen>0)||h.rent[id]==null) ? '<td style="padding:6px 4px;text-align:right;color:var(--text3);font-size:10px">—</td>' :
+    '<td style="padding:6px 4px;text-align:right;white-space:nowrap"><input type="number" id="pch-'+h.id+'-'+id+'-margen" value="'+(Math.round(h.rent[id]*10)/10)+'" step="1" onchange="pcHistMargenChange('+h.id+',\''+id+'\',this.value)" style="width:50px;font-size:10.5px;text-align:right;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--bg1);color:var(--text2)" title="Rentabilidad sobre el costo. Editala para recalcular el precio de este canal."><span style="font-size:9px;color:var(--text3)">%</span></td>';
+  var g=ch.ganancia||0;
+  return p+m+'<td id="pch-'+h.id+'-'+id+'-ganan" style="padding:6px 4px;text-align:right;font-weight:600;font-size:10.5px;color:'+(g>=0?'var(--green)':'var(--red)')+'">'+_pcMoney(g)+'</td>';
+}
+
+// ── administración de canales ──
+function pcChannelsOpen(nuevo){
+  var I='padding:6px 8px;border:1px solid #cbd5e1;border-radius:7px;font-size:13px;background:#fff;color:#1e293b';
+  var rows=_pcCfg.channels.map(function(c,i){
+    return '<tr style="border-top:1px solid #f1f5f9'+(c.active?'':';opacity:.55')+'">'+
+      '<td style="padding:5px"><input type="color" value="'+_pcEsc(c.color||'#475569')+'" onchange="pcChSet('+i+',\'color\',this.value)" style="width:34px;height:30px;border:none;background:none;cursor:pointer"></td>'+
+      '<td style="padding:5px"><input value="'+_pcEsc(c.icon||'')+'" onchange="pcChSet('+i+',\'icon\',this.value)" style="'+I+';width:46px;text-align:center" maxlength="4"></td>'+
+      '<td style="padding:5px"><input value="'+_pcEsc(c.label)+'" onchange="pcChSet('+i+',\'label\',this.value)" style="'+I+';width:100%"></td>'+
+      '<td style="padding:5px;text-align:center"><label style="cursor:pointer;font-size:12px;color:#334155"><input type="checkbox"'+(c.active?' checked':'')+' onchange="pcChSet('+i+',\'active\',this.checked)"> activo</label></td>'+
+      '<td style="padding:5px;white-space:nowrap"><button onclick="pcChMove('+i+',-1)" style="'+I+';padding:4px 8px;cursor:pointer"'+(i===0?' disabled':'')+'>↑</button> <button onclick="pcChMove('+i+',1)" style="'+I+';padding:4px 8px;cursor:pointer"'+(i===_pcCfg.channels.length-1?' disabled':'')+'>↓</button></td>'+
+      '<td style="padding:5px">'+(c.base?'<span title="Los 4 canales de siempre no se eliminan: desactivalo si no lo usás" style="font-size:11px;color:#94a3b8">base</span>':'<button onclick="pcChDel('+i+')" style="'+I+';padding:4px 8px;cursor:pointer;color:#b91c1c">🗑</button>')+'</td></tr>';
+  }).join('');
+  _pcModal('<div style="font-size:16px;font-weight:800;color:#1e293b;margin-bottom:4px">🛒 Canales de venta</div>'+
+    '<div style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.4">Renombrá, cambiá el color, activá o desactivá y ordená tus canales. Los cambios se guardan en la nube y se ven en todas tus PCs. Al desactivar o eliminar un canal, el historial conserva sus datos.</div>'+
+    '<table style="width:100%;border-collapse:collapse;font-size:12.5px;color:#1e293b"><thead><tr style="font-size:11px;color:#64748b;text-align:left"><th>Color</th><th>Ícono</th><th>Nombre</th><th></th><th>Orden</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<div style="margin-top:14px;padding:12px;border:2px dashed #c7d2fe;border-radius:12px;background:#f8fafc"'+(nuevo?' id="pc-new-box"':'')+'>'+
+      '<div style="font-size:13px;font-weight:800;color:#3730a3;margin-bottom:8px">➕ Agregar canal</div>'+
+      '<div style="display:grid;grid-template-columns:44px 56px 1fr 1fr;gap:8px;align-items:end">'+
+        '<input type="color" id="pcn-color" value="#0ea5e9" style="width:40px;height:34px;border:none;background:none">'+
+        '<input id="pcn-icon" value="🛍️" maxlength="4" style="'+I+';text-align:center">'+
+        '<input id="pcn-name" placeholder="Nombre (ej.: Shopee, WhatsApp)" style="'+I+'">'+
+        '<select id="pcn-copy" style="'+I+'"><option value="">Costos en cero</option>'+_pcCfg.channels.map(function(c){ return '<option value="'+c.id+'">Copiar costos de '+_pcEsc(c.label)+'</option>'; }).join('')+'</select>'+
+      '</div>'+
+      '<button onclick="pcChAdd()" style="margin-top:10px;width:100%;padding:10px;border:none;background:#4f46e5;color:#fff;border-radius:9px;font-weight:700;cursor:pointer">Crear canal</button>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;margin-top:14px"><button onclick="_pcModal(null)" style="flex:1;padding:10px 14px;border:1px solid #cbd5e1;background:#fff;color:#475569;border-radius:9px;font-weight:600;cursor:pointer">Listo</button></div>');
+  if(nuevo){ var n=document.getElementById('pcn-name'); if(n) n.focus(); }
+}
+function _pcCfgChanged(){ _pcSaveCfg(); _pcApplyCfg(); pcRenderChannels(); PC_CHANNELS.forEach(function(ch){ pcDeriveAmounts(ch.id); pcRefreshChannelUI(ch.id); }); pcUpdateKPIs(); pcRenderHistory(); }
+function pcChSet(i, k, v){
+  var c=_pcCfg.channels[i]; if(!c) return;
+  if(k==='label'){ v=String(v||'').trim(); if(!v){ showToast('El canal necesita un nombre','warn'); pcChannelsOpen(); return; } }
+  c[k]=v; _pcCfgChanged(); pcChannelsOpen();
+}
+function pcChMove(i, d){ var a=_pcCfg.channels, j=i+d; if(j<0||j>=a.length) return; var t=a[i]; a[i]=a[j]; a[j]=t; _pcCfgChanged(); pcChannelsOpen(); }
+function pcChDel(i){
+  var c=_pcCfg.channels[i]; if(!c || c.base) return;
+  if(!confirm('¿Eliminar el canal «'+c.label+'»?\n\nSe quita de la calculadora. Los cálculos guardados en el historial conservan sus datos (si volvés a crear el canal no reaparecen, porque es otro canal).')) return;
+  _pcCfg.channels.splice(i,1); delete _pcState[c.id]; _pcCfgChanged(); pcChannelsOpen();
+}
+function pcChAdd(){
+  var name=(document.getElementById('pcn-name').value||'').trim(); if(!name){ showToast('Poné un nombre para el canal','warn'); return; }
+  var id='c'+Date.now().toString(36), cp=document.getElementById('pcn-copy').value, src=cp?_pcChCfg(cp):null;
+  var nc={ id:id, label:name.slice(0,40), icon:(document.getElementById('pcn-icon').value||'🛍️').slice(0,4), color:document.getElementById('pcn-color').value||'#0ea5e9', active:true, base:false,
+    fields:(src?src.fields:PC_DEFAULT_FIELDS._nuevo).slice(), names:src?JSON.parse(JSON.stringify(src.names||{})):{}, defaults:null };
+  if(src && _pcState[cp]){ var d={}, s=_pcState[cp]; Object.keys(s).forEach(function(k){ if(k==='precio'||k==='ganancia'||(/Amt$/.test(k)&&k!=='envioAmt')) return; d[k]=JSON.parse(JSON.stringify(s[k])); }); nc.defaults=d; }
+  else nc.defaults={ comPct:0, flatFee:0, iibbPct:0, retencionesPct:0, contablePct:0, publicidadPct:0, packagingPct:0, hostingPct:0, debcredPct:0, envioCheck:false, envioAmt:0, extras:[] };
+  _pcCfg.channels.push(nc);
+  _pcState[id]=null; _pcApplyCfg(); _pcState[id]=_pcInitState(PC_CHANNELS.find(function(c){ return c.id===id; }));
+  _pcOpen[id]=true; _pcCfgChanged(); pcChannelsOpen();
+  showToast('✅ Canal «'+name+'» creado: cargá sus costos e impuestos en su tarjeta','success');
+}
+
+// ── inicio ──
+var _pcInitV320 = pcInit;
+window.pcInit = function(){
+  if(!_pcCfg) _pcLoadCfgLocal();
+  _pcApplyCfg();
+  pcRenderChannels();
+  pcRenderHistory();
+  PC_CHANNELS.forEach(function(ch){ pcDeriveAmounts(ch.id); pcRefreshChannelUI(ch.id); });
+  pcOriginChanged();
+  pcLockBarRender();
+  _pcLoadCfgCloud();
+};
+// Los cálculos guardados antes de v321 no tienen $ fijo / base / tipo / conceptos extra: al abrirlos se
+// completan en NEUTRO (0, sobre precio, activos, costo, sin extras) para que den exactamente lo mismo que antes.
+var _pcHistEnsureV320 = pcHistEnsure;
+window.pcHistEnsure = function(h){ _pcHistEnsureV320(h); if(h && h.channels) Object.keys(h.channels).forEach(function(k){ if(h.channels[k]) _pcEnsure(h.channels[k]); }); return h; };
+// Ajuste masivo: en los canales nuevos sólo se tocan los conceptos que el canal usa
+function _pcMasivoVisible(id, k){ var f = k==='flatFee'?'flatfee' : k==='envioAmt'?'envio' : k.replace(/Pct$/,''); return _pcHas(id, f); }
+_pcLoadCfgLocal();
+PC_CHANNELS.forEach(function(ch){ _pcState[ch.id]=_pcInitState(ch); });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// v321 · Analizador SEO «🚚 Envío gratis» · Herramienta 2: columna Grupo ordenable · Botón «Borrar Msjs»
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── 1) Analizador SEO · escenario Envío gratis ──
+// Envío gratis PARA EL COMPRADOR (item.shipping.free_shipping de Mercado Libre). Si consultás el costo,
+// el panel pregunta a ML cuánto pagás vos por ese envío (/users/{id}/shipping_options/free?item_id=…):
+//   · costo > 0  → lo asumís vos (total o parcialmente con tu bonificación): queda en el escenario y se muestra
+//   · costo = 0  → bonificado por Mercado Libre: sale del escenario
+//   · sin consultar o sin dato → queda en el escenario sin inventar un costo
+var SEO_ENVIO_KEY = 'mlp_envio_free_cost_v1', SEO_ENVIO_TTL = 3 * 86400000;
+var _seoEnvio = {};
+try{ _seoEnvio = JSON.parse(localStorage.getItem(SEO_ENVIO_KEY) || '{}') || {}; }catch(e){ _seoEnvio = {}; }
+function _seoEnvioGet(id){ var x=_seoEnvio[id]; return x && Date.now()-x.t < SEO_ENVIO_TTL ? x : null; }
+function _seoEnvioGratisComprador(i){ return !!(i && ((i.shipping && i.shipping.free_shipping) || (Array.isArray(i.tags) && i.tags.indexOf('free_shipping')>=0))); }
+(function(){
+  if(typeof SEO_SCENARIOS==='undefined' || SEO_SCENARIOS.envio_gratis) return;
+  SEO_SCENARIOS.envio_gratis = {
+    emoji:'🚚', label:'Envío gratis', color:'#0891b2',
+    description:'Publicaciones con envío GRATIS PARA EL COMPRADOR, donde el costo del envío lo pagás vos (total o parcialmente). Gratis para el comprador no es gratis para vos. Las que Mercado Libre bonifica al 100% salen del escenario una vez consultado el costo.',
+    actionMain:'Tocá «Consultar costo de envío» para ver cuánto pagás en cada una y revisá que el precio lo cubra (Calculadora de Rentabilidad → envío vendedor).',
+    actionSecondary:'En las de precio bajo, el envío puede comerse el margen: evaluá subir el precio o combos.',
+    filter:function(i){ if(!_seoEnvioGratisComprador(i)) return false; var c=_seoEnvioGet(i.id); return !(c && c.ok && c.cost===0); }
+  };
+  var k=SEO_SCENARIO_ORDER.indexOf('sin_descuento');
+  SEO_SCENARIO_ORDER.splice(k>=0?k+1:SEO_SCENARIO_ORDER.length, 0, 'envio_gratis');
+})();
+var _seoEnvioRunning=false;
+async function seoEnvioConsultar(){
+  if(_seoEnvioRunning) return;
+  if(typeof userId==='undefined' || !userId){ showToast('Esperá a que cargue la cuenta de Mercado Libre','warn'); return; }
+  var items=(typeof seoGetFilteredItems==='function'?seoGetFilteredItems():[]).filter(_seoEnvioGratisComprador);
+  var pend=items.filter(function(i){ return !_seoEnvioGet(i.id); });
+  if(!pend.length){ showToast('Ya están consultadas las '+items.length+' publicaciones (se renuevan cada 3 días)','info'); _seoEnvioPaint(); return; }
+  if(pend.length>300 && !confirm('Se van a consultar '+pend.length+' publicaciones a Mercado Libre (una consulta por publicación, pausadas). ¿Seguir?')) return;
+  _seoEnvioRunning=true;
+  var ok=0, sin=0;
+  try{
+    for(var n=0;n<pend.length;n++){
+      var it=pend[n];
+      if(typeof wiFloat==='function') wiFloat('seo-envio','🚚 Costo de envío gratis', (n+1)+' / '+pend.length+' · '+String(it.title||it.id).slice(0,40), n/pend.length*100, '#0891b2', 'seo');
+      var rec={ t:Date.now(), ok:false, cost:null };
+      try{
+        var d=await mlGet('/users/'+userId+'/shipping_options/free?item_id='+encodeURIComponent(it.id));
+        var ac=d && d.coverage && d.coverage.all_country;
+        if(ac && ac.list_cost!=null && isFinite(+ac.list_cost)){ rec.ok=true; rec.cost=+ac.list_cost; rec.cur=ac.currency_id||'ARS'; ok++; }
+        else { rec.why='ML no informó el costo'; sin++; }
+      }catch(e){ rec.why=String(e&&e.message||'error').slice(0,80); sin++; }
+      _seoEnvio[it.id]=rec;
+      if(n%20===19) try{ localStorage.setItem(SEO_ENVIO_KEY, JSON.stringify(_seoEnvio)); }catch(e){}
+      await new Promise(function(r){ setTimeout(r, 180); });
+    }
+  } finally {
+    _seoEnvioRunning=false;
+    try{ localStorage.setItem(SEO_ENVIO_KEY, JSON.stringify(_seoEnvio)); }catch(e){}
+    if(typeof wiFloatEnd==='function') wiFloatEnd('seo-envio', '🚚 Costo de envío: '+ok+' consultadas'+(sin?' · '+sin+' sin dato de ML':''), sin&&!ok?'warn':'success');
+    try{ if(typeof seoInvalidateScenarioCounts==='function') seoInvalidateScenarioCounts(); }catch(e){}
+    try{ _scenarioCountsCache=null; }catch(e){}
+    try{ renderScenarioChips(); renderSEOTable(); }catch(e){}
+  }
+}
+function _seoEnvioPaint(){
+  if(typeof _seoActiveScenario==='undefined' || _seoActiveScenario!=='envio_gratis') return;
+  var info=document.getElementById('seo-scenario-info');
+  if(info && !document.getElementById('seo-envio-box')){
+    var items=(typeof seoGetFilteredItems==='function'?seoGetFilteredItems():[]);
+    var con=items.filter(function(i){ var c=_seoEnvioGet(i.id); return c&&c.ok; });
+    var tot=con.reduce(function(a,i){ return a+(_seoEnvioGet(i.id).cost||0); },0);
+    var box=document.createElement('div'); box.id='seo-envio-box';
+    box.style.cssText='margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12px;background:#ecfeff;border:1px solid #a5f3fc;border-radius:10px;padding:8px 12px;color:#155e75';
+    box.innerHTML='<button class="btn btn-sm" onclick="seoEnvioConsultar()" style="background:#0891b2;color:#fff;border:none;font-weight:700">🔎 Consultar costo de envío</button>'+
+      '<span>'+(con.length ? 'Costo consultado en <b>'+con.length+'</b> de '+items.length+' · promedio que pagás: <b>$'+Math.round(tot/con.length).toLocaleString('es-AR')+'</b> por envío' : 'Todavía sin consultar: se muestran todas las de envío gratis para el comprador, sin costo')+'</span>'+
+      '<span style="color:#64748b;font-size:11px">Costo según Mercado Libre (lista con tu bonificación). Se guarda 3 días.</span>';
+    info.appendChild(box);
+  }
+  document.querySelectorAll('#seo-tbody tr[data-seo-id]').forEach(function(tr){
+    var id=tr.getAttribute('data-seo-id'), cell=document.getElementById('seo-price-cell-'+id); if(!cell || cell.querySelector('.seo-envio-badge')) return;
+    var c=_seoEnvioGet(id), b=document.createElement('div'); b.className='seo-envio-badge';
+    b.style.cssText='font-size:9.5px;font-weight:700;margin-top:2px;white-space:nowrap';
+    if(c && c.ok){ b.style.color='#0e7490'; b.textContent='🚚 vos pagás $'+Math.round(c.cost).toLocaleString('es-AR'); b.title='Costo del envío gratis que asumís (según Mercado Libre)'; }
+    else { b.style.color='#94a3b8'; b.textContent='🚚 gratis comprador'+(c&&c.why?' · sin dato':''); b.title=c&&c.why?('Sin costo informado: '+c.why):'Costo para vos sin consultar'; }
+    cell.appendChild(b);
+  });
+}
+(function(){
+  var o=window.renderSEOTable; if(typeof o!=='function' || o._v321) return;
+  var w=function(){ var r=o.apply(this, arguments); try{ _seoEnvioPaint(); }catch(e){} return r; };
+  w._v321=true; window.renderSEOTable=w;
+  var s=window.seoSetScenario; if(typeof s==='function' && !s._v321){ var w2=function(){ var r=s.apply(this, arguments); try{ _seoEnvioPaint(); }catch(e){} return r; }; w2._v321=true; window.seoSetScenario=w2; }
+})();
+
+// ── 2) Herramienta 2 · columna «Grupo» ordenable (alfabético por el nombre del grupo) ──
+var WI_GRUPO_LBL = { vinculada:'Vinculada', coincidencia:'SKU / código', auto:'Automática', sugerencia:'Revisar', nueva:'Nueva', ignorada:'No importar' };
+(function(){
+  var oF=window.wiRowsFiltered; if(typeof oF!=='function' || oF._v321) return;
+  var wF=function(){
+    var so=wiS.sort||{ col:'date', dir:-1 };
+    if(so.col!=='group') return oF.apply(this, arguments);
+    var keep=wiS.sort; wiS.sort={ col:'date', dir:-1 };
+    var list; try{ list=oF.apply(this, arguments); } finally { wiS.sort=keep; }
+    var nm=function(r){ return (WI_GRUPO_LBL[r.group]||r.group||'').toLowerCase(); };
+    // estable: dentro del mismo grupo queda el orden por fecha (más nuevas primero)
+    return list.map(function(r,i){ return [r,i]; }).sort(function(a,b){ var c=nm(a[0]).localeCompare(nm(b[0]),'es'); return c ? c*so.dir : a[1]-b[1]; }).map(function(x){ return x[0]; });
+  };
+  wF._v321=true; window.wiRowsFiltered=wF;
+  var oR=window.wiRenderRows; if(typeof oR!=='function' || oR._v321) return;
+  var wR=function(){
+    var r=oR.apply(this, arguments);
+    try{
+      var ths=document.querySelectorAll('#wi-rows thead th');
+      ths.forEach(function(th){
+        if(th.textContent.indexOf('🏷️ Grupo')!==0) return;
+        th.style.cursor='pointer'; th.style.userSelect='none'; th.style.whiteSpace='nowrap'; th.title='Ordenar por grupo (A→Z / Z→A)';
+        th.innerHTML='🏷️ Grupo'+wiSortArrow('group');
+        th.onclick=function(){ var so=wiS.sort||{ col:'date', dir:-1 }; wiS.sort = so.col==='group' ? { col:'group', dir:-so.dir } : { col:'group', dir:1 }; wiRenderRows(); };
+      });
+    }catch(e){}
+    return r;
+  };
+  wR._v321=true; window.wiRenderRows=wR;
+})();
+
+// ── 3) Botón «Borrar Msjs»: limpia los avisos de abajo a la derecha (sin avisar nada) ──
+// Marca cada aviso que crea showToast para poder quitarlos todos juntos. No toca las tarjetas
+// de procesos en curso (abajo a la izquierda) ni ningún dato: sólo lo visual.
+(function(){
+  var o=window.showToast; if(typeof o!=='function' || o._v321) return;
+  var w=function(){
+    var antes=document.body ? document.body.lastElementChild : null;
+    var r=o.apply(this, arguments);
+    try{ var t=document.body.lastElementChild; if(t && t!==antes && t.style && t.style.position==='fixed' && t.style.bottom==='24px' && t.style.right==='24px') t.classList.add('pm-toast'); }catch(e){}
+    return r;
+  };
+  w._v321=true; window.showToast=w;
+})();
+function borrarMsjs(){
+  document.querySelectorAll('.pm-toast').forEach(function(t){ t.remove(); });
+  // avisos creados antes de este cambio (mismo estilo: fijos abajo a la derecha con ×)
+  Array.prototype.slice.call(document.body.children).forEach(function(el){
+    if(el.tagName==='DIV' && el.style && el.style.position==='fixed' && el.style.bottom==='24px' && el.style.right==='24px' && el.querySelector(':scope > button') ) el.remove();
+  });
+}
+(function(){
+  function poner(){
+    if(document.getElementById('borrar-msjs-btn')) return;
+    var cs=document.getElementById('switch-account-btn'); if(!cs) return;
+    var b=document.createElement('button');
+    b.id='borrar-msjs-btn'; b.type='button'; b.innerHTML='<span style="font-size:14px;line-height:1;vertical-align:-2px;margin-right:5px">🧹</span>Borrar Mensajes';   // v322
+    b.title='Quita todos los avisos de abajo a la derecha (no borra datos ni frena procesos)';
+    b.setAttribute('style', 'display:flex;align-items:center;justify-content:flex-start;gap:0;margin:6px 10px 0;padding:7px 12px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rs);font-size:11.5px;font-weight:600;color:#fff;cursor:pointer;width:calc(100% - 20px);text-align:left');   // v323: blanco y a la izquierda
+    b.onclick=function(e){ e.preventDefault(); borrarMsjs(); };
+    cs.insertAdjacentElement('afterend', b);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', poner); else poner();
+})();
+
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// v322 · Calculadora: emoji por producto / cálculo (se guarda en el historial)
+// ═══════════════════════════════════════════════════════════════════════════════
+var PC_EMOJIS = ['🎣','🐟','🪝','🧵','🧰','🎒','🏕️','⛺','🔦','🚤','🧥','🥾','🧊','🔥','🛶','🌲','⛰️','🦆','🎁','⭐','💼','📦','🧪','✨'];
+function _pcEmojiVal(){ var e=document.getElementById('pc-save-emoji'); return e ? String(e.getAttribute('data-v')||'') : ''; }
+function pcEmojiSet(v){
+  var e=document.getElementById('pc-save-emoji'); if(!e) return;
+  e.setAttribute('data-v', v||''); e.innerHTML = v ? v : '<span style="font-size:13px;opacity:.55">😀＋</span>';
+  e.title = v ? 'Emoji del producto: '+v+' (clic para cambiar)' : 'Elegí un emoji para identificar el producto';
+  var p=document.getElementById('pc-emoji-pop'); if(p) p.remove();
+}
+function pcEmojiPick(anchor, onPick){
+  var old=document.getElementById('pc-emoji-pop'); if(old){ old.remove(); return; }
+  var r=anchor.getBoundingClientRect(), p=document.createElement('div'); p.id='pc-emoji-pop';
+  p.style.cssText='position:fixed;z-index:100003;left:'+Math.max(8,Math.min(window.innerWidth-292,r.left))+'px;top:'+(r.bottom+6)+'px;width:280px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 14px 34px rgba(15,23,42,.25);padding:8px;color:#1e293b';
+  p.innerHTML='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">'+PC_EMOJIS.map(function(x){ return '<button type="button" data-e="'+x+'" style="font-size:20px;line-height:1.3;border:none;background:none;cursor:pointer;border-radius:7px;padding:3px">'+x+'</button>'; }).join('')+'</div>'+
+    '<div style="display:flex;gap:6px;margin-top:6px"><input id="pc-emoji-free" maxlength="4" placeholder="otro…" style="flex:1;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;font-size:15px;color:#1e293b;background:#fff">'+
+    '<button type="button" data-ok="1" style="padding:5px 10px;border:none;background:#2563eb;color:#fff;border-radius:7px;cursor:pointer;font-weight:700">OK</button>'+
+    '<button type="button" data-e="" style="padding:5px 8px;border:1px solid #cbd5e1;background:#fff;color:#64748b;border-radius:7px;cursor:pointer" title="Sin emoji">✕</button></div>'+
+    '<div style="font-size:10.5px;color:#64748b;margin-top:4px">En Windows también podés abrir el teclado de emojis con <b>Win + .</b></div>';
+  p.addEventListener('click', function(ev){
+    var b=ev.target.closest('button'); if(!b) return;
+    var v = b.hasAttribute('data-ok') ? String(document.getElementById('pc-emoji-free').value||'').trim() : b.getAttribute('data-e');
+    p.remove(); document.removeEventListener('mousedown', fuera, true); onPick(v);
+  });
+  p.addEventListener('mouseover', function(ev){ var b=ev.target.closest('button[data-e]'); if(b && b.textContent) b.style.background='#eff6ff'; });
+  p.addEventListener('mouseout', function(ev){ var b=ev.target.closest('button[data-e]'); if(b && b.textContent) b.style.background='none'; });
+  var fuera=function(ev){ if(!p.contains(ev.target) && ev.target!==anchor){ p.remove(); document.removeEventListener('mousedown', fuera, true); } };
+  document.body.appendChild(p); document.addEventListener('mousedown', fuera, true);
+}
+// botón junto al nombre del producto
+(function(){
+  function poner(){
+    var n=document.getElementById('pc-save-name'); if(!n || document.getElementById('pc-save-emoji')) return;
+    var b=document.createElement('button'); b.type='button'; b.id='pc-save-emoji';
+    b.setAttribute('style','font-size:20px;line-height:1;min-width:40px;height:30px;padding:0 6px;border:1px solid var(--border);border-radius:7px;background:var(--bg1,#fff);cursor:pointer');
+    b.onclick=function(){ pcEmojiPick(b, pcEmojiSet); };
+    n.parentNode.insertBefore(b, n); pcEmojiSet('');
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', poner); else poner();
+})();
+// guardar / abrir: el emoji viaja con el cálculo
+(function(){
+  var oS=window.pcSnapshot; if(typeof oS==='function' && !oS._v322){ var wS=function(){ var s=oS.apply(this, arguments); var v=_pcEmojiVal(); if(v) s.emoji=v; return s; }; wS._v322=true; window.pcSnapshot=wS; }
+  var oL=window.pcLoadCalc; if(typeof oL==='function' && !oL._v322){ var wL=function(id){ var r=oL.apply(this, arguments); try{ var h=pcLoadHistory().find(function(x){ return x.id===id; }); pcEmojiSet(h&&h.emoji||''); }catch(e){} return r; }; wL._v322=true; window.pcLoadCalc=wL; }
+  var oR=window.pcRenderHistory; if(typeof oR==='function' && !oR._v322){
+    var wR=function(){
+      var r=oR.apply(this, arguments);
+      try{
+        var hist=pcLoadHistory(), tb=document.getElementById('pc-history-tbody');
+        if(tb) Array.prototype.forEach.call(tb.rows, function(tr, i){
+          var h=hist[i]; if(!h || !tr.cells[1] || tr.cells[1].querySelector('.pc-hemoji')) return;
+          var s=document.createElement('span'); s.className='pc-hemoji';
+          s.style.cssText='display:inline-block;font-size:18px;line-height:1;margin-right:6px;vertical-align:-3px;cursor:pointer;min-width:18px;text-align:center';
+          s.textContent=h.emoji||'＋'; if(!h.emoji){ s.style.fontSize='12px'; s.style.opacity='.35'; }
+          s.title=h.emoji?'Cambiar emoji':'Agregar un emoji a este producto';
+          s.onclick=function(ev){ ev.stopPropagation(); pcEmojiPick(s, function(v){ pcHistEmoji(h.id, v); }); };
+          tr.cells[1].insertBefore(s, tr.cells[1].firstChild);
+        });
+      }catch(e){}
+      return r;
+    };
+    wR._v322=true; window.pcRenderHistory=wR;
+  }
+})();
+function pcHistEmoji(id, v){
+  var hist=pcLoadHistory(), h=hist.find(function(x){ return x.id===id; }); if(!h) return;
+  if(v) h.emoji=v; else delete h.emoji;
+  pcSaveHistoryLS(hist);
+  if(_pcLock.histId===id) pcEmojiSet(v||'');
+  pcRenderHistory();
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// v323 · Herramienta 3: sincronizar en segundo plano y sin perder productos por pausas de la tienda
+//        · Cuenta Puma: comparación con el período anterior (meses que no estaban cargados)
+//        · Consumo KV: desglose real por tipo de dato y por ruta
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── 1) Sincronizar stock y precio (herramienta 3) ──
+// Antes: lotes de 20 y, si la tienda limitaba (HTTP 429) más allá de los reintentos del Worker,
+// el producto quedaba en «Error» y no se volvía a intentar. Ahora:
+//   · lotes de 10 con una pausa entre lotes,
+//   · al terminar una vuelta, los que quedaron con error TEMPORAL (429 / 5xx / sin respuesta)
+//     se reintentan solos después de esperar (30 s, 1, 2 y 4 min; hasta 5 vueltas),
+//   · los errores permanentes no se repiten y quedan en Historial,
+//   · todo se ve en la tarjeta de abajo a la izquierda: podés seguir usando el panel.
+var WI_LS_TEMP = /HTTP (429|5\d\d)|limit[oó]|reintent|no respond|cortad|timeout|52\d/i;
+function _wiLsCard(t, estado, color){
+  var proc=t.hechos, tot=t.total, pct=tot?Math.min(100, proc/tot*100):0;
+  if(typeof _wiFloatHtml!=='undefined') _wiFloatHtml.lsync='<div style="font-size:11px;color:#334155;line-height:1.5;margin-top:2px">'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:10px">'+
+      '<span>Procesados: <b>'+proc+' / '+tot+'</b></span><span>Vuelta: <b>'+t.ronda+'</b></span>'+
+      '<span>Stock: <b>'+t.writes_ml+'</b> ML · <b>'+t.writes_woo+'</b> Woo</span><span>Precio: <b>'+t.writes+'</b> en Woo</span>'+
+      '<span style="color:'+(t.reintentar?'#b45309':'#64748b')+'">Para reintentar: <b>'+t.reintentar+'</b></span><span style="color:'+(t.perm?'#b91c1c':'#64748b')+'">Con error: <b>'+t.perm+'</b></span>'+
+    '</div><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:'+(/pausa|espera/i.test(estado)?'#b45309':'#475569')+'">Estado: '+wiEsc(estado)+'</div></div>';
+  wiFloat('lsync', '🔄 SINCRONIZAR STOCK Y PRECIO', estado, pct, color||(/pausa|espera/i.test(estado)?'#d97706':'#059669'), 'woo-import');
+}
+window.wiLSyncRun = async function(){
+  var ids=(wiS._lsync||[]).slice(); wiModal(null);
+  if(!ids.length) return;
+  if(wiS.lsyncing){ showToast('Ya hay una sincronización en curso (abajo a la izquierda)','warn'); return; }
+  wiS.lsyncing=true;
+  var prog=document.getElementById('wi-lp-prog'); if(prog) prog.innerHTML='';
+  var t={ total:ids.length, hechos:0, ronda:1, writes_ml:0, writes_woo:0, writes:0, errors:0, reintentar:0, perm:0 };
+  var run_id='sel-'+Date.now().toString(36), SL=10, pend=ids.slice(), ESPERAS=[30,60,120,240], cortado=null;
+  try{
+    while(pend.length){
+      for(var i=0;i<pend.length;i+=SL){
+        var slice=pend.slice(i,i+SL), cursor=0;
+        _wiLsCard(t, '📦 stock · lote '+(Math.floor(i/SL)+1)+' de '+Math.ceil(pend.length/SL));
+        while(true){
+          var d=await wiApiPaced('/wsync/run', { ids:slice, simulate:false, confirm:'SINCRONIZAR', run_id:run_id, cursor:cursor, quiet:t.hechos>0||cursor>0, total:ids.length }, function(s){ _wiLsCard(t, '⏳ Pausa pedida por la tienda: sigo en '+s+' s'); });
+          if(d.error) throw new Error(d.message||d.error);
+          t.writes_ml+=(d.stats&&d.stats.writes_ml)||0; t.writes_woo+=(d.stats&&d.stats.writes_woo)||0;
+          cursor=d.cursor; if(d.done) break;
+        }
+        _wiLsCard(t, '💲 precio · lote '+(Math.floor(i/SL)+1)+' de '+Math.ceil(pend.length/SL)); cursor=0;
+        while(true){
+          var q=await wiApiPaced('/wsync/price-run', { ids:slice, simulate:false, confirm:'APLICAR', fallback:'igual', run_id:run_id, cursor:cursor, quiet:true, total:ids.length }, function(s){ _wiLsCard(t, '⏳ Pausa pedida por la tienda: sigo en '+s+' s'); });
+          if(q.error) throw new Error(q.message||q.error);
+          t.writes+=(q.stats&&q.stats.writes)||0;
+          cursor=q.cursor; if(q.done) break;
+        }
+        if(t.ronda===1) t.hechos=Math.min(t.total, t.hechos+slice.length);
+        if(i+SL<pend.length) await new Promise(function(r){ setTimeout(r, 1500); });   // respiro para la tienda
+      }
+      // ¿quiénes quedaron con error? temporales → otra vuelta; permanentes → quedan en Historial
+      var l=await wiApi('/wsync/links'); if(!l.error){ wiSetLinks(l); try{ wiLinksRender(); }catch(e){} }
+      var temp=[], perm=[];
+      ids.forEach(function(k){ var x=wiS.linkByMl[k]; if(x && x.state==='error'){ if(WI_LS_TEMP.test(x.last_result||'')) temp.push(k); else perm.push(k); } });
+      t.reintentar=temp.length; t.perm=perm.length;
+      pend=temp;
+      if(!pend.length) break;
+      if(t.ronda>=ESPERAS.length+1){ cortado='quedaron '+pend.length+' con la tienda limitando: probá de nuevo más tarde'; break; }
+      var w=ESPERAS[t.ronda-1], fin=Date.now()+w*1000;
+      while(Date.now()<fin){ _wiLsCard(t, '⏳ Pausa: la tienda limitó '+pend.length+' producto(s); reintento en '+Math.ceil((fin-Date.now())/1000)+' s'); await new Promise(function(r){ setTimeout(r, 1000); }); }
+      t.ronda++;
+    }
+    var okN=ids.filter(function(k){ var x=wiS.linkByMl[k]; return x && x.state!=='error'; }).length;
+    wiFloatEnd('lsync', (t.perm||cortado?'⚠ ':'✅ ')+'Sincronización terminada: '+okN+' de '+ids.length+' bien · stock: '+t.writes_ml+' cambios en ML y '+t.writes_woo+' en Woo · precio: '+t.writes+' en Woo'+(t.perm?' · '+t.perm+' con error (ver Historial)':'')+(cortado?' · '+cortado:''), (t.perm||cortado)?'warn':'success');
+  }catch(err){ wiFloatEnd('lsync','Sincronizar: '+err.message,'error'); }
+  finally{ wiS.lsyncing=false; if(_wiFloat.lsync) wiFloatEnd('lsync'); try{ var l2=await wiApi('/wsync/links'); if(!l2.error){ wiSetLinks(l2); wiLinksRender(); } wiStatusLoad(); }catch(e){} }
+};
+
+// ── 2) Cuenta Puma: la línea punteada del período anterior necesita esos meses cargados ──
+var _ctaCmpTried = {};
+async function _ctaCmpEnsure(){
+  var modo=(document.getElementById('cta-cmp-modo')||{}).value||'off';
+  if(modo==='off' || typeof _ctaPeriodoRango!=='function' || typeof _ctaPeriodoAnterior!=='function') return;
+  var pr=_ctaPeriodoRango(), an=_ctaPeriodoAnterior(pr[0], pr[1], modo==='yoy'?'yoy':'auto');
+  if(!an || !an[0] || !an[1]) return;
+  var meses=[], y=+an[0].slice(0,4), m=+an[0].slice(5,7), y1=+an[1].slice(0,4), m1=+an[1].slice(5,7);
+  while(y<y1 || (y===y1 && m<=m1)){ meses.push(y+'-'+String(m).padStart(2,'0')); m++; if(m>12){ m=1; y++; } if(meses.length>24) break; }
+  var faltan=meses.filter(function(ym){ return !_ctaState.loaded.has(ym) && !_ctaCmpTried[ym] && (!_ctaState.months || !_ctaState.months.length || _ctaState.months.indexOf(ym)>=0); });
+  if(!faltan.length) return;
+  faltan.forEach(function(ym){ _ctaCmpTried[ym]=1; });
+  await Promise.all(faltan.map(function(ym){ return _ctaFetchChunk(ym).catch(function(){}); }));
+  try{ ctaRenderKPIs(); }catch(e){}
+  try{ _ctaRenderChartV322(); }catch(e){}
+}
+var _ctaRenderChartV322 = (typeof ctaRenderChart==='function') ? ctaRenderChart : null;
+if(_ctaRenderChartV322) window.ctaRenderChart = function(){ var r=_ctaRenderChartV322.apply(this, arguments); try{ _ctaCmpEnsure(); }catch(e){} return r; };
+
+// ── 3) Consumo KV: desglose real (Worker v83) ──
+(function(){
+  var o=window.kvUsageOpenDetails; if(typeof o!=='function' || o._v323) return;
+  var w=async function(){
+    var r=await o.apply(this, arguments);
+    try{
+      var d=await (await fetch(WORKER+'/kv/usage')).json(), b=d&&d.breakdown, m=document.getElementById('kv-usage-modal');
+      if(!m) return r;
+      var box=document.createElement('div');
+      box.style.cssText='background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:11px 13px;margin:0 14px 10px;font-size:11.5px;color:#7c2d12';
+      if(!b){ box.innerHTML='<b>Desglose real:</b> disponible con el Worker v83 (empieza a contar desde que lo subís).'; }
+      else {
+        var top=function(obj){ return Object.keys(obj||{}).map(function(k){ return [k, obj[k]]; }).sort(function(a,c){ return c[1]-a[1]; }).slice(0,10); };
+        var tbl=function(t, rows){ return '<div style="font-weight:700;margin:6px 0 3px">'+t+'</div>'+rows.map(function(x){ return '<div style="display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #fed7aa;padding:2px 0"><span style="font-family:monospace">'+String(x[0]).replace(/</g,'&lt;')+'</span><b>'+x[1]+'</b></div>'; }).join(''); };
+        box.innerHTML='<div style="font-size:12.5px;font-weight:800">🔎 Qué escribió hoy en KV (contador real del Worker)</div><div style="color:#9a3412">'+b.total+' escrituras desde que se subió el Worker v83 · actualizado '+(b.updated?new Date(b.updated).toLocaleTimeString('es-AR'):'—')+'</div>'+
+          tbl('Por tipo de dato', top(b.counts))+tbl('Por ruta que lo provocó', top(b.routes));
+      }
+      box.style.margin='0 0 10px';
+      var tips=Array.prototype.slice.call(m.querySelectorAll('.modal-bd > div > div')).find(function(x){ return /Optimizaciones aplicadas/.test(x.textContent); });
+      if(tips) tips.parentNode.insertBefore(box, tips); else { var bd=m.querySelector('.modal-bd > div')||m; bd.appendChild(box); }
+    }catch(e){}
+    return r;
+  };
+  w._v323=true; window.kvUsageOpenDetails=w;
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// v323 · Importar a Woo → vinculados → «Actualizar desde ML»: aplicar en SEGUNDO PLANO
+// La vista previa sigue en la ventana. Al tocar «Aplicar en Woo» la ventana se cierra y el
+// trabajo sigue en la tarjeta de abajo a la izquierda (podés seguir usando el panel):
+//   · un producto por vez, con pausa entre productos,
+//   · si la tienda limita (429 / 5xx / sin respuesta) ese producto se reintenta después,
+//     esperando 30 s, 1, 2 y 4 minutos (hasta 5 vueltas), sin repetir los que ya salieron bien,
+//   · los errores permanentes no se repiten; al final ves el detalle y podés reintentarlos.
+// ═══════════════════════════════════════════════════════════════════════════════
+var WI_UPD_TEMP = /HTTP (429|5\d\d)|limit[oó]|reintent|no respond|cortad|timeout|52\d|Failed to fetch|504/i;
+var _wiUpdLast = null;
+function _wiUpdCard(t, estado){
+  var proc=t.ok+t.fail+t.sin, pct=t.total?Math.min(100, proc/t.total*100):0;
+  if(typeof _wiFloatHtml!=='undefined') _wiFloatHtml.wupd='<div style="font-size:11px;color:#334155;line-height:1.5;margin-top:2px">'+
+    '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>'+wiEsc(t.campos)+'</b></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:10px">'+
+      '<span>Procesados: <b>'+proc+' / '+t.total+'</b></span><span>Vuelta: <b>'+t.ronda+'</b></span>'+
+      '<span style="color:#15803d">Actualizados: <b>'+t.ok+'</b></span><span>Sin cambios: <b>'+t.sin+'</b></span>'+
+      '<span style="color:'+(t.retry?'#b45309':'#64748b')+'">Para reintentar: <b>'+t.retry+'</b></span><span style="color:'+(t.fail?'#b91c1c':'#64748b')+'">Con error: <b>'+t.fail+'</b></span>'+
+    '</div><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:'+(/pausa|espera/i.test(estado)?'#b45309':'#475569')+'">Estado: '+wiEsc(estado)+'</div></div>';
+  wiFloat('wupd', '📥 ACTUALIZAR DESDE ML', estado, pct, /pausa|espera/i.test(estado)?'#d97706':'#2563eb', 'woo-import');
+}
+var _wiUpdRunV322 = wiUpdRun;
+window.wiUpdRun = async function(sim){
+  if(sim) return _wiUpdRunV322.apply(this, arguments);          // vista previa: igual que antes
+  var f=wiUpdFields(); if(!Object.keys(f).length){ showToast('Elegí al menos un dato','warn'); return; }
+  var ids=(wiS._updIds||[]).slice(); if(!ids.length) return;
+  if(wiS.updRunning){ showToast('Ya hay una actualización en curso (abajo a la izquierda)','warn'); return; }
+  var nom={ price:'precio', dims:'medidas', images:'fotos', attributes:'atributos', description:'descripción', title:'título' };
+  var campos=Object.keys(f).map(function(k){ return nom[k]||k; }).join(', ');
+  if(!confirm('¿Aplicar en Woo ('+campos+') a '+ids.length+' producto(s)?\n\nSigue en segundo plano: podés seguir usando el panel.')) return;
+  wiModal(null);
+  wiS.updRunning=true;
+  var t={ total:ids.length, ok:0, sin:0, fail:0, retry:0, ronda:1, campos:'Copiar de ML a Woo: '+campos }, res={}, pend=ids.slice(), ESPERAS=[30,60,120,240];
+  try{
+    while(pend.length){
+      var otra=[];
+      for(var i=0;i<pend.length;i++){
+        var id=pend[i];
+        _wiUpdCard(t, 'Actualizando '+id+' ('+(i+1)+' de '+pend.length+')');
+        var d=await wiApi('/wsync/update', { ml_item_id:id, fields:f, simulate:false });
+        if(d && !d.error){ res[id]={ ok:true, diff:d.diff||[] }; if((d.diff||[]).length) t.ok++; else t.sin++; }
+        else {
+          var msg=String((d&&(d.message||d.error))||'sin respuesta');
+          if(WI_UPD_TEMP.test(msg) && t.ronda<=ESPERAS.length){ otra.push(id); res[id]={ ok:false, temp:true, error:msg }; }
+          else { res[id]={ ok:false, error:msg }; t.fail++; }
+        }
+        t.retry=otra.length;
+        await new Promise(function(r){ setTimeout(r, 700); });   // respiro para la tienda
+      }
+      pend=otra;
+      if(!pend.length) break;
+      var w=ESPERAS[t.ronda-1], fin=Date.now()+w*1000;
+      while(Date.now()<fin){ _wiUpdCard(t, '⏳ Pausa: la tienda limitó '+pend.length+' producto(s); reintento en '+Math.ceil((fin-Date.now())/1000)+' s'); await new Promise(function(r){ setTimeout(r, 1000); }); }
+      t.ronda++;
+    }
+    // los que siguieron limitados después de todas las vueltas quedan como error
+    Object.keys(res).forEach(function(k){ if(res[k].temp){ res[k].temp=false; t.fail++; } });
+    _wiUpdLast={ fields:f, campos:campos, res:res, t:t };
+    wiFloatEnd('wupd', (t.fail?'⚠ ':'✅ ')+'Actualizar desde ML terminado: '+t.ok+' actualizados, '+t.sin+' sin cambios'+(t.fail?', '+t.fail+' con error':'')+' de '+t.total, t.fail?'warn':'success');
+    if(t.fail) wiUpdShowResult();
+  }catch(err){ wiFloatEnd('wupd','Actualizar desde ML: '+err.message,'error'); }
+  finally{ wiS.updRunning=false; if(_wiFloat.wupd) wiFloatEnd('wupd'); try{ wiLinksLoad(); }catch(e){} }
+};
+function wiUpdShowResult(){
+  var L=_wiUpdLast; if(!L) return;
+  var rows=[], fails=[];
+  Object.keys(L.res).forEach(function(id){ var r=L.res[id];
+    if(!r.ok){ fails.push(id); rows.push('<tr style="border-top:1px solid #f1f5f9"><td style="padding:4px 6px;font-family:var(--mono);font-size:10.5px">'+id+'</td><td colspan="3" style="padding:4px 6px;color:#b91c1c">'+wiEsc(r.error)+'</td></tr>'); }
+    else (r.diff||[]).forEach(function(x){ rows.push('<tr style="border-top:1px solid #f1f5f9"><td style="padding:4px 6px;font-family:var(--mono);font-size:10.5px">'+id+'</td><td style="padding:4px 6px">'+wiEsc(x.campo)+'</td><td style="padding:4px 6px;color:#94a3b8">'+wiEsc(x.antes)+'</td><td style="padding:4px 6px;font-weight:600">'+wiEsc(x.despues)+'</td></tr>'); });
+  });
+  wiModal('<div style="'+WI_M.title+'">'+(L.t.fail?'⚠ Actualizar desde ML: terminado con errores':'✅ Actualizar desde ML: terminado')+'</div>'+
+    '<div style="'+WI_M.sub+'">'+wiEsc(L.campos)+' · '+L.t.ok+' actualizados · '+L.t.sin+' sin cambios · '+L.t.fail+' con error</div>'+
+    '<div style="max-height:320px;overflow:auto;border:1px solid #e2e8f0;border-radius:8px"><table style="width:100%;border-collapse:collapse;font-size:11.5px;color:#1e293b"><tbody>'+(rows.join('')||'<tr><td style="padding:8px;color:#64748b">Sin cambios.</td></tr>')+'</tbody></table></div>'+
+    '<div style="display:flex;gap:8px;margin-top:12px"><button onclick="wiModal(null)" style="'+WI_M.cancel+';flex:1">Cerrar</button>'+
+    (fails.length?'<button onclick="wiUpdRetry()" style="flex:1;padding:10px;border:none;background:#2563eb;color:#fff;border-radius:9px;font-weight:700;cursor:pointer">🔁 Reintentar los '+fails.length+' con error</button>':'')+'</div>', true);
+}
+function wiUpdRetry(){
+  var L=_wiUpdLast; if(!L) return;
+  var ids=Object.keys(L.res).filter(function(k){ return !L.res[k].ok; }); if(!ids.length) return;
+  wiS._updIds=ids;
+  // reabrir el formulario con los mismos datos tildados para que confirmes
+  wiUpdOpen(ids);
+  ['price','dims','images','attrs','desc','title'].forEach(function(k){ var e=document.getElementById('wu-'+k); if(e) e.checked=false; });
+  var map={ price:'wu-price', dims:'wu-dims', images:'wu-images', attributes:'wu-attrs', description:'wu-desc', title:'wu-title' };
+  Object.keys(L.fields).forEach(function(k){ var e=document.getElementById(map[k]); if(e) e.checked=true; });
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// v325 · Procesos contra la tienda Woo: Cancelar, ritmo lento, sin escrituras vacías,
+//        un solo proceso a la vez (bloqueo compartido con el cron del Worker v83)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── 1) Botón «⏹ Cancelar» en las tarjetas flotantes ──
+// Cada proceso registra cómo se cancela. La tarjeta entera lleva a la sección (onclick):
+// el botón corta la propagación para no cambiar de sección al tocarlo.
+var _WI_CANCEL_TOOL2 = /^(run|img|dup|dupload|dupfoto|load|stock|precio|lprecios|regla)$/;
+function _wiCancelFor(key){
+  if(key==='wupd') return function(){ wiS.updCancel=true; };
+  if(key==='wupd-prev') return function(){ wiS.updPrevStop=true; };
+  if(key==='lsync') return function(){ wiS.lsyncCancel=true; };
+  if(/^wj-/.test(key)) return function(){ wjCancelCard(key.slice(3)); };
+  if(_WI_CANCEL_TOOL2.test(key)) return function(){ wiS.cancel=true; };
+  return null;
+}
+function wiFloatCancel(ev, key){
+  if(ev){ ev.stopPropagation(); ev.preventDefault(); }
+  var f=_wiCancelFor(key); if(!f) return;
+  f();
+  var c=_wiFloat[key]; if(c){ c._cancelando=true; wiFloatPaint(); }
+}
+async function wjCancelCard(id){
+  if(!confirm('¿Cancelar lo que queda pendiente de este trabajo? Lo ya aplicado no se deshace.')) return;
+  await wiApi('/wjob/cancel', { id:id });
+}
+window.wiFloatPaint = function(){
+  var el=document.getElementById('wi-float');
+  var keys=Object.keys(_wiFloat);
+  if(!keys.length){ if(el) el.remove(); return; }
+  if(!el){ el=document.createElement('div'); el.id='wi-float'; document.body.appendChild(el); }
+  el.innerHTML=keys.map(function(k){ var f=_wiFloat[k], h=(typeof _wiFloatHtml!=='undefined')?_wiFloatHtml[k]:null, can=!!_wiCancelFor(k);
+    return '<div class="wi-fcard" style="border-color:'+f.color+(h?';width:340px':'')+'" title="'+(f.section?'Ir a la sección':'')+'" onclick="'+(f.section?'try{showSection(\''+f.section+'\')}catch(e){}':'')+'">'+
+      '<div style="display:flex;gap:9px;align-items:'+(h?'flex-start':'center')+'"><span class="wi-spin" style="border-top-color:'+f.color+';width:16px;height:16px'+(h?';margin-top:2px':'')+'"></span><div style="min-width:0;flex:1">'+
+      '<div style="display:flex;gap:6px;align-items:center"><div style="flex:1;min-width:0;font-weight:800;font-size:12.5px;color:'+f.color+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+f.title+(f.pct!=null?' · '+Math.round(f.pct)+'%':'')+'</div>'+
+      (can?'<button type="button" onclick="wiFloatCancel(event,\''+k+'\')" title="Cortar el proceso" style="flex:none;font-size:11px;font-weight:700;padding:2px 8px;border-radius:7px;border:1px solid #fecaca;background:#fff;color:#b91c1c;cursor:pointer"'+(f._cancelando?' disabled':'')+'>'+(f._cancelando?'Cancelando…':'⏹ Cancelar')+'</button>':'')+'</div>'+
+      (h ? h : '<div style="font-size:11px;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+f.text+'</div>')+
+      '<div class="wi-pbar" style="height:5px;margin-top:4px"><div class="wi-pbar-in'+(f.pct==null?' wi-pbar-ind':'')+'" style="'+(f.pct!=null?'width:'+Math.max(2,f.pct)+'%;':'')+'background:'+f.color+'"></div></div></div></div></div>'; }).join('');
+};
+// mantener la marca «Cancelando…» aunque el proceso vuelva a pintar su tarjeta
+(function(){ var o=window.wiFloat; if(typeof o!=='function' || o._v325) return; var w=function(key){ var was=_wiFloat[key]&&_wiFloat[key]._cancelando; var r=o.apply(this, arguments); if(was && _wiFloat[key]){ _wiFloat[key]._cancelando=true; wiFloatPaint(); } return r; }; w._v325=true; window.wiFloat=w; })();
+
+// ── 2) Un solo proceso masivo contra Woo a la vez (panel + cron del Worker) ──
+var _wooProc=null;
+async function wooLockTake(who, label){
+  if(_wooProc && _wooProc.who!==who){ alert('Hay otro proceso contra la tienda en curso: «'+_wooProc.label+'».\n\nEsperá a que termine o cancelalo desde su tarjeta (abajo a la izquierda).'); return false; }
+  var force=false, g=await wiApi('/wsync/lock');
+  if(g && !g.error){
+    var l=g.lock, mio=l && l.who==='panel:'+who;
+    if(l && !mio && String(l.who).indexOf('panel')===0){ alert('Hay otro proceso contra la tienda en curso: «'+(l.label||'proceso')+'» (desde este u otro navegador).\n\nEsperá a que termine.'); return false; }
+    if((l && String(l.who).indexOf('cron')===0) || g.cron_stock || g.cron_price){
+      var q=(g.cron_stock?'la sincronización automática de stock':'')+(g.cron_stock&&g.cron_price?' y ':'')+(g.cron_price?'el precio automático':'')||(l&&l.label)||'un proceso automático';
+      if(!confirm('Ahora está trabajando '+q+' contra la tienda.\n\nSi seguís, el proceso automático se pausa mientras corre «'+label+'» y retoma solo al terminar.\n\n¿Seguir?')) return false;
+      force=true;
+    }
+    var d=await wiApi('/wsync/lock', { who:who, label:label, ttl_s:600, force:force });
+    if(d && d.ok===false){ alert('Hay otro proceso contra la tienda en curso: «'+((d.held&&d.held.label)||'proceso')+'».'); return false; }
+  }
+  _wooProc={ who:who, label:label, t:setInterval(function(){ wiApi('/wsync/lock', { who:who, label:label, ttl_s:600, force:true }); }, 240000) };
+  return true;
+}
+function wooLockRelease(who){
+  if(_wooProc && _wooProc.who===who){ clearInterval(_wooProc.t); _wooProc=null; }
+  try{ wiApi('/wsync/unlock', { who:who }); }catch(e){}
+}
+
+// ── 3) «Actualizar desde ML»: precio destildado por defecto + aviso con 0 % ──
+var _wiUpdOpenV324 = wiUpdOpen;
+window.wiUpdOpen = function(ids){
+  var r=_wiUpdOpenV324.apply(this, arguments);
+  var cb=document.getElementById('wu-price'); if(!cb) return r;
+  cb.checked=false;   // v325: viene destildado (antes pisaba la regla general con el precio de ML)
+  var pct=document.getElementById('wu-pct'), disc=document.getElementById('wu-disc');
+  var av=document.createElement('div'); av.id='wu-price-warn';
+  av.style.cssText='display:none;margin:0 0 8px 26px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:600';
+  av.textContent='⚠ Esto pone el mismo precio que ML e ignora la regla general.';
+  var grid=pct && pct.closest('div[style*="grid"]'); if(grid && grid.parentNode) grid.parentNode.insertBefore(av, grid.nextSibling);
+  var chk=function(){ av.style.display = cb.checked && (+(pct&&pct.value)||0)===0 && (+(disc&&disc.value)||0)===0 ? '' : 'none'; };
+  [cb,pct,disc].forEach(function(e){ if(e){ e.addEventListener('change', chk); e.addEventListener('input', chk); } });
+  chk();
+  return r;
+};
+
+// ── 4) «Actualizar desde ML»: vista previa y aplicación ──
+var WI_UPD_PAUSA_MS = 2500;        // pausa entre productos
+var WI_UPD_BLOQUE = 20;            // cada cuántos productos se hace una pausa larga
+var WI_UPD_BLOQUE_PAUSA_S = 60;    // pausa larga
+var WI_UPD_FRENO_S = 300;          // si más de la mitad de los últimos 10 dio 429: frenar 5 minutos
+var WI_UPD_ESPERAS = [30, 60, 120, 240];   // esperas entre vueltas de reintento
+var WI_UPD_TEMP = /HTTP (429|5\d\d)|limit[oó]|no respond|cortad|timeout|52\d|Failed to fetch/i;
+var _wiUpdLast=null;
+function _wiUpdNom(f){ var nom={ price:'precio', dims:'medidas/peso', images:'fotos', attributes:'atributos', description:'descripción', title:'título' }; return Object.keys(f).map(function(k){ return nom[k]||k; }).join(', '); }
+async function _wiUpdSleep(seg, flag, onTick){
+  var fin=Date.now()+seg*1000;
+  while(Date.now()<fin){ if(wiS[flag]) return false; if(onTick) onTick(Math.ceil((fin-Date.now())/1000)); await new Promise(function(r){ setTimeout(r, Math.min(1000, Math.max(50, fin-Date.now()))); }); }
+  return !wiS[flag];
+}
+function _wiUpdCard(t, estado){
+  var proc=t.ok+t.sin+t.fail, pct=t.total?Math.min(100, proc/t.total*100):0;
+  _wiFloatHtml.wupd='<div style="font-size:11px;color:#334155;line-height:1.5;margin-top:2px">'+
+    '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Copiar de ML a Woo: '+wiEsc(t.campos)+'</b></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:10px">'+
+      '<span>Procesados: <b>'+proc+' / '+t.total+'</b></span><span>Vuelta: <b>'+t.ronda+'</b></span>'+
+      '<span style="color:#15803d">Actualizados: <b>'+t.ok+'</b></span><span>Sin cambios: <b>'+t.sin+'</b></span>'+
+      '<span style="color:'+(t.retry?'#b45309':'#64748b')+'">Para reintentar: <b>'+t.retry+'</b></span><span style="color:'+(t.fail?'#b91c1c':'#64748b')+'">Con error: <b>'+t.fail+'</b></span>'+
+    '</div><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:'+(/pausa|frena/i.test(estado)?'#b45309':'#475569')+'">Estado: '+wiEsc(estado)+'</div></div>';
+  wiFloat('wupd', '📥 ACTUALIZAR DESDE ML', estado, pct, /pausa|frena/i.test(estado)?'#d97706':'#2563eb', 'woo-import');
+}
+window.wiUpdRun = async function(sim){
+  var f=wiUpdFields(); if(!Object.keys(f).length){ showToast('Elegí al menos un dato','warn'); return; }
+  var ids=(wiS._updIds||[]).slice(); if(!ids.length) return;
+  return sim ? _wiUpdPreview(ids, f) : _wiUpdApply(ids, f);
+};
+
+// Vista previa: muestra sólo lo que cambia; se puede detener
+async function _wiUpdPreview(ids, f){
+  var out=document.getElementById('wu-prev'); if(!out) return;
+  if(wiS.updRunning){ showToast('Hay una actualización aplicándose: esperá a que termine','warn'); return; }
+  wiS.updPrevStop=false;
+  var go=document.getElementById('wu-go'); if(go){ go.disabled=true; go.style.opacity='.5'; }
+  var filas=[], sin=0, err=0, notas=0, n=0;
+  var pinta=function(estado){
+    out.innerHTML='<div style="display:flex;gap:8px;align-items:center;font-size:12px;font-weight:700;margin-bottom:4px">'+estado+
+      (estado.indexOf('Vista previa (no')===0?'':'<button type="button" onclick="wiS.updPrevStop=true" style="margin-left:auto;font-size:11px;padding:3px 9px;border:1px solid #fecaca;background:#fff;color:#b91c1c;border-radius:7px;cursor:pointer">⏹ Detener</button>')+'</div>'+
+      '<div style="font-size:11.5px;color:#475569;margin-bottom:6px">Con cambios: <b>'+(n-sin-err)+'</b> · <b>'+sin+'</b> sin cambios'+(err?' · <b style="color:#b91c1c">'+err+'</b> sin poder leer':'')+(notas?' · '+notas+' sin medidas en ML':'')+'</div>'+
+      (filas.length?'<div style="max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:8px"><table style="width:100%;border-collapse:collapse;font-size:11.5px"><tbody>'+filas.join('')+'</tbody></table></div>':'');
+  };
+  for(var i=0;i<ids.length;i++){
+    if(wiS.updPrevStop) break;
+    pinta('Calculando '+(i+1)+' / '+ids.length+'…');
+    var d=await wiApi('/wsync/update', { ml_item_id:ids[i], fields:f, simulate:true });
+    n++;
+    if(d && !d.error){
+      var df=(d.diff||[]); if(d.notas&&d.notas.length) notas++;
+      if(!df.length) sin++;
+      df.forEach(function(x){ filas.push('<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:4px 6px;font-family:var(--mono);font-size:10.5px">'+ids[i]+'</td><td style="padding:4px 6px">'+wiEsc(x.campo)+'</td><td style="padding:4px 6px;color:#94a3b8">'+wiEsc(x.antes)+'</td><td style="padding:4px 6px;font-weight:600">'+wiEsc(x.despues)+'</td></tr>'); });
+    } else {
+      err++; var msg=String((d&&(d.error||d.message))||'sin respuesta');
+      filas.push('<tr><td style="padding:4px 6px">'+ids[i]+'</td><td colspan="3" style="color:#b91c1c;padding:4px 6px">'+wiEsc(msg)+'</td></tr>');
+      if(d && (d.temp || WI_UPD_TEMP.test(msg))){ var ok=await _wiUpdSleep(Math.min(120, d.retry_after||30), 'updPrevStop', function(s){ pinta('⏳ La tienda pidió pausa: sigo en '+s+' s'); }); if(!ok) break; }
+    }
+    await _wiUpdSleep(1, 'updPrevStop');
+  }
+  pinta('Vista previa (no se aplicó nada)'+(wiS.updPrevStop?' · detenida en '+n+' de '+ids.length:''));
+  wiS.updPrevStop=false;
+  if(go){ go.disabled=false; go.style.opacity='1'; }
+}
+
+// Aplicar: en segundo plano, lento, con Cancelar y sin escribir lo que no cambia
+async function _wiUpdApply(ids, f){
+  if(wiS.updRunning){ showToast('Ya hay una actualización en curso (abajo a la izquierda)','warn'); return; }
+  var campos=_wiUpdNom(f);
+  if(!confirm('¿Aplicar en Woo ('+campos+') a '+ids.length+' producto(s)?\n\nVa despacio para que la tienda no frene (≈'+Math.ceil(ids.length*(WI_UPD_PAUSA_MS/1000+1)/60)+' min o más). Sigue en segundo plano y lo podés cancelar desde su tarjeta.')) return;
+  if(!(await wooLockTake('actualizar-ml', 'Actualizar desde ML'))) return;
+  wiModal(null);
+  wiS.updRunning=true; wiS.updCancel=false;
+  var t={ total:ids.length, ok:0, sin:0, fail:0, retry:0, ronda:1, campos:campos }, res={}, ronda=ids.slice(), retryQ=[], hechos={}, ultimos=[], cancelado=false;
+  try{
+    while(ronda.length){
+      retryQ=[];
+      for(var i=0;i<ronda.length;i++){
+        if(wiS.updCancel){ cancelado=true; break; }
+        var id=ronda[i];
+        _wiUpdCard(t, 'Actualizando '+id+' ('+(i+1)+' de '+ronda.length+(t.ronda>1?', reintento':'')+')');
+        var d=await wiApi('/wsync/update', { ml_item_id:id, fields:f, simulate:false });
+        var es429=false, ra=0;
+        if(d && !d.error){ hechos[id]=1; res[id]={ ok:true, diff:d.diff||[] }; if((d.diff||[]).length) t.ok++; else t.sin++; }
+        else {
+          var msg=String((d&&(d.error||d.message))||'sin respuesta');
+          if(d && (d.temp || WI_UPD_TEMP.test(msg))){ es429=true; ra=+(d&&d.retry_after)||0; retryQ.push(id); res[id]={ ok:false, temp:true, error:msg }; }
+          else { hechos[id]=1; res[id]={ ok:false, error:msg }; t.fail++; }
+        }
+        t.retry=retryQ.length;
+        ultimos.push(es429?1:0); if(ultimos.length>10) ultimos.shift();
+        var lim=ultimos.reduce(function(a,b){ return a+b; },0);
+        var ok=true;
+        if(ra>0) ok=await _wiUpdSleep(ra, 'updCancel', function(s){ _wiUpdCard(t, '⏳ Pausa: la tienda pidió esperar '+s+' s (Retry-After)'); });
+        else if(ultimos.length>=6 && lim*2>ultimos.length){ ok=await _wiUpdSleep(WI_UPD_FRENO_S, 'updCancel', function(s){ _wiUpdCard(t, '⏳ Frenado: la tienda limitó '+lim+' de los últimos '+ultimos.length+'. Sigo en '+s+' s'); }); ultimos=[]; }
+        else if((i+1)%WI_UPD_BLOQUE===0 && i+1<ronda.length) ok=await _wiUpdSleep(WI_UPD_BLOQUE_PAUSA_S, 'updCancel', function(s){ _wiUpdCard(t, '⏳ Pausa cada '+WI_UPD_BLOQUE+' productos: sigo en '+s+' s'); });
+        else ok=await _wiUpdSleep(WI_UPD_PAUSA_MS/1000, 'updCancel');
+        if(!ok){ cancelado=true; break; }
+      }
+      if(cancelado || !retryQ.length) break;
+      if(t.ronda>WI_UPD_ESPERAS.length){ retryQ.forEach(function(k){ res[k].temp=false; res[k].error='La tienda siguió limitando después de '+WI_UPD_ESPERAS.length+' esperas: '+res[k].error; hechos[k]=1; t.fail++; }); retryQ=[]; t.retry=0; break; }
+      var okW=await _wiUpdSleep(WI_UPD_ESPERAS[t.ronda-1], 'updCancel', function(s){ _wiUpdCard(t, '⏳ Pausa: '+retryQ.length+' para reintentar; sigo en '+s+' s'); });
+      if(!okW){ cancelado=true; break; }
+      ronda=retryQ.slice(); t.ronda++;
+    }
+    var pendientes=ids.filter(function(k){ return !hechos[k]; });
+    _wiUpdLast={ fields:f, campos:campos, res:res, t:t, pendientes:pendientes, cancelado:cancelado };
+    if(cancelado) wiFloatEnd('wupd', '⏹ Actualizar desde ML cancelado: '+(t.ok+t.sin+t.fail)+' procesados ('+t.ok+' actualizados, '+t.sin+' sin cambios, '+t.fail+' con error) · '+pendientes.length+' pendientes', 'warn');
+    else wiFloatEnd('wupd', (t.fail?'⚠ ':'✅ ')+'Actualizar desde ML terminado: '+t.ok+' actualizados, '+t.sin+' sin cambios'+(t.fail?', '+t.fail+' con error':'')+' de '+t.total, t.fail?'warn':'success');
+    if(cancelado || t.fail) wiUpdShowResult();
+  }catch(err){ wiFloatEnd('wupd','Actualizar desde ML: '+err.message,'error'); }
+  finally{ wiS.updRunning=false; wiS.updCancel=false; if(_wiFloat.wupd) wiFloatEnd('wupd'); wooLockRelease('actualizar-ml'); try{ wiLinksLoad(); }catch(e){} }
+}
+window.wiUpdShowResult = function(){
+  var L=_wiUpdLast; if(!L) return;
+  var rows=[], fails=Object.keys(L.res).filter(function(k){ return !L.res[k].ok && !L.res[k].temp; });
+  fails.forEach(function(id){ rows.push('<tr style="border-top:1px solid #f1f5f9"><td style="padding:4px 6px;font-family:var(--mono);font-size:10.5px">'+id+'</td><td style="padding:4px 6px;color:#b91c1c">'+wiEsc(L.res[id].error)+'</td></tr>'); });
+  var p=L.pendientes||[], t=L.t;
+  var box=function(n,l,c){ return '<div style="border:1px solid #e2e8f0;border-radius:9px;padding:6px;text-align:center"><div style="font-size:18px;font-weight:800;color:'+c+'">'+n+'</div><div style="font-size:10.5px;color:#64748b">'+l+'</div></div>'; };
+  wiModal('<div style="'+WI_M.title+'">'+(L.cancelado?'⏹ Actualizar desde ML: cancelado':(t.fail?'⚠ Actualizar desde ML: terminado con errores':'✅ Actualizar desde ML: terminado'))+'</div>'+
+    '<div style="'+WI_M.sub+'">Copiar de ML a Woo: '+wiEsc(L.campos)+'</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px">'+box(t.ok+t.sin+t.fail,'Procesados','#334155')+box(t.ok,'Actualizados','#15803d')+box(t.sin,'Sin cambios','#475569')+box(p.length,'Pendientes',p.length?'#b45309':'#64748b')+box(t.fail,'Con error',t.fail?'#b91c1c':'#64748b')+'</div>'+
+    (rows.length?'<div style="max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:8px"><table style="width:100%;border-collapse:collapse;font-size:11.5px;color:#1e293b"><tbody>'+rows.join('')+'</tbody></table></div>':'')+
+    '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button onclick="wiModal(null)" style="'+WI_M.cancel+';flex:1">Cerrar</button>'+
+    (p.length?'<button onclick="wiUpdReopen(\'pend\')" style="flex:1;padding:10px;border:none;background:#2563eb;color:#fff;border-radius:9px;font-weight:700;cursor:pointer">▶ Reanudar los '+p.length+' pendientes</button>':'')+
+    (fails.length?'<button onclick="wiUpdReopen(\'fail\')" style="flex:1;padding:10px;border:1px solid #2563eb;background:#eff6ff;color:#1d4ed8;border-radius:9px;font-weight:700;cursor:pointer">🔁 Reintentar los '+fails.length+' con error</button>':'')+'</div>', true);
+};
+function wiUpdReopen(cual){
+  var L=_wiUpdLast; if(!L) return;
+  var ids = cual==='pend' ? (L.pendientes||[]) : Object.keys(L.res).filter(function(k){ return !L.res[k].ok && !L.res[k].temp; });
+  if(!ids.length) return;
+  wiS._updIds=ids; wiUpdOpen(ids);
+  ['price','dims','images','attrs','desc','title'].forEach(function(k){ var e=document.getElementById('wu-'+k); if(e) e.checked=false; });
+  var map={ price:'wu-price', dims:'wu-dims', images:'wu-images', attributes:'wu-attrs', description:'wu-desc', title:'wu-title' };
+  Object.keys(L.fields).forEach(function(k){ var e=document.getElementById(map[k]); if(e){ e.checked=true; e.dispatchEvent(new Event('change')); } });
+  if(L.fields.price){ var p=document.getElementById('wu-pct'), d=document.getElementById('wu-disc'); if(p) p.value=L.fields.price.pct; if(d) d.value=L.fields.price.disc; }
+}
+window.wiUpdRetry = function(){ wiUpdReopen('fail'); };
+
+// ── 5) Sincronizar stock y precio (herramienta 3): pausas de la tienda sin «Error», Cancelar, bloqueo ──
+// Con el Worker v83, si la tienda pide pausa la tanda vuelve con wait:true y NO marca error:
+// acá se espera (Retry-After o 30 s, 1, 2, 4 min) y se repite la misma tanda; después de la última
+// espera se manda «final» y recién ahí lo que falle queda en error.
+async function _wiLsCall(path, body, t, paso){
+  var esperas=[30,60,120,240], k=0;
+  while(true){
+    if(wiS.lsyncCancel) return { cancel:true };
+    var d=await wiApi(path, Object.assign({}, body, { final: k>=esperas.length }));
+    if(d && d.error){
+      if((d.temp || WI_UPD_TEMP.test(String(d.error))) && k<esperas.length){ var s0=Math.max(+d.retry_after||0, esperas[k]); k++; t.pausas++; var ok=await _wiUpdSleep(s0, 'lsyncCancel', function(s){ _wiLsCard(t, '⏳ Pausa pedida por la tienda ('+paso+'): sigo en '+s+' s'); }); if(!ok) return { cancel:true }; continue; }
+      throw new Error(d.message||d.error);
+    }
+    if(d && d.wait && k<esperas.length){ var s1=Math.max(+d.retry_after||0, esperas[k]); k++; t.pausas++; t.writes_ml+=(d.stats&&d.stats.writes_ml)||0; t.writes_woo+=(d.stats&&d.stats.writes_woo)||0; t.writes+=(d.stats&&d.stats.writes)||0;
+      var ok2=await _wiUpdSleep(s1, 'lsyncCancel', function(s){ _wiLsCard(t, '⏳ Pausa pedida por la tienda ('+paso+'): repito la tanda en '+s+' s'); }); if(!ok2) return { cancel:true }; body=Object.assign({}, body, { cursor:d.cursor }); continue; }
+    return d;
+  }
+}
+window._wiLsCard = function(t, estado){
+  var proc=t.hechos, tot=t.total, pct=tot?Math.min(100, proc/tot*100):0;
+  _wiFloatHtml.lsync='<div style="font-size:11px;color:#334155;line-height:1.5;margin-top:2px">'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:10px">'+
+      '<span>Procesados: <b>'+proc+' / '+tot+'</b></span><span>Pausas de la tienda: <b>'+(t.pausas||0)+'</b></span>'+
+      '<span>Stock: <b>'+t.writes_ml+'</b> ML · <b>'+t.writes_woo+'</b> Woo</span><span>Precio: <b>'+t.writes+'</b> en Woo</span>'+
+    '</div><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:'+(/pausa/i.test(estado)?'#b45309':'#475569')+'">Estado: '+wiEsc(estado)+'</div></div>';
+  wiFloat('lsync', '🔄 SINCRONIZAR STOCK Y PRECIO', estado, pct, /pausa/i.test(estado)?'#d97706':'#059669', 'woo-import');
+};
+window.wiLSyncRun = async function(){
+  var ids=(wiS._lsync||[]).slice(); wiModal(null);
+  if(!ids.length) return;
+  if(wiS.lsyncing){ showToast('Ya hay una sincronización en curso (abajo a la izquierda)','warn'); return; }
+  if(!(await wooLockTake('sincronizar', 'Sincronizar stock y precio'))) return;
+  wiS.lsyncing=true; wiS.lsyncCancel=false;
+  var prog=document.getElementById('wi-lp-prog'); if(prog) prog.innerHTML='';
+  var t={ total:ids.length, hechos:0, writes_ml:0, writes_woo:0, writes:0, pausas:0 }, run_id='sel-'+Date.now().toString(36), SL=50, cancel=false;
+  try{
+    for(var i=0;i<ids.length && !cancel;i+=SL){
+      var slice=ids.slice(i,i+SL), lote='lote '+(Math.floor(i/SL)+1)+' de '+Math.ceil(ids.length/SL), cursor=0;
+      _wiLsCard(t, '📦 stock · '+lote);
+      while(true){
+        var d=await _wiLsCall('/wsync/run', { ids:slice, simulate:false, confirm:'SINCRONIZAR', run_id:run_id, cursor:cursor, quiet:i>0||cursor>0, total:ids.length }, t, 'stock');
+        if(d.cancel){ cancel=true; break; }
+        t.writes_ml+=(d.stats&&d.stats.writes_ml)||0; t.writes_woo+=(d.stats&&d.stats.writes_woo)||0;
+        cursor=d.cursor; if(d.done) break;
+      }
+      if(cancel) break;
+      _wiLsCard(t, '💲 precio · '+lote); cursor=0;
+      while(true){
+        var q=await _wiLsCall('/wsync/price-run', { ids:slice, simulate:false, confirm:'APLICAR', fallback:'igual', run_id:run_id, cursor:cursor, quiet:true, total:ids.length }, t, 'precio');
+        if(q.cancel){ cancel=true; break; }
+        t.writes+=(q.stats&&q.stats.writes)||0;
+        cursor=q.cursor; if(q.done) break;
+      }
+      if(cancel) break;
+      t.hechos=Math.min(t.total, t.hechos+slice.length);
+      if(i+SL<ids.length){ if(!(await _wiUpdSleep(5, 'lsyncCancel', function(s){ _wiLsCard(t, 'Respiro para la tienda: sigo en '+s+' s'); }))){ cancel=true; break; } }
+    }
+    var l=await wiApi('/wsync/links'); if(!l.error){ wiSetLinks(l); try{ wiLinksRender(); }catch(e){} }
+    var errN=ids.filter(function(k){ var x=wiS.linkByMl[k]; return x && x.state==='error'; }).length;
+    if(cancel) wiFloatEnd('lsync', '⏹ Sincronización cancelada: '+t.hechos+' de '+ids.length+' procesados · stock '+t.writes_ml+' ML / '+t.writes_woo+' Woo · precio '+t.writes+' · '+(ids.length-t.hechos)+' sin procesar', 'warn');
+    else wiFloatEnd('lsync', (errN?'⚠ ':'✅ ')+'Sincronización terminada: '+ids.length+' productos · stock: '+t.writes_ml+' cambios en ML y '+t.writes_woo+' en Woo · precio: '+t.writes+' en Woo'+(t.pausas?' · '+t.pausas+' pausas de la tienda':'')+(errN?' · '+errN+' con error (ver Historial)':''), errN?'warn':'success');
+  }catch(err){ wiFloatEnd('lsync','Sincronizar: '+err.message,'error'); }
+  finally{ wiS.lsyncing=false; wiS.lsyncCancel=false; if(_wiFloat.lsync) wiFloatEnd('lsync'); wooLockRelease('sincronizar'); try{ var l2=await wiApi('/wsync/links'); if(!l2.error){ wiSetLinks(l2); wiLinksRender(); } wiStatusLoad(); }catch(e){} }
+};
+
+// ── 6) Importar y vincular (herramienta 2) y trabajos de Web Tienda: también toman el bloqueo ──
+(function(){
+  var o=window.wiRun; if(typeof o!=='function' || o._v325) return;
+  var w=async function(){
+    if(wiS.running){ showToast('Ya hay un proceso en curso. Esperá a que termine.','warn'); return; }
+    if(!(await wooLockTake('importar-vincular', 'Importar y vincular'))) return;
+    try{ return await o.apply(this, arguments); } finally { wooLockRelease('importar-vincular'); }
+  };
+  w._v325=true; window.wiRun=w;
+})();
+(function(){
+  var o=window.wjCreateAndRun; if(typeof o!=='function' || o._v325) return;
+  var w=async function(kind, label){
+    if(!(await wooLockTake('web-tienda', label||'Trabajo en Web Tienda'))) return null;
+    var job=null;
+    try{ job=await o.apply(this, arguments); } catch(e){ wooLockRelease('web-tienda'); throw e; }
+    if(!job){ wooLockRelease('web-tienda'); return null; }
+    // liberar cuando el panel deja de seguirlo
+    var chk=setInterval(function(){ if(!_wjRunning[job.id]){ clearInterval(chk); wooLockRelease('web-tienda'); } }, 3000);
+    return job;
+  };
+  w._v325=true; window.wjCreateAndRun=w;
+})();
 </script>
 </body>
 </html>
